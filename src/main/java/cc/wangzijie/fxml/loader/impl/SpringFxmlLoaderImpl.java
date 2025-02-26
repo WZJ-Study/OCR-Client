@@ -4,10 +4,12 @@ package cc.wangzijie.fxml.loader.impl;
 import cc.wangzijie.fxml.FxmlViews;
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.fxml.loader.SpringFxmlLoader;
+import cc.wangzijie.ui.utils.CssLoader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -49,8 +51,16 @@ public class SpringFxmlLoaderImpl implements SpringFxmlLoader {
         if (null == root) {
             return;
         }
-        stage.setScene(new Scene(root));
+        // 场景scene
+        Scene scene = new Scene(root);
+        URL css = CssLoader.load(view.getCssPath());
+        if (null != css) {
+            scene.getStylesheets().add(css.toExternalForm());
+        }
+        // 舞台stage
+        stage.setScene(scene);
         stage.setTitle(view.getTitle());
+        stage.initStyle(view.getStageStyle());
         stage.sizeToScene();
         stage.show();
     }

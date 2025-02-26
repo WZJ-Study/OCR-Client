@@ -1,17 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="cc.wangzijie.ui.view.MainWindowView">
+<VBox minHeight="768.0" minWidth="1024.0" spacing="20.0" style="-fx-background-color: #454855;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.wangzijie.ui.view.MainWindowView">
+    <children>
+        <BorderPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+            <left>
+                <ImageView fx:id="mainWindowLogoImage" fitHeight="50.0" BorderPane.alignment="CENTER_LEFT" />
+            </left>
+            <right>
+                <HBox maxHeight="50.0" minHeight="50.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" spacing="5.0" BorderPane.alignment="CENTER_RIGHT">
+                    <children>
+                        <Button onAction="#onCloseWindowButtonClick" styleClass="windowButton">
+                            <graphic>
+                                <ImageView fx:id="closeWindowButtonImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onMaximizeWindowButtonClick" styleClass="windowButton">
+                            <graphic>
+                                <ImageView fx:id="maximizeWindowButtonImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onMinimizeWindowButtonClick" styleClass="windowButton">
+                            <graphic>
+                                <ImageView fx:id="minimizeWindowButtonImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onOpenSettingsWindowButtonClick" styleClass="windowButton">
+                            <graphic>
+                                <ImageView fx:id="openSettingsWindowButtonImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+                            </graphic>
+                        </Button>
+                        <Button onAction="#onReloadButtonClick" styleClass="windowButton">
+                            <graphic>
+                                <ImageView fx:id="reloadMainWindowButtonImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" />
+                            </graphic>
+                        </Button>
+                    </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+                </HBox>
+            </right>
+        </BorderPane>
+
+        <Label fx:id="mousePosition" textFill="WHITE" />
+        <Label fx:id="welcomeText" textFill="WHITE" />
+        <Button onAction="#onHelloButtonClick" text="Hello!" />
+    </children>
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets left="5.0" right="5.0" />
     </padding>
-
-    <Label fx:id="mousePosition"/>
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
 </VBox>

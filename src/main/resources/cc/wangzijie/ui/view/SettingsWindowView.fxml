@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox minHeight="600.0" minWidth="800.0" maxHeight="800" maxWidth="1200" style="-fx-background-color: #2A2C37;"
+      xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="cc.wangzijie.ui.view.SettingsWindowView">
+   <children>
+      <BorderPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0">
+         <left>
+            <Label text="Settings" textFill="WHITE" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <Button mnemonicParsing="false" text="closeSettingsWindow" BorderPane.alignment="CENTER" />
+         </right>
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" top="5.0" />
+         </VBox.margin>
+      </BorderPane>
+      <TabPane tabClosingPolicy="UNAVAILABLE" tabMaxHeight="750.0" tabMaxWidth="1150.0" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab text="常规设置">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="切口设置">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>

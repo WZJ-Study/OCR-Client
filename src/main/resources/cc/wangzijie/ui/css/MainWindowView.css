@@ -1,0 +1,17 @@
+.windowButton {
+    -fx-background-color: #454855;
+    -fx-border-radius: 10px;
+    -fx-border-color: #454855;
+}
+
+.windowButton:hover {
+    -fx-background-color: #454855;
+    -fx-border-radius: 10px;
+    -fx-border-color: #FFFFFF;
+}
+
+.windowButton:pressed {
+    -fx-background-color: #2A2C37;
+    -fx-border-radius: 10px;
+    -fx-border-color: #FFFFFF;
+}
