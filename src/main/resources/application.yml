@@ -1,0 +1,17 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: ocrClient
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://wangzijie.store:15432/paas_test
+    username: postgres
+    password: 123456aA@
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
