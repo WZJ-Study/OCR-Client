@@ -11,6 +11,8 @@ import cc.wangzijie.ui.model.MousePositionModel;
 import cc.wangzijie.ui.utils.ImageLoader;
 import cc.wangzijie.ui.utils.WindowSizeHolder;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
@@ -47,11 +49,6 @@ public class MainWindowView implements Initializable {
     @FXML
     private ImageView mainWindowLogoImage;
 
-    @FXML
-    private Label mousePosition;
-
-    @FXML
-    private Label welcomeText;
 
     @FXML
     private ImageView closeWindowButtonImage;
@@ -64,30 +61,71 @@ public class MainWindowView implements Initializable {
     @FXML
     private ImageView reloadMainWindowButtonImage;
 
+
+    @FXML
+    private ImageView openFullMenuButtonImage;
+    @FXML
+    private ImageView historyDataMenuButtonImage;
+    @FXML
+    private ImageView screenshotMenuButtonImage;
+    @FXML
+    private ImageView withdrawMenuButtonImage;
+    @FXML
+    private ImageView startCollectMenuButtonImage;
+    @FXML
+    private ImageView stopCollectMenuButtonImage;
+
+    @FXML
+    private Label mousePosition;
+
+    @FXML
+    private Label welcomeText;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 绑定FXML组件与model属性
+        // 绑定FXML组件与model属性 - 标题栏logo
         mainWindowLogoImage.imageProperty().bindBidirectional(mainWindowModel.mainWindowLogoImageProperty());
 
+        // 绑定FXML组件与model属性 - 标题栏右侧窗口按钮
         closeWindowButtonImage.imageProperty().bindBidirectional(mainWindowModel.closeWindowButtonImageProperty());
         maximizeWindowButtonImage.imageProperty().bindBidirectional(mainWindowModel.maximizeWindowButtonImageProperty());
         minimizeWindowButtonImage.imageProperty().bindBidirectional(mainWindowModel.minimizeWindowButtonImageProperty());
         openSettingsWindowButtonImage.imageProperty().bindBidirectional(mainWindowModel.openSettingsWindowButtonImageProperty());
-        reloadMainWindowButtonImage.imageProperty().bind(mainWindowModel.reloadMainWindowButtonImageProperty());
+        reloadMainWindowButtonImage.imageProperty().bindBidirectional(mainWindowModel.reloadMainWindowButtonImageProperty());
+
+        // 绑定FXML组件与model属性 - 菜单栏按钮
+        openFullMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.openFullMenuButtonImageProperty());
+        historyDataMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.historyDataMenuButtonImageProperty());
+        screenshotMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.screenshotMenuButtonImageProperty());
+        withdrawMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.withdrawMenuButtonImageProperty());
+        startCollectMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.startCollectMenuButtonImageProperty());
+        stopCollectMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.stopCollectMenuButtonImageProperty());
+
 
         mousePosition.textProperty().bindBidirectional(mainWindowModel.mousePositionProperty());
         welcomeText.textProperty().bind(mainWindowModel.welcomeTextProperty());
 
 
-        // 处理model属性
+        // 处理model属性 - 标题栏logo
         mainWindowModel.setMainWindowLogoImage(ImageLoader.load(Constants.LOGO_IMAGE_PATH));
 
+        // 处理model属性 - 标题栏右侧窗口按钮
         mainWindowModel.setCloseWindowButtonImage(ImageLoader.load(Constants.CLOSE_IMAGE_PATH));
         mainWindowModel.setMaximizeWindowButtonImage(ImageLoader.load(Constants.MAXIMIZE_IMAGE_PATH));
         mainWindowModel.setMinimizeWindowButtonImage(ImageLoader.load(Constants.MINIMIZE_IMAGE_PATH));
         mainWindowModel.setOpenSettingsWindowButtonImage(ImageLoader.load(Constants.SETTINGS_IMAGE_PATH));
         mainWindowModel.setReloadMainWindowButtonImage(ImageLoader.load(Constants.RELOAD_IMAGE_PATH));
 
+        // 处理model属性 - 菜单栏按钮
+        mainWindowModel.setOpenFullMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setHistoryDataMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setScreenshotMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setWithdrawMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setStartCollectMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setStopCollectMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+
+
+        // 处理model属性 - 鼠标坐标
         mainWindowModel.mousePositionProperty().bind(mousePositionModel.displayTextProperty());
     }
 
@@ -159,6 +197,44 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onReloadButtonClick() {
         log.info("==== onReloadButtonClick ==== 点击【重新加载】按钮！");
+
+    }
+
+
+    @FXML
+    protected void onOpenFullMenuButtonClick() {
+        log.info("==== onOpenFullMenuButtonClick ==== 点击【xxx】按钮！");
+
+    }
+
+
+    @FXML
+    protected void onHistoryDataMenuButtonClick() {
+        log.info("==== onHistoryDataMenuButtonClick ==== 点击【xxx】按钮！");
+
+    }
+
+    @FXML
+    protected void onScreenshotMenuButtonClick() {
+        log.info("==== onScreenshotMenuButtonClick ==== 点击【xxx】按钮！");
+
+    }
+
+    @FXML
+    protected void onWithdrawMenuButtonClick() {
+        log.info("==== onWithdrawMenuButtonClick ==== 点击【xxx】按钮！");
+
+    }
+
+    @FXML
+    protected void onStartCollectMenuButtonClick() {
+        log.info("==== onStartCollectMenuButtonClick ==== 点击【xxx】按钮！");
+
+    }
+
+    @FXML
+    protected void onStopCollectMenuButtonClick() {
+        log.info("==== onStopCollectMenuButtonClick ==== 点击【xxx】按钮！");
 
     }
 }

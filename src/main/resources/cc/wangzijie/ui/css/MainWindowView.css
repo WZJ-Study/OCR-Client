@@ -1,10 +1,25 @@
+
+.mainWindow {
+    -fx-background-color: #454855;
+    -fx-background-radius: 10px;
+    -fx-border-color: #454855;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0;
+    -fx-border-style: solid;
+}
+
+.windowTitleBar {
+    -fx-background-color: #454855;
+}
+
 .windowButton {
     -fx-background-color: #454855;
     -fx-background-radius: 10px;
     -fx-border-color: #454855;
     -fx-border-radius: 10px;
     -fx-border-width: 0;
-    -fx-border-style: none;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
 }
 
 .windowButton:hover {
@@ -13,7 +28,8 @@
     -fx-border-color: #FFFFFF;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-border-style: outset;
+    -fx-border-style: dashed;
+    -fx-border-insets: 2px;
 }
 
 .windowButton:pressed {
@@ -22,5 +38,41 @@
     -fx-border-color: #FFFFFF;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
-    -fx-border-style: inset;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
+}
+
+
+.menuBar {
+    -fx-background-color: #2A2C37;
+}
+
+.menuButton {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 10px;
+    -fx-border-color: #2A2C37;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
+}
+
+.menuButton:hover {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 10px;
+    -fx-border-color: #67B6D5;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-border-insets: 2px;
+}
+
+.menuButton:pressed {
+    -fx-background-color: #67B6D5;
+    -fx-background-radius: 10px;
+    -fx-border-color: #67B6D5;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
 }

@@ -13,4 +13,6 @@ public class Constants {
     public static final String RESIZE_IMAGE_PATH = "/icons/Resize.png";
     public static final String RELOAD_IMAGE_PATH = "/icons/Reload.png";
     public static final String SETTINGS_IMAGE_PATH = "/icons/Settings.png";
+
+    public static final String DRAG_IMAGE_PATH = "/icons/Drag.png";
 }

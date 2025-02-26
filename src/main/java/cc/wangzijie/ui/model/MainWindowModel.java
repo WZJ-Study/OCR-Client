@@ -12,17 +12,20 @@ public class MainWindowModel {
     private final ObjectProperty<Image> mainWindowLogoImage = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Image> closeWindowButtonImage = new SimpleObjectProperty<>();
-
     private final ObjectProperty<Image> maximizeWindowButtonImage = new SimpleObjectProperty<>();
-
     private final ObjectProperty<Image> minimizeWindowButtonImage = new SimpleObjectProperty<>();
-
     private final ObjectProperty<Image> openSettingsWindowButtonImage = new SimpleObjectProperty<>();
-
     private final ObjectProperty<Image> reloadMainWindowButtonImage = new SimpleObjectProperty<>();
 
-    private final SimpleStringProperty welcomeText = new SimpleStringProperty("");
+    private final ObjectProperty<Image> openFullMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> historyDataMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> screenshotMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> withdrawMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> startCollectMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> stopCollectMenuButtonImage = new SimpleObjectProperty<>();
 
+
+    private final SimpleStringProperty welcomeText = new SimpleStringProperty("");
     private final SimpleStringProperty mousePosition = new SimpleStringProperty("");
 
     public Image getMainWindowLogoImage() {
@@ -96,6 +99,78 @@ public class MainWindowModel {
 
     public void setReloadMainWindowButtonImage(Image reloadMainWindowButtonImage) {
         this.reloadMainWindowButtonImage.set(reloadMainWindowButtonImage);
+    }
+
+    public Image getOpenFullMenuButtonImage() {
+        return openFullMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> openFullMenuButtonImageProperty() {
+        return openFullMenuButtonImage;
+    }
+
+    public void setOpenFullMenuButtonImage(Image openFullMenuButtonImage) {
+        this.openFullMenuButtonImage.set(openFullMenuButtonImage);
+    }
+
+    public Image getHistoryDataMenuButtonImage() {
+        return historyDataMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> historyDataMenuButtonImageProperty() {
+        return historyDataMenuButtonImage;
+    }
+
+    public void setHistoryDataMenuButtonImage(Image historyDataMenuButtonImage) {
+        this.historyDataMenuButtonImage.set(historyDataMenuButtonImage);
+    }
+
+    public Image getScreenshotMenuButtonImage() {
+        return screenshotMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> screenshotMenuButtonImageProperty() {
+        return screenshotMenuButtonImage;
+    }
+
+    public void setScreenshotMenuButtonImage(Image screenshotMenuButtonImage) {
+        this.screenshotMenuButtonImage.set(screenshotMenuButtonImage);
+    }
+
+    public Image getWithdrawMenuButtonImage() {
+        return withdrawMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> withdrawMenuButtonImageProperty() {
+        return withdrawMenuButtonImage;
+    }
+
+    public void setWithdrawMenuButtonImage(Image withdrawMenuButtonImage) {
+        this.withdrawMenuButtonImage.set(withdrawMenuButtonImage);
+    }
+
+    public Image getStartCollectMenuButtonImage() {
+        return startCollectMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> startCollectMenuButtonImageProperty() {
+        return startCollectMenuButtonImage;
+    }
+
+    public void setStartCollectMenuButtonImage(Image startCollectMenuButtonImage) {
+        this.startCollectMenuButtonImage.set(startCollectMenuButtonImage);
+    }
+
+    public Image getStopCollectMenuButtonImage() {
+        return stopCollectMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> stopCollectMenuButtonImageProperty() {
+        return stopCollectMenuButtonImage;
+    }
+
+    public void setStopCollectMenuButtonImage(Image stopCollectMenuButtonImage) {
+        this.stopCollectMenuButtonImage.set(stopCollectMenuButtonImage);
     }
 
     public String getWelcomeText() {

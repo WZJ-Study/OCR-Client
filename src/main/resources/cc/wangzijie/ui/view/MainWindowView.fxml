@@ -5,58 +5,108 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox minHeight="768.0" minWidth="1024.0" spacing="20.0" style="-fx-background-color: #454855;"
+<VBox minHeight="768.0" minWidth="1024.0" spacing="20.0" styleClass="mainWindow"
       xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="cc.wangzijie.ui.view.MainWindowView">
     <children>
-        <BorderPane maxHeight="60.0" minHeight="60.0" prefHeight="60.0">
+        <BorderPane maxHeight="60.0" minHeight="60.0" prefHeight="60.0" styleClass="windowTitleBar">
             <left>
                 <ImageView fx:id="mainWindowLogoImage" fitHeight="50.0" BorderPane.alignment="CENTER_LEFT"/>
             </left>
             <right>
-                <HBox maxHeight="50.0" minHeight="50.0" prefHeight="50.0" spacing="5.0" nodeOrientation="RIGHT_TO_LEFT"
+                <HBox maxHeight="50.0" minHeight="50.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" spacing="5.0"
                       BorderPane.alignment="CENTER_RIGHT">
                     <children>
-                        <Button onAction="#onCloseWindowButtonClick" styleClass="windowButton">
+                        <Button maxHeight="40.0" maxWidth="40.0" onAction="#onCloseWindowButtonClick"
+                                styleClass="windowButton">
                             <graphic>
                                 <ImageView fx:id="closeWindowButtonImage" fitHeight="36.0" fitWidth="36.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </graphic>
                         </Button>
-                        <Button onAction="#onMaximizeWindowButtonClick" styleClass="windowButton">
+                        <Button maxHeight="40.0" maxWidth="40.0" onAction="#onMaximizeWindowButtonClick"
+                                styleClass="windowButton">
                             <graphic>
                                 <ImageView fx:id="maximizeWindowButtonImage" fitHeight="36.0" fitWidth="36.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </graphic>
                         </Button>
-                        <Button onAction="#onMinimizeWindowButtonClick" styleClass="windowButton">
+                        <Button maxHeight="40.0" maxWidth="40.0" onAction="#onMinimizeWindowButtonClick"
+                                styleClass="windowButton">
                             <graphic>
                                 <ImageView fx:id="minimizeWindowButtonImage" fitHeight="36.0" fitWidth="36.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </graphic>
                         </Button>
-                        <Button onAction="#onOpenSettingsWindowButtonClick" styleClass="windowButton">
+                        <Button maxHeight="40.0" maxWidth="40.0" onAction="#onOpenSettingsWindowButtonClick"
+                                styleClass="windowButton">
                             <graphic>
                                 <ImageView fx:id="openSettingsWindowButtonImage" fitHeight="36.0" fitWidth="36.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </graphic>
                         </Button>
-                        <Button onAction="#onReloadButtonClick" styleClass="windowButton">
+                        <Button maxHeight="40.0" maxWidth="40.0" onAction="#onReloadButtonClick"
+                                styleClass="windowButton">
                             <graphic>
                                 <ImageView fx:id="reloadMainWindowButtonImage" fitHeight="36.0" fitWidth="36.0"
                                            pickOnBounds="true" preserveRatio="true"/>
                             </graphic>
                         </Button>
                     </children>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                    </padding>
                 </HBox>
             </right>
             <padding>
-                <Insets top="5.0" left="5.0" bottom="5.0" right="5.0"/>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </padding>
         </BorderPane>
+        <HBox maxHeight="80.0" minHeight="80.0" prefHeight="80.0" spacing="5.0" nodeOrientation="LEFT_TO_RIGHT"
+              BorderPane.alignment="CENTER_LEFT" styleClass="menuBar">
+            <children>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onOpenFullMenuButtonClick" styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="openFullMenuButtonImage" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
+                    </graphic>
+                </Button>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onHistoryDataMenuButtonClick"
+                        styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="historyDataMenuButtonImage" fitHeight="48.0" fitWidth="48.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onScreenshotMenuButtonClick"
+                        styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="screenshotMenuButtonImage" fitHeight="48.0" fitWidth="48.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onWithdrawMenuButtonClick" styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="withdrawMenuButtonImage" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
+                    </graphic>
+                </Button>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onStartCollectMenuButtonClick"
+                        styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="startCollectMenuButtonImage" fitHeight="48.0" fitWidth="48.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
+                <Button maxHeight="50.0" maxWidth="50.0" onAction="#onStopCollectMenuButtonClick"
+                        styleClass="menuButton">
+                    <graphic>
+                        <ImageView fx:id="stopCollectMenuButtonImage" fitHeight="48.0" fitWidth="48.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </HBox>
 
         <Label fx:id="mousePosition" textFill="WHITE"/>
         <Label fx:id="welcomeText" textFill="WHITE"/>
