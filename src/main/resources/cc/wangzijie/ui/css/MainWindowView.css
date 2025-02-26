@@ -1,17 +1,26 @@
 .windowButton {
     -fx-background-color: #454855;
-    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-color: #454855;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0;
+    -fx-border-style: none;
 }
 
 .windowButton:hover {
     -fx-background-color: #454855;
-    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: outset;
 }
 
 .windowButton:pressed {
     -fx-background-color: #2A2C37;
-    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: inset;
 }

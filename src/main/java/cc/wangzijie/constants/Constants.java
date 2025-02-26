@@ -10,6 +10,7 @@ public class Constants {
     public static final String CLOSE_IMAGE_PATH = "/icons/Close.png";
     public static final String MAXIMIZE_IMAGE_PATH = "/icons/Maximize.png";
     public static final String MINIMIZE_IMAGE_PATH = "/icons/Minimize.png";
+    public static final String RESIZE_IMAGE_PATH = "/icons/Resize.png";
     public static final String RELOAD_IMAGE_PATH = "/icons/Reload.png";
     public static final String SETTINGS_IMAGE_PATH = "/icons/Settings.png";
 }

@@ -9,13 +9,16 @@ import cc.wangzijie.ui.helper.StageManager;
 import cc.wangzijie.ui.model.MainWindowModel;
 import cc.wangzijie.ui.model.MousePositionModel;
 import cc.wangzijie.ui.utils.ImageLoader;
+import cc.wangzijie.ui.utils.WindowSizeHolder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -106,10 +109,30 @@ public class MainWindowView implements Initializable {
 
     @FXML
     protected void onMaximizeWindowButtonClick() {
-        log.info("==== onMaximizeWindowButtonClick ==== 点击【最大化窗口】按钮！");
+        log.info("==== onMaximizeWindowButtonClick ==== 点击【最大化窗口/恢复窗口大小】按钮！");
         Stage stage = stageManager.getMainWindowStage();
-        if (null != stage && !stage.isFullScreen()) {
-            Platform.runLater(() -> stage.setFullScreen(true));
+        if (null != stage) {
+            if (WindowSizeHolder.isMaximized()) {
+                // 关闭全屏
+                log.info("==== onMaximizeWindowButtonClick ==== 恢复窗口大小！");
+                Platform.runLater(() -> {
+                    WindowSizeHolder.restore(stage);
+                });
+                mainWindowModel.setMaximizeWindowButtonImage(ImageLoader.load(Constants.MAXIMIZE_IMAGE_PATH));
+            } else {
+                // 全屏
+                log.info("==== onMaximizeWindowButtonClick ==== 最大化窗口！");
+                WindowSizeHolder.backup(stage);
+                Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+                log.info("==== WindowSizeHolder ==== 最大化的窗口位置大小：visualBounds={}", visualBounds);
+                Platform.runLater(() -> {
+                    stage.setX(visualBounds.getMinX());
+                    stage.setY(visualBounds.getMinY());
+                    stage.setWidth(visualBounds.getWidth());
+                    stage.setHeight(visualBounds.getHeight());
+                });
+                mainWindowModel.setMaximizeWindowButtonImage(ImageLoader.load(Constants.RESIZE_IMAGE_PATH));
+            }
         }
     }
 
