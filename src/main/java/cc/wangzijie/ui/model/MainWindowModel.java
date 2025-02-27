@@ -1,8 +1,6 @@
 package cc.wangzijie.ui.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +23,10 @@ public class MainWindowModel {
     private final ObjectProperty<Image> stopCollectMenuButtonImage = new SimpleObjectProperty<>();
 
 
-    private final SimpleStringProperty welcomeText = new SimpleStringProperty("");
-    private final SimpleStringProperty mousePosition = new SimpleStringProperty("");
+    private final StringProperty welcomeText = new SimpleStringProperty("");
+    private final StringProperty mousePosition = new SimpleStringProperty("");
+
+    private final BooleanProperty collectRunningFlag = new SimpleBooleanProperty(false);
 
     public Image getMainWindowLogoImage() {
         return mainWindowLogoImage.get();
@@ -177,7 +177,7 @@ public class MainWindowModel {
         return welcomeText.get();
     }
 
-    public SimpleStringProperty welcomeTextProperty() {
+    public StringProperty welcomeTextProperty() {
         return welcomeText;
     }
 
@@ -189,11 +189,23 @@ public class MainWindowModel {
         return mousePosition.get();
     }
 
-    public SimpleStringProperty mousePositionProperty() {
+    public StringProperty mousePositionProperty() {
         return mousePosition;
     }
 
     public void setMousePosition(String mousePosition) {
         this.mousePosition.set(mousePosition);
+    }
+
+    public boolean isCollectRunningFlag() {
+        return collectRunningFlag.get();
+    }
+
+    public BooleanProperty collectRunningFlagProperty() {
+        return collectRunningFlag;
+    }
+
+    public void setCollectRunningFlag(boolean collectRunningFlag) {
+        this.collectRunningFlag.set(collectRunningFlag);
     }
 }

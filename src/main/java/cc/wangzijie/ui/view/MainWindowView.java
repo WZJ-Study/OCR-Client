@@ -118,12 +118,12 @@ public class MainWindowView implements Initializable {
 
         // 处理model属性 - 菜单栏按钮
         mainWindowModel.setOpenFullMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setHistoryDataMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setScreenshotMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setWithdrawMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setStartCollectMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setStopCollectMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-
+        mainWindowModel.setHistoryDataMenuButtonImage(ImageLoader.load(Constants.HISTORY_DATA_IMAGE_PATH));
+        mainWindowModel.setScreenshotMenuButtonImage(ImageLoader.load(Constants.SCREENSHOT_BLUE_IMAGE_PATH));
+        mainWindowModel.setWithdrawMenuButtonImage(ImageLoader.load(Constants.WITHDRAW_WHITE_IMAGE_PATH));
+        mainWindowModel.setStartCollectMenuButtonImage(ImageLoader.load(Constants.RUN_BLUE_IMAGE_PATH));
+        mainWindowModel.setStopCollectMenuButtonImage(ImageLoader.load(Constants.PAUSE_GREY_IMAGE_PATH));
+        mainWindowModel.setCollectRunningFlag(false);
 
         // 处理model属性 - 鼠标坐标
         mainWindowModel.mousePositionProperty().bind(mousePositionModel.displayTextProperty());
