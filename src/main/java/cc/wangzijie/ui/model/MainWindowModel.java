@@ -4,6 +4,7 @@ import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -32,19 +33,19 @@ public class MainWindowModel {
     private final ObjectProperty<Image> withdrawMenuButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> startCollectMenuButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> stopCollectMenuButtonImage = new SimpleObjectProperty<>();
+    private final BooleanProperty collectRunningFlag = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<Rectangle> screenshotArea = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> screenshotImage = new SimpleObjectProperty<>();
-
+    private final ObjectProperty<Cursor> screenshotImageCursor = new SimpleObjectProperty<>();
+    private final StringProperty screenshotImageHint = new SimpleStringProperty();
+    private final BooleanProperty screenshotImageHintVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty screenshotAreaHasImageFlag = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<Image> dataListTitleBarMenuButtonImage = new SimpleObjectProperty<>();
     private final StringProperty dataListTitleBarMenuTitle = new SimpleStringProperty();
     private final ObjectProperty<Image> dataListTitleBarSearchButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> dataListTitleBarDeleteButtonImage = new SimpleObjectProperty<>();
-
-
-    private final BooleanProperty collectRunningFlag = new SimpleBooleanProperty(false);
-    private final BooleanProperty screenshotAreaHasImageFlag = new SimpleBooleanProperty(false);
 
     @Getter
     private BufferedImage screenshot;
@@ -59,6 +60,8 @@ public class MainWindowModel {
 
                 // 转换为JavaFX Image并显示预览‌
                 this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
+                this.setScreenshotImageCursor(Cursor.CROSSHAIR);
+                this.setScreenshotImageHintVisible(false);
                 this.setScreenshotAreaHasImageFlag(true);
             } catch (Exception ex) {
                 log.error("==== 执行截屏 === 全屏截图失败！", ex);
@@ -71,6 +74,8 @@ public class MainWindowModel {
 
                 // 转换为JavaFX Image并显示预览‌
                 this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
+                this.setScreenshotImageCursor(Cursor.CROSSHAIR);
+                this.setScreenshotImageHintVisible(false);
                 this.setScreenshotAreaHasImageFlag(true);
             } catch (Exception ex) {
                 log.error("==== 执行截屏 === 区域截图失败！", ex);
@@ -223,6 +228,23 @@ public class MainWindowModel {
         this.stopCollectMenuButtonImage.set(stopCollectMenuButtonImage);
     }
 
+
+
+    public boolean isCollectRunningFlag() {
+        return collectRunningFlag.get();
+    }
+
+    public BooleanProperty collectRunningFlagProperty() {
+        return collectRunningFlag;
+    }
+
+    public void setCollectRunningFlag(boolean collectRunningFlag) {
+        this.collectRunningFlag.set(collectRunningFlag);
+    }
+
+
+
+
     public Rectangle getScreenshotArea() {
         return screenshotArea.get();
     }
@@ -245,6 +267,54 @@ public class MainWindowModel {
 
     public void setScreenshotImage(Image screenshotImage) {
         this.screenshotImage.set(screenshotImage);
+    }
+
+    public Cursor getScreenshotImageCursor() {
+        return screenshotImageCursor.get();
+    }
+
+    public ObjectProperty<Cursor> screenshotImageCursorProperty() {
+        return screenshotImageCursor;
+    }
+
+    public void setScreenshotImageCursor(Cursor screenshotImageCursor) {
+        this.screenshotImageCursor.set(screenshotImageCursor);
+    }
+
+    public String getScreenshotImageHint() {
+        return screenshotImageHint.get();
+    }
+
+    public StringProperty screenshotImageHintProperty() {
+        return screenshotImageHint;
+    }
+
+    public void setScreenshotImageHint(String screenshotImageHint) {
+        this.screenshotImageHint.set(screenshotImageHint);
+    }
+
+    public boolean isScreenshotImageHintVisible() {
+        return screenshotImageHintVisible.get();
+    }
+
+    public BooleanProperty screenshotImageHintVisibleProperty() {
+        return screenshotImageHintVisible;
+    }
+
+    public void setScreenshotImageHintVisible(boolean screenshotImageHintVisible) {
+        this.screenshotImageHintVisible.set(screenshotImageHintVisible);
+    }
+
+    public boolean isScreenshotAreaHasImageFlag() {
+        return screenshotAreaHasImageFlag.get();
+    }
+
+    public BooleanProperty screenshotAreaHasImageFlagProperty() {
+        return screenshotAreaHasImageFlag;
+    }
+
+    public void setScreenshotAreaHasImageFlag(boolean screenshotAreaHasImageFlag) {
+        this.screenshotAreaHasImageFlag.set(screenshotAreaHasImageFlag);
     }
 
     public Image getDataListTitleBarMenuButtonImage() {
@@ -293,32 +363,6 @@ public class MainWindowModel {
 
     public void setDataListTitleBarDeleteButtonImage(Image dataListTitleBarDeleteButtonImage) {
         this.dataListTitleBarDeleteButtonImage.set(dataListTitleBarDeleteButtonImage);
-    }
-
-
-
-    public boolean isCollectRunningFlag() {
-        return collectRunningFlag.get();
-    }
-
-    public BooleanProperty collectRunningFlagProperty() {
-        return collectRunningFlag;
-    }
-
-    public void setCollectRunningFlag(boolean collectRunningFlag) {
-        this.collectRunningFlag.set(collectRunningFlag);
-    }
-
-    public boolean isScreenshotAreaHasImageFlag() {
-        return screenshotAreaHasImageFlag.get();
-    }
-
-    public BooleanProperty screenshotAreaHasImageFlagProperty() {
-        return screenshotAreaHasImageFlag;
-    }
-
-    public void setScreenshotAreaHasImageFlag(boolean screenshotAreaHasImageFlag) {
-        this.screenshotAreaHasImageFlag.set(screenshotAreaHasImageFlag);
     }
 
 

@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -70,7 +71,8 @@ public class MainWindowView implements Initializable {
 
     @FXML
     private ImageView screenshotImage;
-
+    @FXML
+    private Label screenshotImageHint;
 
     @FXML
     private ImageView dataListTitleBarMenuButtonImage;
@@ -108,6 +110,9 @@ public class MainWindowView implements Initializable {
 
         // 绑定FXML组件与model属性 - 主界面 - 左侧截屏图片预览
         screenshotImage.imageProperty().bindBidirectional(mainWindowModel.screenshotImageProperty());
+        screenshotImage.cursorProperty().bindBidirectional(mainWindowModel.screenshotImageCursorProperty());
+        screenshotImageHint.textProperty().bindBidirectional(mainWindowModel.screenshotImageHintProperty());
+        screenshotImageHint.visibleProperty().bindBidirectional(mainWindowModel.screenshotImageHintVisibleProperty());
 
         // 绑定FXML组件与model属性 - 主界面 - 右侧数据列表 - 标题栏
         dataListTitleBarMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarMenuButtonImageProperty());
@@ -137,6 +142,9 @@ public class MainWindowView implements Initializable {
 
         // 处理model属性 - 主界面 - 左侧截屏图片预览区域
         mainWindowModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
+        mainWindowModel.setScreenshotImageCursor(Cursor.DEFAULT);
+        mainWindowModel.setScreenshotImageHint(Constants.SCREENSHOT_IMAGE_HINT);
+        mainWindowModel.setScreenshotImageHintVisible(true);
         mainWindowModel.setScreenshotAreaHasImageFlag(false);
 
         // 处理model属性 - 主界面 - 右侧数据列表区域 - 标题栏
@@ -222,7 +230,14 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onReloadButtonClick() {
         log.info("==== onReloadButtonClick ==== 点击【重新加载】按钮！");
-
+        if (mainWindowModel.isCollectRunningFlag()) {
+            log.error("采集正在运行中，不可重新加载！");
+            return;
+        }
+        mainWindowModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
+        mainWindowModel.setScreenshotImageCursor(Cursor.DEFAULT);
+        mainWindowModel.setScreenshotImageHintVisible(true);
+        mainWindowModel.setScreenshotAreaHasImageFlag(false);
     }
 
 
@@ -256,12 +271,21 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onStartCollectMenuButtonClick() {
         log.info("==== onStartCollectMenuButtonClick ==== 点击【开始采集】按钮！");
-
+        if (mainWindowModel.isCollectRunningFlag()) {
+            log.error("采集正在运行中，不可重复开始！");
+            return;
+        }
+        mainWindowModel.setCollectRunningFlag(true);
     }
 
     @FXML
     protected void onStopCollectMenuButtonClick() {
         log.info("==== onStopCollectMenuButtonClick ==== 点击【结束采集】按钮！");
+        if (!mainWindowModel.isCollectRunningFlag()) {
+            log.error("采集未运行！");
+            return;
+        }
+        mainWindowModel.setCollectRunningFlag(false);
 
     }
 

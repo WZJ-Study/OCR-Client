@@ -6,6 +6,7 @@ public class Constants {
     public static final String SETTINGS_WINDOW_TITLE = "设置";
     public static final String HISTORY_DATA_WINDOW_TITLE = "历史数据";
 
+    public static final String SCREENSHOT_IMAGE_HINT = "点击【截取】按钮，即可截取屏幕";
     public static final String DATA_LIST_TITLE = "数据信息";
     /*
      * Logo图片
