@@ -1,8 +1,8 @@
 package cc.wangzijie.server.service.impl;
 
-import cc.wangzijie.server.entity.SysUser;
-import cc.wangzijie.server.mapper.ISysUserMapper;
-import cc.wangzijie.server.service.ISysUserService;
+import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.mapper.IOcrResultMapper;
+import cc.wangzijie.server.service.IOcrResultService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +13,11 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SysUserServiceImpl implements ISysUserService {
+public class OcrResultServiceImpl implements IOcrResultService {
 
     @Resource
-    private ISysUserMapper baseMapper;
+    private IOcrResultMapper baseMapper;
 
-    @Override
-    public String now() {
-        return baseMapper.now();
-    }
 
     /**
      * 查询VO不分页列表
@@ -30,8 +26,8 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 不分页列表
      */
     @Override
-    public List<SysUser> voList(SysUser entity) {
-        LambdaQueryWrapper<SysUser> lqw = Wrappers.lambdaQuery(entity);
+    public List<OcrResult> getList(OcrResult entity) {
+        LambdaQueryWrapper<OcrResult> lqw = Wrappers.lambdaQuery(entity);
         return baseMapper.selectList(lqw);
     }
 
@@ -42,7 +38,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 单条记录
      */
     @Override
-    public SysUser voGetById(Long id) {
+    public OcrResult getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -53,7 +49,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 操作是否成功
      */
     @Override
-    public boolean save(SysUser entity) {
+    public boolean save(OcrResult entity) {
         return baseMapper.insert(entity) > 0;
     }
 
@@ -64,7 +60,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 操作是否成功
      */
     @Override
-    public boolean updateById(SysUser entity) {
+    public boolean updateById(OcrResult entity) {
         return baseMapper.updateById(entity) > 0;
     }
 

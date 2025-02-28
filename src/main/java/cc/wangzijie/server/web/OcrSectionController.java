@@ -16,8 +16,8 @@
 
 package cc.wangzijie.server.web;
 
-import cc.wangzijie.server.entity.SysUser;
-import cc.wangzijie.server.service.ISysUserService;
+import cc.wangzijie.server.entity.OcrSection;
+import cc.wangzijie.server.service.IOcrSectionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,45 +25,40 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")
-public class SysUserController {
+@RequestMapping("/ocr-section")
+public class OcrSectionController {
 
     @Resource
-    private ISysUserService sysUserService;
-
-    @GetMapping("/now")
-    public String now() {
-        return sysUserService.now();
-    }
+    private IOcrSectionService ocrSectionService;
 
     @GetMapping("/all")
-    public List<SysUser> getList() {
-        return sysUserService.voList(new SysUser());
+    public List<OcrSection> getList() {
+        return ocrSectionService.getList(new OcrSection());
     }
 
     @PostMapping("/list")
-    public List<SysUser> getList(@RequestBody SysUser entity) {
-        return sysUserService.voList(entity);
+    public List<OcrSection> getList(@RequestBody OcrSection entity) {
+        return ocrSectionService.getList(entity);
     }
 
     @GetMapping("/get")
-    public SysUser voGet(@RequestParam Long id) {
-        return sysUserService.voGetById(id);
+    public OcrSection voGet(@RequestParam Long id) {
+        return ocrSectionService.getById(id);
     }
 
     @PostMapping("/create")
-    public boolean create(@RequestBody SysUser entity) {
-        return sysUserService.save(entity);
+    public boolean create(@RequestBody OcrSection entity) {
+        return ocrSectionService.save(entity);
     }
 
     @PostMapping("/update")
-    public boolean update(@RequestBody SysUser entity) {
-        return sysUserService.updateById(entity);
+    public boolean update(@RequestBody OcrSection entity) {
+        return ocrSectionService.updateById(entity);
     }
 
     @PostMapping("/delete")
     public boolean delete(@RequestBody List<Long> ids) {
-        return sysUserService.removeByIds(ids);
+        return ocrSectionService.removeByIds(ids);
     }
 
 }

@@ -16,6 +16,9 @@
         <!-- 以下是 SpringBoot 组件版本号 -->
         <spring-boot.version>2.7.18</spring-boot.version>
 
+        <!-- 以下是 OCR引擎 组件版本号 -->
+        <rapidocr.version>0.0.7</rapidocr.version>
+
         <!-- 以下是 JavaFX 组件版本号 -->
         <javafx.version>17.0.6</javafx.version>
 
@@ -85,6 +88,14 @@
             <version>${commons-collections4.version}</version>
         </dependency>
 
+
+        <!-- 以下是 CommonsIO 工具包 组件 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.18.0</version>
+        </dependency>
+
         <!-- 以下是 JDK兼容 组件 -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -96,6 +107,8 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>${jakarta-xml-bind.version}</version>
         </dependency>
+
+
 
         <!-- 以下是 JavaFX 组件 -->
         <dependency>
@@ -112,6 +125,18 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+
+        <!--  以下是 RapidOCR 组件     -->
+        <dependency>
+            <groupId>io.github.mymonstercat</groupId>
+            <artifactId>rapidocr</artifactId>
+            <version>${rapidocr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.mymonstercat</groupId>
+            <artifactId>rapidocr-onnx-platform</artifactId>
+            <version>${rapidocr.version}</version>
         </dependency>
 
     </dependencies>

@@ -1,14 +1,10 @@
 package cc.wangzijie.server.service;
 
-
-
-import cc.wangzijie.server.entity.SysUser;
+import cc.wangzijie.server.entity.OcrResult;
 
 import java.util.List;
 
-public interface ISysUserService {
-
-    String now();
+public interface IOcrResultService {
 
     /**
      * 查询VO不分页列表
@@ -16,7 +12,7 @@ public interface ISysUserService {
      * @param entity     查询参数
      * @return 不分页列表
      */
-    List<SysUser> voList(SysUser entity);
+    List<OcrResult> getList(OcrResult entity);
 
     /**
      * 根据ID查询单条VO记录
@@ -24,7 +20,7 @@ public interface ISysUserService {
      * @param id      ID
      * @return 单条记录
      */
-    SysUser voGetById(Long id);
+    OcrResult getById(Long id);
 
     /**
      * 创建新增
@@ -32,7 +28,7 @@ public interface ISysUserService {
      * @param entity  实体类对象
      * @return 操作是否成功
      */
-    boolean save(SysUser entity);
+    boolean save(OcrResult entity);
 
     /**
      * 编辑修改
@@ -40,7 +36,7 @@ public interface ISysUserService {
      * @param entity  实体类对象
      * @return 操作是否成功
      */
-    boolean updateById(SysUser entity);
+    boolean updateById(OcrResult entity);
 
     /**
      * 根据IDs批量删除（软删除）
@@ -49,7 +45,5 @@ public interface ISysUserService {
      * @return 操作是否成功
      */
     boolean removeByIds(List<Long> ids);
-
-
 
 }
