@@ -6,8 +6,11 @@ import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.fxml.loader.SpringFxmlLoader;
 import cc.wangzijie.ui.utils.CssLoader;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
@@ -51,17 +54,33 @@ public class SpringFxmlLoaderImpl implements SpringFxmlLoader {
         if (null == root) {
             return;
         }
+
+        // 窗口尺寸计算
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        double width = view.getPrefWidth();
+        double height = view.getPrefHeight();
+        if (view.validDynamicWidthRatio()) {
+            width = bounds.getWidth() * view.getDynamicWidthRatio();
+        }
+        if (view.validDynamicHeightRatio()) {
+            height = bounds.getHeight() * view.getDynamicHeightRatio();
+        }
+        log.info("==== 窗口尺寸 ==== width={} height={}", width, height);
+
         // 场景scene
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, width, height);
+        scene.setFill(Color.TRANSPARENT);
+
         URL css = CssLoader.load(view.getCssPath());
         if (null != css) {
             scene.getStylesheets().add(css.toExternalForm());
         }
+
         // 舞台stage
         stage.setScene(scene);
         stage.setTitle(view.getTitle());
         stage.initStyle(view.getStageStyle());
-        stage.sizeToScene();
+        stage.setResizable(view.isResizeable());
         stage.show();
     }
 }

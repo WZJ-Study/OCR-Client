@@ -11,17 +11,9 @@ import javax.annotation.Resource;
 @RequestMapping("/main")
 public class MainWindowController {
 
-    @Resource
-    private MainWindowModel mainWindowModel;
+//    @Resource
+//    private MainWindowModel mainWindowModel;
+//
 
-    @GetMapping("/welcomeText")
-    public String getWelcomeText() {
-        return mainWindowModel.getWelcomeText();
-    }
-
-    @GetMapping("/mousePosition")
-    public String getMousePosition() {
-        return mainWindowModel.getMousePosition();
-    }
 
 }

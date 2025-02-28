@@ -1,9 +1,20 @@
 package cc.wangzijie.ui.model;
 
+import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+@Slf4j
 @Component
 public class MainWindowModel {
 
@@ -22,11 +33,50 @@ public class MainWindowModel {
     private final ObjectProperty<Image> startCollectMenuButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> stopCollectMenuButtonImage = new SimpleObjectProperty<>();
 
+    private final ObjectProperty<Rectangle> screenshotArea = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> screenshotImage = new SimpleObjectProperty<>();
 
-    private final StringProperty welcomeText = new SimpleStringProperty("");
-    private final StringProperty mousePosition = new SimpleStringProperty("");
+
+    private final ObjectProperty<Image> dataListTitleBarMenuButtonImage = new SimpleObjectProperty<>();
+    private final StringProperty dataListTitleBarMenuTitle = new SimpleStringProperty();
+    private final ObjectProperty<Image> dataListTitleBarSearchButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> dataListTitleBarDeleteButtonImage = new SimpleObjectProperty<>();
+
 
     private final BooleanProperty collectRunningFlag = new SimpleBooleanProperty(false);
+    private final BooleanProperty screenshotAreaHasImageFlag = new SimpleBooleanProperty(false);
+
+    @Getter
+    private BufferedImage screenshot;
+
+    public void doScreenshot() {
+        Rectangle rect = this.screenshotArea.get();
+        if (null == rect) {
+            log.info("==== 执行截屏 === 未选定截屏区域！默认截屏整个屏幕！");
+            try {
+                // 捕获屏幕区域‌
+                this.screenshot = new Robot().createScreenCapture(new java.awt.Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+
+                // 转换为JavaFX Image并显示预览‌
+                this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
+                this.setScreenshotAreaHasImageFlag(true);
+            } catch (Exception ex) {
+                log.error("==== 执行截屏 === 全屏截图失败！", ex);
+            }
+        } else {
+            log.info("==== 执行截屏 === 截屏区域 rect={}", rect);
+            try {
+                // 捕获屏幕区域‌
+                this.screenshot = AwtRobotUtils.createScreenCapture(rect);
+
+                // 转换为JavaFX Image并显示预览‌
+                this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
+                this.setScreenshotAreaHasImageFlag(true);
+            } catch (Exception ex) {
+                log.error("==== 执行截屏 === 区域截图失败！", ex);
+            }
+        }
+    }
 
     public Image getMainWindowLogoImage() {
         return mainWindowLogoImage.get();
@@ -173,29 +223,79 @@ public class MainWindowModel {
         this.stopCollectMenuButtonImage.set(stopCollectMenuButtonImage);
     }
 
-    public String getWelcomeText() {
-        return welcomeText.get();
+    public Rectangle getScreenshotArea() {
+        return screenshotArea.get();
     }
 
-    public StringProperty welcomeTextProperty() {
-        return welcomeText;
+    public ObjectProperty<Rectangle> screenshotAreaProperty() {
+        return screenshotArea;
     }
 
-    public void setWelcomeText(String welcomeText) {
-        this.welcomeText.set(welcomeText);
+    public void setScreenshotArea(Rectangle screenshotArea) {
+        this.screenshotArea.set(screenshotArea);
     }
 
-    public String getMousePosition() {
-        return mousePosition.get();
+    public Image getScreenshotImage() {
+        return screenshotImage.get();
     }
 
-    public StringProperty mousePositionProperty() {
-        return mousePosition;
+    public ObjectProperty<Image> screenshotImageProperty() {
+        return screenshotImage;
     }
 
-    public void setMousePosition(String mousePosition) {
-        this.mousePosition.set(mousePosition);
+    public void setScreenshotImage(Image screenshotImage) {
+        this.screenshotImage.set(screenshotImage);
     }
+
+    public Image getDataListTitleBarMenuButtonImage() {
+        return dataListTitleBarMenuButtonImage.get();
+    }
+
+    public ObjectProperty<Image> dataListTitleBarMenuButtonImageProperty() {
+        return dataListTitleBarMenuButtonImage;
+    }
+
+    public void setDataListTitleBarMenuButtonImage(Image dataListTitleBarMenuButtonImage) {
+        this.dataListTitleBarMenuButtonImage.set(dataListTitleBarMenuButtonImage);
+    }
+
+    public String getDataListTitleBarMenuTitle() {
+        return dataListTitleBarMenuTitle.get();
+    }
+
+    public StringProperty dataListTitleBarMenuTitleProperty() {
+        return dataListTitleBarMenuTitle;
+    }
+
+    public void setDataListTitleBarMenuTitle(String dataListTitleBarMenuTitle) {
+        this.dataListTitleBarMenuTitle.set(dataListTitleBarMenuTitle);
+    }
+
+    public Image getDataListTitleBarSearchButtonImage() {
+        return dataListTitleBarSearchButtonImage.get();
+    }
+
+    public ObjectProperty<Image> dataListTitleBarSearchButtonImageProperty() {
+        return dataListTitleBarSearchButtonImage;
+    }
+
+    public void setDataListTitleBarSearchButtonImage(Image dataListTitleBarSearchButtonImage) {
+        this.dataListTitleBarSearchButtonImage.set(dataListTitleBarSearchButtonImage);
+    }
+
+    public Image getDataListTitleBarDeleteButtonImage() {
+        return dataListTitleBarDeleteButtonImage.get();
+    }
+
+    public ObjectProperty<Image> dataListTitleBarDeleteButtonImageProperty() {
+        return dataListTitleBarDeleteButtonImage;
+    }
+
+    public void setDataListTitleBarDeleteButtonImage(Image dataListTitleBarDeleteButtonImage) {
+        this.dataListTitleBarDeleteButtonImage.set(dataListTitleBarDeleteButtonImage);
+    }
+
+
 
     public boolean isCollectRunningFlag() {
         return collectRunningFlag.get();
@@ -208,4 +308,19 @@ public class MainWindowModel {
     public void setCollectRunningFlag(boolean collectRunningFlag) {
         this.collectRunningFlag.set(collectRunningFlag);
     }
+
+    public boolean isScreenshotAreaHasImageFlag() {
+        return screenshotAreaHasImageFlag.get();
+    }
+
+    public BooleanProperty screenshotAreaHasImageFlagProperty() {
+        return screenshotAreaHasImageFlag;
+    }
+
+    public void setScreenshotAreaHasImageFlag(boolean screenshotAreaHasImageFlag) {
+        this.screenshotAreaHasImageFlag.set(screenshotAreaHasImageFlag);
+    }
+
+
+
 }

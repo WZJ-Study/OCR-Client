@@ -2,24 +2,19 @@ package cc.wangzijie.ui.view;
 
 
 import cc.wangzijie.constants.Constants;
-import cc.wangzijie.fxml.FxmlViews;
-import cc.wangzijie.fxml.loader.SpringFxmlLoader;
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
 import cc.wangzijie.ui.model.MainWindowModel;
-import cc.wangzijie.ui.model.MousePositionModel;
+import cc.wangzijie.ui.screenshot.ScreenCaptureStage;
 import cc.wangzijie.ui.utils.ImageLoader;
 import cc.wangzijie.ui.utils.WindowSizeHolder;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Slf4j
@@ -43,8 +37,6 @@ public class MainWindowView implements Initializable {
     @Resource
     private MainWindowModel mainWindowModel;
 
-    @Resource
-    private MousePositionModel mousePositionModel;
 
     @FXML
     private ImageView mainWindowLogoImage;
@@ -75,11 +67,24 @@ public class MainWindowView implements Initializable {
     @FXML
     private ImageView stopCollectMenuButtonImage;
 
-    @FXML
-    private Label mousePosition;
 
     @FXML
-    private Label welcomeText;
+    private ImageView screenshotImage;
+
+
+    @FXML
+    private ImageView dataListTitleBarMenuButtonImage;
+    @FXML
+    private Label dataListTitleBarMenuTitle;
+
+
+    @FXML
+    private ImageView dataListTitleBarSearchButtonImage;
+    @FXML
+    private ImageView dataListTitleBarDeleteButtonImage;
+
+    private double offsetX;
+    private double offsetY;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -101,9 +106,14 @@ public class MainWindowView implements Initializable {
         startCollectMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.startCollectMenuButtonImageProperty());
         stopCollectMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.stopCollectMenuButtonImageProperty());
 
+        // 绑定FXML组件与model属性 - 主界面 - 左侧截屏图片预览
+        screenshotImage.imageProperty().bindBidirectional(mainWindowModel.screenshotImageProperty());
 
-        mousePosition.textProperty().bindBidirectional(mainWindowModel.mousePositionProperty());
-        welcomeText.textProperty().bind(mainWindowModel.welcomeTextProperty());
+        // 绑定FXML组件与model属性 - 主界面 - 右侧数据列表 - 标题栏
+        dataListTitleBarMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarMenuButtonImageProperty());
+        dataListTitleBarMenuTitle.textProperty().bind(mainWindowModel.dataListTitleBarMenuTitleProperty());
+        dataListTitleBarSearchButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarSearchButtonImageProperty());
+        dataListTitleBarDeleteButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarDeleteButtonImageProperty());
 
 
         // 处理model属性 - 标题栏logo
@@ -125,16 +135,31 @@ public class MainWindowView implements Initializable {
         mainWindowModel.setStopCollectMenuButtonImage(ImageLoader.load(Constants.PAUSE_GREY_IMAGE_PATH));
         mainWindowModel.setCollectRunningFlag(false);
 
-        // 处理model属性 - 鼠标坐标
-        mainWindowModel.mousePositionProperty().bind(mousePositionModel.displayTextProperty());
+        // 处理model属性 - 主界面 - 左侧截屏图片预览区域
+        mainWindowModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
+        mainWindowModel.setScreenshotAreaHasImageFlag(false);
+
+        // 处理model属性 - 主界面 - 右侧数据列表区域 - 标题栏
+        mainWindowModel.setDataListTitleBarMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        mainWindowModel.setDataListTitleBarMenuTitle(Constants.DATA_LIST_TITLE);
+        mainWindowModel.setDataListTitleBarSearchButtonImage(ImageLoader.load(Constants.SEARCH_IMAGE_PATH));
+        mainWindowModel.setDataListTitleBarDeleteButtonImage(ImageLoader.load(Constants.DELETE_IMAGE_PATH));
     }
 
     @FXML
-    protected void onHelloButtonClick() {
-        mainWindowModel.setWelcomeText("Welcome to JavaFX Application!" + System.currentTimeMillis());
+    protected void onMainWindowMousePressed(MouseEvent event) {
+        this.offsetX = event.getSceneX();
+        this.offsetY = event.getSceneY();
+    }
+
+    @FXML
+    protected void onMainWindowMouseDragged(MouseEvent event) {
         Stage stage = stageManager.getMainWindowStage();
-        if (null != stage && null != stage.getScene()) {
-            Platform.runLater(() -> stage.getScene().setOnMouseClicked(mousePositionModel::refresh));
+        if (null != stage) {
+            Platform.runLater(() -> {
+                stage.setX(event.getScreenX() - offsetX);
+                stage.setY(event.getScreenY() - offsetY);
+            });
         }
     }
 
@@ -203,38 +228,59 @@ public class MainWindowView implements Initializable {
 
     @FXML
     protected void onOpenFullMenuButtonClick() {
-        log.info("==== onOpenFullMenuButtonClick ==== 点击【xxx】按钮！");
+        log.info("==== onOpenFullMenuButtonClick ==== 点击【菜单栏】按钮！");
 
     }
 
 
     @FXML
     protected void onHistoryDataMenuButtonClick() {
-        log.info("==== onHistoryDataMenuButtonClick ==== 点击【xxx】按钮！");
+        log.info("==== onHistoryDataMenuButtonClick ==== 点击【历史数据】按钮！");
 
     }
 
     @FXML
     protected void onScreenshotMenuButtonClick() {
-        log.info("==== onScreenshotMenuButtonClick ==== 点击【xxx】按钮！");
-
+        log.info("==== onScreenshotMenuButtonClick ==== 点击【截屏】按钮！");
+        Stage stage = stageManager.getMainWindowStage();
+        ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, mainWindowModel);
+        screenCaptureStage.show();
     }
 
     @FXML
     protected void onWithdrawMenuButtonClick() {
-        log.info("==== onWithdrawMenuButtonClick ==== 点击【xxx】按钮！");
+        log.info("==== onWithdrawMenuButtonClick ==== 点击【撤回上一步】按钮！");
 
     }
 
     @FXML
     protected void onStartCollectMenuButtonClick() {
-        log.info("==== onStartCollectMenuButtonClick ==== 点击【xxx】按钮！");
+        log.info("==== onStartCollectMenuButtonClick ==== 点击【开始采集】按钮！");
 
     }
 
     @FXML
     protected void onStopCollectMenuButtonClick() {
-        log.info("==== onStopCollectMenuButtonClick ==== 点击【xxx】按钮！");
+        log.info("==== onStopCollectMenuButtonClick ==== 点击【结束采集】按钮！");
 
     }
+
+    @FXML
+    protected void onDataListTitleBarMenuButtonClick() {
+        log.info("==== onDataListTitleBarMenuButtonClick ==== 点击【数据列表区域-菜单栏】按钮！");
+
+    }
+
+    @FXML
+    protected void onDataListTitleBarSearchButtonClick() {
+        log.info("==== onDataListTitleBarSearchButtonClick ==== 点击【数据列表区域-菜单栏-搜索】按钮！");
+
+    }
+
+    @FXML
+    protected void onDataListTitleBarDeleteButtonClick() {
+        log.info("==== onDataListTitleBarDeleteButtonClick ==== 点击【数据列表区域-菜单栏-删除】按钮！");
+
+    }
+
 }

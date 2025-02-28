@@ -1,22 +1,10 @@
 package cc.wangzijie.ui.view;
 
 
-import cc.wangzijie.constants.Constants;
-import cc.wangzijie.fxml.FxmlViews;
 import cc.wangzijie.fxml.loader.SpringFxmlLoader;
-import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
-import cc.wangzijie.ui.model.MainWindowModel;
-import cc.wangzijie.ui.model.MousePositionModel;
 import cc.wangzijie.ui.model.SettingsWindowModel;
-import cc.wangzijie.ui.utils.ImageLoader;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -22,8 +22,8 @@ public class StageReadyListener implements ApplicationListener<StageReadyEvent> 
     @Override
     public void onApplicationEvent(StageReadyEvent event) {
         Stage stage = event.getStage();
-        stageManager.setMainWindowStage(stage);
         springFxmlLoader.loadTo(FxmlViews.MAIN_WINDOW, stage);
+        stageManager.setMainWindowStage(stage);
     }
 
 }

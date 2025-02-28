@@ -6,6 +6,7 @@ public class Constants {
     public static final String SETTINGS_WINDOW_TITLE = "设置";
     public static final String HISTORY_DATA_WINDOW_TITLE = "历史数据";
 
+    public static final String DATA_LIST_TITLE = "数据信息";
     /*
      * Logo图片
      */
@@ -67,4 +68,17 @@ public class Constants {
     public static final String STOP_GREY_IMAGE_PATH = "/icons/menu/stop/Stop_Grey.png";
     public static final String STOP_RED_IMAGE_PATH = "/icons/menu/stop/Stop_Red.png";
     public static final String STOP_WHITE_IMAGE_PATH = "/icons/menu/stop/Stop_White.png";
+
+
+    /*
+     * 主界面图片 - 左侧截屏图片预览区域
+     */
+    public static final String SCREEN_CAPTURE_IMAGE_PATH = "/icons/main/ScreenCapture.png";
+
+    /*
+     * 主界面图片 - 右侧数据列表区域
+     */
+    public static final String SEARCH_IMAGE_PATH = "/icons/main/Search.png";
+    public static final String DELETE_IMAGE_PATH = "/icons/main/Delete.png";
+
 }

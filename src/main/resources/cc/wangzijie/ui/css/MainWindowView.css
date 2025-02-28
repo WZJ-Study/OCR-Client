@@ -5,7 +5,7 @@
     -fx-border-color: #454855;
     -fx-border-radius: 10px;
     -fx-border-width: 0;
-    -fx-border-style: solid;
+    -fx-border-style: none;
 }
 
 .windowTitleBar {
@@ -71,6 +71,45 @@
     -fx-background-color: #67B6D5;
     -fx-background-radius: 10px;
     -fx-border-color: #67B6D5;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
+}
+
+.screenshotArea {
+    -fx-background-color: #454855;
+}
+
+.dataListTitleBar {
+    -fx-background-color: #404455;
+}
+
+
+.dataListTitleBarButton {
+    -fx-background-color: #404455;
+    -fx-background-radius: 10px;
+    -fx-border-color: #404455;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0;
+    -fx-border-style: solid;
+    -fx-border-insets: 2px;
+}
+
+.dataListTitleBarButton:hover {
+    -fx-background-color: #404455;
+    -fx-background-radius: 10px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-border-insets: 2px;
+}
+
+.dataListTitleBarButton:pressed {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 10px;
+    -fx-border-color: #FFFFFF;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
     -fx-border-style: solid;
