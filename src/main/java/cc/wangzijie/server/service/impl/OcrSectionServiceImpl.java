@@ -1,11 +1,12 @@
 package cc.wangzijie.server.service.impl;
 
 import cc.wangzijie.server.entity.OcrSection;
-import cc.wangzijie.server.mapper.IOcrResultMapper;
 import cc.wangzijie.server.mapper.IOcrSectionMapper;
 import cc.wangzijie.server.service.IOcrSectionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +75,21 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
     @Override
     public boolean removeByIds(List<Long> ids) {
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public OcrSection createNewSection(Rectangle rect) {
+        OcrSection entity = new OcrSection();
+        entity.setId(IdWorker.getId());
+        entity.setName("字段#" + IdWorker.getMillisecond());
+        entity.setX((int) rect.getTranslateX());
+        entity.setY((int) rect.getTranslateY());
+        entity.setWidth((int) rect.getWidth());
+        entity.setHeight((int) rect.getHeight());
+        entity.displayPosition();
+        entity.setType("文本");
+        baseMapper.insert(entity);
+
+        return entity;
     }
 }

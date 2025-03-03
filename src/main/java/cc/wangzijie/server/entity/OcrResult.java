@@ -1,7 +1,6 @@
 package cc.wangzijie.server.entity;
 
 import cc.wangzijie.ocr.utils.DateFormat;
-import cc.wangzijie.ocr.utils.DateUtils;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -16,6 +15,11 @@ public class OcrResult {
      * 主键ID
      */
     private Long id;
+
+    /**
+     * 采集区域ID
+     */
+    private Long sectionId;
 
     /**
      * 字段名称

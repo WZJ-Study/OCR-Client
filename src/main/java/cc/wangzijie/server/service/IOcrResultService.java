@@ -46,4 +46,5 @@ public interface IOcrResultService {
      */
     boolean removeByIds(List<Long> ids);
 
+
 }

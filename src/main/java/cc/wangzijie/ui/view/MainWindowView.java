@@ -2,20 +2,34 @@ package cc.wangzijie.ui.view;
 
 
 import cc.wangzijie.constants.Constants;
+import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.entity.OcrSection;
+import cc.wangzijie.server.service.IOcrResultService;
+import cc.wangzijie.server.service.IOcrSectionService;
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
+import cc.wangzijie.ui.model.DataListAreaModel;
 import cc.wangzijie.ui.model.MainWindowModel;
+import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import cc.wangzijie.ui.screenshot.ScreenCaptureStage;
-import cc.wangzijie.ui.utils.ImageLoader;
-import cc.wangzijie.ui.utils.WindowSizeHolder;
+import cc.wangzijie.ui.utils.*;
+import cc.wangzijie.ui.vo.OcrSectionResultVO;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +37,31 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Slf4j
 @Component
 public class MainWindowView implements Initializable {
 
-//    @Resource
-//    private SpringFxmlLoader springFxmlLoader;
+    @Resource
+    private IOcrResultService ocrResultService;
+
+    @Resource
+    private IOcrSectionService ocrSectionService;
 
     @Resource
     private StageManager stageManager;
 
     @Resource
     private MainWindowModel mainWindowModel;
+
+
+    @Resource
+    private ScreenshotAreaModel screenshotAreaModel;
+
+    @Resource
+    private DataListAreaModel dataListAreaModel;
 
 
     @FXML
@@ -68,7 +93,8 @@ public class MainWindowView implements Initializable {
     @FXML
     private ImageView stopCollectMenuButtonImage;
 
-
+    @FXML
+    private StackPane screenshotImageStackPane;
     @FXML
     private ImageView screenshotImage;
     @FXML
@@ -84,9 +110,26 @@ public class MainWindowView implements Initializable {
     private ImageView dataListTitleBarSearchButtonImage;
     @FXML
     private ImageView dataListTitleBarDeleteButtonImage;
+    @FXML
+    private TableView<OcrSectionResultVO> ocrSectionTable;
+
+    @FXML
+    private TableColumn<OcrSectionResultVO, Boolean> varChecked;
+    @FXML
+    private TableColumn<OcrSectionResultVO, String> varName;
+    @FXML
+    private TableColumn<OcrSectionResultVO, String> varPosition;
+    @FXML
+    private TableColumn<OcrSectionResultVO, String> varType;
+    @FXML
+    private TableColumn<OcrSectionResultVO, String> varValue;
 
     private double offsetX;
     private double offsetY;
+
+    private RectBuilder rectBuilder;
+
+    private List<Rectangle> rectList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -109,16 +152,51 @@ public class MainWindowView implements Initializable {
         stopCollectMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.stopCollectMenuButtonImageProperty());
 
         // 绑定FXML组件与model属性 - 主界面 - 左侧截屏图片预览
-        screenshotImage.imageProperty().bindBidirectional(mainWindowModel.screenshotImageProperty());
-        screenshotImage.cursorProperty().bindBidirectional(mainWindowModel.screenshotImageCursorProperty());
-        screenshotImageHint.textProperty().bindBidirectional(mainWindowModel.screenshotImageHintProperty());
-        screenshotImageHint.visibleProperty().bindBidirectional(mainWindowModel.screenshotImageHintVisibleProperty());
+        screenshotImage.imageProperty().bindBidirectional(screenshotAreaModel.screenshotImageProperty());
+        screenshotImage.cursorProperty().bindBidirectional(screenshotAreaModel.screenshotImageCursorProperty());
+        screenshotImageHint.textProperty().bindBidirectional(screenshotAreaModel.screenshotImageHintProperty());
+        screenshotImageHint.visibleProperty().bindBidirectional(screenshotAreaModel.screenshotImageHintVisibleProperty());
 
         // 绑定FXML组件与model属性 - 主界面 - 右侧数据列表 - 标题栏
-        dataListTitleBarMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarMenuButtonImageProperty());
-        dataListTitleBarMenuTitle.textProperty().bind(mainWindowModel.dataListTitleBarMenuTitleProperty());
-        dataListTitleBarSearchButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarSearchButtonImageProperty());
-        dataListTitleBarDeleteButtonImage.imageProperty().bindBidirectional(mainWindowModel.dataListTitleBarDeleteButtonImageProperty());
+        dataListTitleBarMenuButtonImage.imageProperty().bindBidirectional(dataListAreaModel.dataListTitleBarMenuButtonImageProperty());
+        dataListTitleBarMenuTitle.textProperty().bind(dataListAreaModel.dataListTitleBarMenuTitleProperty());
+        dataListTitleBarSearchButtonImage.imageProperty().bindBidirectional(dataListAreaModel.dataListTitleBarSearchButtonImageProperty());
+        dataListTitleBarDeleteButtonImage.imageProperty().bindBidirectional(dataListAreaModel.dataListTitleBarDeleteButtonImageProperty());
+
+        // 绑定FXML组件与model属性 - 主界面 - 右侧数据列表
+        ocrSectionTable.itemsProperty().bindBidirectional(dataListAreaModel.ocrSectionResultListProperty());
+        varChecked.setCellValueFactory(new PropertyValueFactory<>("checkedFlag"));
+        varChecked.setCellFactory(CellFactory.tableCheckBoxColumn(index -> {
+            final OcrSectionResultVO vo = ocrSectionTable.getItems().get(index);
+            ObservableValue<Boolean> property = vo.checkedFlagProperty();
+            property.addListener((observable, oldValue, newValue) -> vo.setCheckedFlag(newValue));
+            return property;
+        }));
+
+        varName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        varName.setCellFactory((TableColumn<OcrSectionResultVO, String> p) -> new EditingCell());
+        varName.setOnEditCommit(
+                (TableColumn.CellEditEvent<OcrSectionResultVO, String> t) -> {
+                    int row = t.getTablePosition().getRow();
+                    OcrSectionResultVO vo = t.getTableView().getItems().get(row);
+                    vo.setName(t.getNewValue());
+                });
+
+        varPosition.setCellValueFactory(new PropertyValueFactory<>("position"));
+
+        varType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        varType.setCellFactory((TableColumn<OcrSectionResultVO, String> p) -> new EditingCell());
+        varType.setOnEditCommit(
+                (TableColumn.CellEditEvent<OcrSectionResultVO, String> t) -> {
+                    int row = t.getTablePosition().getRow();
+                    OcrSectionResultVO vo = t.getTableView().getItems().get(row);
+                    vo.setType(t.getNewValue());
+                });
+
+        varValue.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        // todo初始化数据列表
+        dataListAreaModel.setOcrSectionResultList(FXCollections.observableArrayList(OcrSectionResultVO.dummyList()));
 
 
         // 处理model属性 - 标题栏logo
@@ -141,17 +219,17 @@ public class MainWindowView implements Initializable {
         mainWindowModel.setCollectRunningFlag(false);
 
         // 处理model属性 - 主界面 - 左侧截屏图片预览区域
-        mainWindowModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
-        mainWindowModel.setScreenshotImageCursor(Cursor.DEFAULT);
-        mainWindowModel.setScreenshotImageHint(Constants.SCREENSHOT_IMAGE_HINT);
-        mainWindowModel.setScreenshotImageHintVisible(true);
-        mainWindowModel.setScreenshotAreaHasImageFlag(false);
+        screenshotAreaModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
+        screenshotAreaModel.setScreenshotImageCursor(Cursor.DEFAULT);
+        screenshotAreaModel.setScreenshotImageHint(Constants.SCREENSHOT_IMAGE_HINT);
+        screenshotAreaModel.setScreenshotImageHintVisible(true);
+        screenshotAreaModel.setScreenshotAreaHasImageFlag(false);
 
         // 处理model属性 - 主界面 - 右侧数据列表区域 - 标题栏
-        mainWindowModel.setDataListTitleBarMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
-        mainWindowModel.setDataListTitleBarMenuTitle(Constants.DATA_LIST_TITLE);
-        mainWindowModel.setDataListTitleBarSearchButtonImage(ImageLoader.load(Constants.SEARCH_IMAGE_PATH));
-        mainWindowModel.setDataListTitleBarDeleteButtonImage(ImageLoader.load(Constants.DELETE_IMAGE_PATH));
+        dataListAreaModel.setDataListTitleBarMenuButtonImage(ImageLoader.load(Constants.DRAG_IMAGE_PATH));
+        dataListAreaModel.setDataListTitleBarMenuTitle(Constants.DATA_LIST_TITLE);
+        dataListAreaModel.setDataListTitleBarSearchButtonImage(ImageLoader.load(Constants.SEARCH_IMAGE_PATH));
+        dataListAreaModel.setDataListTitleBarDeleteButtonImage(ImageLoader.load(Constants.DELETE_IMAGE_PATH));
     }
 
     @FXML
@@ -234,10 +312,13 @@ public class MainWindowView implements Initializable {
             log.error("采集正在运行中，不可重新加载！");
             return;
         }
-        mainWindowModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
-        mainWindowModel.setScreenshotImageCursor(Cursor.DEFAULT);
-        mainWindowModel.setScreenshotImageHintVisible(true);
-        mainWindowModel.setScreenshotAreaHasImageFlag(false);
+        screenshotAreaModel.setScreenshotImage(ImageLoader.load(Constants.SCREEN_CAPTURE_IMAGE_PATH));
+        screenshotAreaModel.setScreenshotImageCursor(Cursor.DEFAULT);
+        screenshotAreaModel.setScreenshotImageHintVisible(true);
+        screenshotAreaModel.setScreenshotAreaHasImageFlag(false);
+        // 删除所有选中框
+        screenshotImageStackPane.getChildren().removeAll(screenshotAreaModel.getRectList());
+        screenshotAreaModel.clearRectList();
     }
 
 
@@ -258,7 +339,7 @@ public class MainWindowView implements Initializable {
     protected void onScreenshotMenuButtonClick() {
         log.info("==== onScreenshotMenuButtonClick ==== 点击【截屏】按钮！");
         Stage stage = stageManager.getMainWindowStage();
-        ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, mainWindowModel);
+        ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, screenshotAreaModel);
         screenCaptureStage.show();
     }
 
@@ -288,6 +369,68 @@ public class MainWindowView implements Initializable {
         mainWindowModel.setCollectRunningFlag(false);
 
     }
+
+
+    @FXML
+    protected void onScreenshotImageMouseClicked(MouseEvent event) {
+        event.consume();
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (!screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
+                // 触发截图功能
+                log.info("==== onScreenshotImageMouseClicked ==== [鼠标左键]点击[截图区域]，尚无截图，触发截图功能！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                        event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
+                Stage stage = stageManager.getMainWindowStage();
+                ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, screenshotAreaModel);
+                screenCaptureStage.show();
+            }
+        }
+    }
+
+    @FXML
+    protected void onScreenshotImageMousePressed(MouseEvent event) {
+        event.consume();
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
+                log.info("==== onScreenshotImageMousePressed ==== [鼠标左键]按下，[截图区域]已有截图，开始创建[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                        event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
+                this.rectBuilder = new RectBuilder(screenshotImageStackPane, screenshotAreaModel);
+                this.rectBuilder.onMousePressed(event);
+            }
+        }
+    }
+
+
+    @FXML
+    protected void onScreenshotImageMouseDragged(MouseEvent event) {
+        event.consume();
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
+                log.debug("==== onScreenshotImageMouseDragged ==== [鼠标左键]按下后拖拽，[截图区域]已有截图，调整正在创建的[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                        event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
+                this.rectBuilder.onMouseDragged(event);
+            }
+        }
+    }
+
+
+    @FXML
+    protected void onScreenshotImageMouseReleased(MouseEvent event) {
+        event.consume();
+        if (event.getButton() == MouseButton.PRIMARY) {
+            if (screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
+                log.info("==== onScreenshotImageMouseReleased ==== [鼠标左键]按下后释放，[截图区域]已有截图，完成正在创建的[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                        event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
+                Rectangle rect = this.rectBuilder.onMouseReleased(event);
+                OcrSection ocrSection = ocrSectionService.createNewSection(rect);
+                OcrResult ocrResult = ocrSection.newResult(null);
+                ocrResultService.save(ocrResult);
+                this.dataListAreaModel.addToOcrSectionResultList(ocrResult);
+            }
+        }
+    }
+
+
+
 
     @FXML
     protected void onDataListTitleBarMenuButtonClick() {

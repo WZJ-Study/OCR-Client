@@ -1,27 +1,20 @@
 package cc.wangzijie.ui.screenshot;
 
-import cc.wangzijie.ui.model.MainWindowModel;
+import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 @Slf4j
 public class ScreenCaptureStage {
     private final Stage mainWindowStage;
-    private final MainWindowModel mainWindowModel;
+    private final ScreenshotAreaModel screenshotAreaModel;
     private Stage stage;
     private Scene scene;
 
@@ -31,9 +24,9 @@ public class ScreenCaptureStage {
     // 鼠标拖拽起点
     private Point2D dragStart = null;
 
-    public ScreenCaptureStage(Stage mainWindowStage, MainWindowModel mainWindowModel) {
+    public ScreenCaptureStage(Stage mainWindowStage, ScreenshotAreaModel screenshotAreaModel) {
         this.mainWindowStage = mainWindowStage;
-        this.mainWindowModel = mainWindowModel;
+        this.screenshotAreaModel = screenshotAreaModel;
         // 1. 初始化全屏遮罩窗口
         initScreenshotStage();
     }
@@ -74,7 +67,7 @@ public class ScreenCaptureStage {
 
     protected void initScene(AnchorPane root) {
         this.scene.setOnMousePressed(e -> {
-            log.info("==== 鼠标按下事件 ==== x={} y={} screenX={} screenY={}",
+            log.debug("==== 鼠标按下事件 ==== x={} y={} screenX={} screenY={}",
                     e.getX(), e.getY(), e.getScreenX(), e.getScreenY());
             // 添加框选图形‌
             this.dragStart = new Point2D(e.getScreenX(), e.getScreenY());
@@ -86,22 +79,21 @@ public class ScreenCaptureStage {
         });
 
         this.scene.setOnMouseDragged(e -> {
+            // 计算相对坐标‌
             double width = Math.abs(e.getScreenX() - this.dragStart.getX());
             double height = Math.abs(e.getScreenY() - this.dragStart.getY());
-
-            // 计算相对坐标‌
-//            this.selectionRect.setLayoutX(this.dragStart.getX());
-//            this.selectionRect.setLayoutY(this.dragStart.getY());
             this.selectionRect.setWidth(width);
             this.selectionRect.setHeight(height);
         });
 
         this.scene.setOnMouseReleased(e -> {
+            // 计算相对坐标‌
             double width = Math.abs(e.getScreenX() - this.dragStart.getX());
             double height = Math.abs(e.getScreenY() - this.dragStart.getY());
-            log.info("==== 鼠标放松事件 ==== \n拖拽起点： screenX={} screenY={} \n当前位置：screenX={} screenY={} \n当前选择框：width={} height={}",
+            this.selectionRect.setWidth(width);
+            this.selectionRect.setHeight(height);
+            log.debug("==== 鼠标放松事件 ==== \n拖拽起点： screenX={} screenY={} \n当前位置：screenX={} screenY={} \n当前选择框：width={} height={}",
                     this.dragStart.getX(), this.dragStart.getY(), e.getScreenX(), e.getScreenY(), width, height);
-
 
             root.getChildren().remove(this.selectionRect);
             this.stage.close();
@@ -117,10 +109,10 @@ public class ScreenCaptureStage {
         log.info("==== 执行截屏 === rect={}", rect);
         try {
             // 设置截屏区域
-            this.mainWindowModel.setScreenshotArea(rect);
+            this.screenshotAreaModel.setScreenshotArea(rect);
 
             // 捕获屏幕区域‌
-            this.mainWindowModel.doScreenshot();
+            this.screenshotAreaModel.doScreenshot();
 
             // 恢复主窗口显示
             if (null != mainWindowStage && !mainWindowStage.isShowing()) {

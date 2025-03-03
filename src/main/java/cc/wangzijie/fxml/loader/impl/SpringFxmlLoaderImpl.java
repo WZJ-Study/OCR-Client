@@ -2,9 +2,10 @@ package cc.wangzijie.fxml.loader.impl;
 
 
 import cc.wangzijie.fxml.FxmlViews;
-import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.fxml.loader.SpringFxmlLoader;
+import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.utils.CssLoader;
+import cc.wangzijie.ui.utils.DrawUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -12,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -81,6 +81,10 @@ public class SpringFxmlLoaderImpl implements SpringFxmlLoader {
         stage.setTitle(view.getTitle());
         stage.initStyle(view.getStageStyle());
         stage.setResizable(view.isResizeable());
+        DrawUtils drawUtils = new DrawUtils(view.getPrefWidth(), view.getPrefHeight());
+        if (view.isResizeable()) {
+            drawUtils.addStretch(stage, root);
+        }
         stage.show();
     }
 }

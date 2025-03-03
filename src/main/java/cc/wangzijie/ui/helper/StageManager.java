@@ -2,9 +2,6 @@ package cc.wangzijie.ui.helper;
 
 import javafx.stage.Stage;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 @Data

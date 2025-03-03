@@ -1,96 +1,130 @@
 
+
 .mainWindow {
     -fx-background-color: #454855;
-    -fx-background-radius: 10px;
-    -fx-border-color: #454855;
-    -fx-border-radius: 10px;
-    -fx-border-width: 0;
-    -fx-border-style: none;
+    -fx-background-radius: 5px;
+    -fx-border-color: red;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
 }
 
 .windowTitleBar {
     -fx-background-color: #454855;
+    -fx-background-radius: 5px;
+    -fx-border-color: orange;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.windowTitleBarLogoArea {
+    -fx-background-color: #454855;
+    -fx-background-radius: 5px;
+    -fx-border-color: yellow;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.windowTitleBarBtnArea {
+    -fx-background-color: #454855;
+    -fx-background-radius: 5px;
+    -fx-border-color: yellow;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
 }
 
 .windowButton {
     -fx-background-color: #454855;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #454855;
-    -fx-border-radius: 10px;
-    -fx-border-width: 0;
     -fx-border-style: solid;
+    -fx-border-width: 0;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 .windowButton:hover {
     -fx-background-color: #454855;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;
-    -fx-border-radius: 10px;
-    -fx-border-width: 2px;
     -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 .windowButton:pressed {
     -fx-background-color: #2A2C37;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;
-    -fx-border-radius: 10px;
-    -fx-border-width: 2px;
     -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 
-.menuBar {
+.windowTitleBarMenuArea {
     -fx-background-color: #2A2C37;
+    -fx-border-color: yellow;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
 }
 
 .menuButton {
     -fx-background-color: #2A2C37;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #2A2C37;
-    -fx-border-radius: 10px;
-    -fx-border-width: 0;
     -fx-border-style: solid;
+    -fx-border-width: 0;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 .menuButton:hover {
     -fx-background-color: #2A2C37;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #67B6D5;
-    -fx-border-radius: 10px;
-    -fx-border-width: 2px;
     -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 .menuButton:pressed {
     -fx-background-color: #67B6D5;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #67B6D5;
-    -fx-border-radius: 10px;
-    -fx-border-width: 2px;
     -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
 
 .screenshotArea {
     -fx-background-color: #454855;
+    -fx-border-color: blue;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
 }
 
 .dataListTitleBar {
     -fx-background-color: #404455;
+    -fx-border-color: green;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
 }
 
 
 .dataListTitleBarButton {
     -fx-background-color: #404455;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #404455;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 5px;
     -fx-border-width: 0;
     -fx-border-style: solid;
     -fx-border-insets: 2px;
@@ -98,9 +132,9 @@
 
 .dataListTitleBarButton:hover {
     -fx-background-color: #404455;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 5px;
     -fx-border-width: 2px;
     -fx-border-style: dashed;
     -fx-border-insets: 2px;
@@ -108,9 +142,9 @@
 
 .dataListTitleBarButton:pressed {
     -fx-background-color: #2A2C37;
-    -fx-background-radius: 10px;
+    -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;
-    -fx-border-radius: 10px;
+    -fx-border-radius: 5px;
     -fx-border-width: 2px;
     -fx-border-style: solid;
     -fx-border-insets: 2px;

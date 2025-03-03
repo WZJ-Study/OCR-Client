@@ -3,6 +3,7 @@ package cc.wangzijie.server.service;
 
 
 import cc.wangzijie.server.entity.OcrSection;
+import javafx.scene.shape.Rectangle;
 
 import java.util.List;
 
@@ -48,5 +49,5 @@ public interface IOcrSectionService {
      */
     boolean removeByIds(List<Long> ids);
 
-    
+    OcrSection createNewSection(Rectangle rect);
 }
