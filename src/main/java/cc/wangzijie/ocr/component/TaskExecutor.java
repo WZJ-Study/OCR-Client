@@ -1,7 +1,6 @@
 package cc.wangzijie.ocr.component;
 
 
-import cc.wangzijie.ocr.snapshot.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
 
 import java.util.concurrent.*;

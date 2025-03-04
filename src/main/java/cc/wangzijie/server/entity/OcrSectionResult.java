@@ -1,12 +1,8 @@
 package cc.wangzijie.server.entity;
 
-import cc.wangzijie.ocr.utils.DateFormat;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @TableName("ocr_section_result")
@@ -84,7 +80,6 @@ public class OcrSectionResult {
     /**
      * 采集时间
      */
-    @JsonFormat(pattern = DateFormat.YYYY_MM_DD_HH_MM_SS, timezone=DateFormat.TIMEZONE)
-    private Date collectTime;
+    private String collectTime;
 
 }

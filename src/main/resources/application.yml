@@ -8,16 +8,13 @@ spring:
     allow-circular-references: true
     allow-bean-definition-overriding: true
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://wangzijie.store:15432/paas_test
-    username: postgres
-    password: 123456aA@
+    url: jdbc:sqlite:sqlite/ocr.db3
+    driver-class-name: org.sqlite.JDBC
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
 
 
-# 截屏配置
 snapshot-camera:
   output-folder-path: D:/output
   file-name-prefix: SnapShot

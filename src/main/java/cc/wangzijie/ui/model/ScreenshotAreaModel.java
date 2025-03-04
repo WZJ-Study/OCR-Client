@@ -9,16 +9,13 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Map;

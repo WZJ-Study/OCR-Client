@@ -1,12 +1,11 @@
 package cc.wangzijie.server.entity;
 
+import cc.wangzijie.ocr.utils.DateUtils;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import javafx.scene.shape.Rectangle;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @TableName("ocr_section")
@@ -98,11 +97,11 @@ public class OcrSection {
         result.setHeight(this.height);
         result.setType(this.type);
         result.setValue(value);
-        result.setCollectTime(value == null ? null : new Date());
+        result.setCollectTime(value == null ? null : DateUtils.nowStr());
         return result;
     }
 
-    public OcrSectionResult newResult(OcrResult ocrResult, Date collectTime) {
+    public OcrSectionResult newResult(OcrResult ocrResult, String collectTime) {
         OcrSectionResult result = new OcrSectionResult();
         result.setId(IdWorker.getId());
         result.setSectionId(this.id);

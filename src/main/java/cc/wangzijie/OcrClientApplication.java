@@ -2,7 +2,6 @@ package cc.wangzijie;
 
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.JavaFxApplication;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 

@@ -7,9 +7,6 @@ import cc.wangzijie.ocr.utils.DateUtils;
 import cc.wangzijie.ocr.utils.FileSizeUtils;
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
-
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Cursor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;

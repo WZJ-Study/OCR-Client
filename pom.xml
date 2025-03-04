@@ -69,6 +69,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 以下是 sqlite数据库 组件 -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.49.1.0</version>
+        </dependency>
+
+
         <!-- 以下是 mybatis-plus 组件 -->
         <dependency>
             <groupId>com.baomidou</groupId>

@@ -1,18 +1,17 @@
 package cc.wangzijie.ocr.task;
 
 
+import cc.wangzijie.ocr.utils.DateUtils;
 import cc.wangzijie.ocr.utils.JacksonUtils;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.model.DataListAreaModel;
-import cc.wangzijie.ui.vo.OcrSectionResultVO;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import io.github.mymonstercat.ocr.InferenceEngine;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +78,7 @@ public class OcrProcessTask implements Runnable {
         // 处理该截屏图片
         if (null != image) {
             // OCR识别各框选区域
-            Date collectTime = new Date();
+            String collectTime = DateUtils.nowStr();
             List<OcrSectionResult> resultList = new LinkedList<>();
             for (String key : this.ocrRectMap.keySet()) {
                 try {

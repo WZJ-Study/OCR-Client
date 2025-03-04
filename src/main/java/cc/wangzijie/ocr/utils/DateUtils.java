@@ -73,4 +73,11 @@ public class DateUtils {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(getFormat(format)));
     }
 
+    public static String nowStr() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(getFormat(DateFormat.YYYY_MM_DD_HH_MM_SS)));
+    }
+
+    public static String todayStr() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(getFormat(DateFormat.YYYY_MM_DD)));
+    }
 }

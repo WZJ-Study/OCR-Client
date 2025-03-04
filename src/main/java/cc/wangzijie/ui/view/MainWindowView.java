@@ -2,8 +2,8 @@ package cc.wangzijie.ui.view;
 
 
 import cc.wangzijie.constants.Constants;
-import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.entity.OcrSection;
+import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.server.service.IOcrSectionService;
 import cc.wangzijie.spring.SpringHelper;
@@ -13,7 +13,6 @@ import cc.wangzijie.ui.model.MainWindowModel;
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import cc.wangzijie.ui.screenshot.ScreenCaptureStage;
 import cc.wangzijie.ui.utils.*;
-import cc.wangzijie.ui.vo.OcrSectionResultVO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -22,10 +21,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,13 +34,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 @Slf4j

@@ -1,8 +1,8 @@
 package cc.wangzijie.ui;
 
 
-import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.fxml.event.StageReadyEvent;
+import cc.wangzijie.spring.SpringHelper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

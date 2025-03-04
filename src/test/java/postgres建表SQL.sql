@@ -51,7 +51,7 @@ CREATE TABLE "public"."ocr_section_result" (
     "height" int4,
     "type" varchar(255),
     "value" text,
-    "collect_time" timestamp(6),
+    "collect_time" varchar(255),
     PRIMARY KEY ("id")
 )
 ;
