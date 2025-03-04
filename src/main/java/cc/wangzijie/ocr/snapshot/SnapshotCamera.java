@@ -5,8 +5,11 @@ import cc.wangzijie.ocr.config.SnapshotCameraConfig;
 import cc.wangzijie.ocr.utils.DateFormat;
 import cc.wangzijie.ocr.utils.DateUtils;
 import cc.wangzijie.ocr.utils.FileSizeUtils;
+import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Cursor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -18,13 +21,18 @@ import java.io.IOException;
 @Slf4j
 public class SnapshotCamera {
 
+    /**
+     * 截屏区域模型
+     */
+    private final ScreenshotAreaModel screenshotAreaModel;
 
     private final String outputFolderPath;
     private final String fileNamePrefix;
     private final String imageFormat;
 
 
-    public SnapshotCamera(SnapshotCameraConfig cameraConfig) {
+    public SnapshotCamera(ScreenshotAreaModel screenshotAreaModel, SnapshotCameraConfig cameraConfig) {
+        this.screenshotAreaModel = screenshotAreaModel;
         if (cameraConfig == null) {
             this.outputFolderPath = SnapshotCameraConfig.DEFAULT_OUTPUT_FOLDER_PATH;
             this.fileNamePrefix = SnapshotCameraConfig.DEFAULT_FILE_NAME_PREFIX;
@@ -44,6 +52,10 @@ public class SnapshotCamera {
     public File snapshot(Rectangle rect) {
         // 截屏
         BufferedImage screenshot = AwtRobotUtils.createScreenCapture(rect);
+        // 显示预览‌
+        if (this.screenshotAreaModel != null) {
+            this.screenshotAreaModel.setScreenshot(screenshot);
+        }
         // 保存到文件
         try {
             File file = this.prepareFile();

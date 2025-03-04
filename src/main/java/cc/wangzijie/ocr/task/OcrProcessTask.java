@@ -5,6 +5,7 @@ import cc.wangzijie.ocr.utils.JacksonUtils;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
+import cc.wangzijie.ui.model.DataListAreaModel;
 import cc.wangzijie.ui.vo.OcrSectionResultVO;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import io.github.mymonstercat.ocr.InferenceEngine;
@@ -30,6 +31,11 @@ import java.util.Map;
 public class OcrProcessTask implements Runnable {
 
     /**
+     * 数据列表区域模型
+     */
+    private final DataListAreaModel dataListAreaModel;
+
+    /**
      * OCR识别结果数据库保存服务
      */
     private final IOcrSectionResultService ocrSectionResultService;
@@ -50,7 +56,8 @@ public class OcrProcessTask implements Runnable {
     private final Map<String, OcrSection> ocrRectMap;
 
 
-    public OcrProcessTask(IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, File snapshotFile, Map<String, OcrSection> ocrRectMap) {
+    public OcrProcessTask(DataListAreaModel dataListAreaModel, IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, File snapshotFile, Map<String, OcrSection> ocrRectMap) {
+        this.dataListAreaModel = dataListAreaModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.snapshotFile = snapshotFile;
         this.ocrRectMap = ocrRectMap;
@@ -89,7 +96,11 @@ public class OcrProcessTask implements Runnable {
                     // 执行OCR识别
                     OcrResult ocrResult = this.ocrEngine.runOcr(filePath);
                     log.info("==== OCR识别处理 ==== 截屏图片文件OCR识别成功，区域：{} ==> 识别结果：{}", key, ocrResult.toString());
-                    resultList.add(ocrSection.newResult(ocrResult, collectTime));
+                    OcrSectionResult result = ocrSection.newResult(ocrResult, collectTime);
+                    resultList.add(result);
+
+                    // OCR识别结果更新到UI视图模型中
+                    dataListAreaModel.addData(ocrSection.displayPosition(), result);
                 } catch (Exception e) {
                     log.error("==== OCR识别处理 ==== 截屏图片文件OCR识别失败，捕获到异常！", e);
                 }

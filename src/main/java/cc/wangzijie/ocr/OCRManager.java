@@ -8,9 +8,12 @@ import cc.wangzijie.ocr.snapshot.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.service.IOcrSectionResultService;
+import cc.wangzijie.ui.model.DataListAreaModel;
+import cc.wangzijie.ui.model.MainWindowModel;
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import io.github.mymonstercat.Model;
 import io.github.mymonstercat.ocr.InferenceEngine;
+import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
@@ -18,6 +21,8 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * OCR任务调度中心
@@ -25,8 +30,24 @@ import java.util.concurrent.ScheduledFuture;
 @Slf4j
 public class OCRManager {
 
+    /**
+     * 截屏区域模型
+     */
     private final ScreenshotAreaModel screenshotAreaModel;
 
+    /**
+     * 数据列表区域模型
+     */
+    private final DataListAreaModel dataListAreaModel;
+
+    /**
+     * 主窗口模型
+     */
+    private final MainWindowModel mainWindowModel;
+
+    /**
+     * OCR识别结果数据库保存服务
+     */
     private final IOcrSectionResultService ocrSectionResultService;
 
     /**
@@ -51,31 +72,47 @@ public class OCRManager {
     private ScheduledFuture<?> scheduledFuture;
 
     /**
+     * 定时截屏采集任务线程Future
+     */
+    private ScheduledFuture<?> countDownFuture;
+
+    /**
      * 定时截屏采集任务时间间隔
      */
-    private Integer intervalSeconds;
+    private int intervalSeconds;
+
+    /**
+     * 倒计时显示的秒数
+     */
+    private final AtomicInteger countDownSeconds;
 
     private volatile boolean running;
 
-    public OCRManager(ScreenshotAreaModel screenshotAreaModel, IOcrSectionResultService ocrSectionResultService) {
+    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService) {
         this.screenshotAreaModel = screenshotAreaModel;
+        this.dataListAreaModel = dataListAreaModel;
+        this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
-        this.snapshotCamera = new SnapshotCamera(null);
+        this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, null);
         // 默认时间间隔：10s
         this.intervalSeconds = 10;
+        this.countDownSeconds = new AtomicInteger(0);
         this.ocrSectionMap = new ConcurrentHashMap<>();
         // 设置运行标志=已停止
         this.running = false;
     }
 
-    public OCRManager(ScreenshotAreaModel screenshotAreaModel, IOcrSectionResultService ocrSectionResultService, SnapshotCameraConfig cameraConfig) {
+    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService, SnapshotCameraConfig cameraConfig) {
         this.screenshotAreaModel = screenshotAreaModel;
+        this.dataListAreaModel = dataListAreaModel;
+        this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
-        this.snapshotCamera = new SnapshotCamera(cameraConfig);
+        this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, cameraConfig);
         // 默认时间间隔：10s
         this.intervalSeconds = 10;
+        this.countDownSeconds = new AtomicInteger(0);
         this.ocrSectionMap = new ConcurrentHashMap<>();
         // 设置运行标志=已停止
         this.running = false;
@@ -90,6 +127,19 @@ public class OCRManager {
         }
         // 开始定时截屏采集
         this.scheduledFuture = TaskExecutor.scheduleWithFixedDelay(new SnapshotTask(this, this.snapshotCamera, this.screenshotAreaModel::getScreenshotArea), intervalSeconds);
+
+        // 开始倒计时
+        this.countDownSeconds.set(this.intervalSeconds);
+        this.countDownFuture = TaskExecutor.scheduleAtFixedRate(() -> {
+            int cdSec = this.countDownSeconds.getAndDecrement();
+            this.countDownSeconds.compareAndSet(0, this.intervalSeconds);
+            String cdSecText = String.format("%02d:%02d", cdSec / 60, cdSec % 60);
+            // 确保UI更新在JavaFX线程中执行
+            Platform.runLater(() -> {
+                this.mainWindowModel.setCollectCountDownText(cdSecText);
+            });
+        }, 0, 1, TimeUnit.SECONDS);
+
         // 设置运行标志=运行中
         this.running = true;
     }
@@ -100,8 +150,14 @@ public class OCRManager {
     public synchronized void stop() {
         // 停止截屏定时任务
         this.scheduledFuture.cancel(true);
+        // 结束倒计时
+        this.countDownFuture.cancel(true);
         // 设置运行标志=已停止
         this.running = false;
+        // 确保UI更新在JavaFX线程中执行
+        Platform.runLater(() -> {
+            mainWindowModel.setCollectCountDownText("已停止");
+        });
     }
 
     public void setIntervalSeconds(int intervalSeconds) {
@@ -135,7 +191,7 @@ public class OCRManager {
     }
 
     public OcrProcessTask createTask(File file) {
-        return new OcrProcessTask(this.ocrSectionResultService, this.ocrEngine, file, this.ocrSectionMap);
+        return new OcrProcessTask(this.dataListAreaModel ,this.ocrSectionResultService, this.ocrEngine, file, this.ocrSectionMap);
     }
 
 }

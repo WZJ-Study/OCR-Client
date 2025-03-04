@@ -1,6 +1,7 @@
 package cc.wangzijie.server.entity;
 
 import cc.wangzijie.ocr.utils.DateFormat;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -10,6 +11,13 @@ import java.util.Date;
 @Data
 @TableName("ocr_section_result")
 public class OcrSectionResult {
+
+
+    /**
+     * checkBox选中情况
+     */
+    @TableField(exist = false)
+    private Boolean checkedFlag = false;
 
     /**
      * 主键ID

@@ -55,7 +55,6 @@ public class RectBuilder {
         this.selectionRect.setFill(Color.TRANSPARENT);
         this.selectionRect.setStroke(Color.RED);
         this.node.getChildren().add(this.selectionRect);
-        screenshotAreaModel.addRect(this.selectionRect);
     }
 
     public void onMouseDragged(MouseEvent e) {

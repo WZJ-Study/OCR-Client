@@ -30,13 +30,35 @@ public class TaskExecutor {
         return EXECUTOR_SERVICE.submit(task);
     }
 
+
+
     /**
-     * 运行截图定时任务
+     * 运行定时任务
      *
-     * @param task 截图定时任务
+     * @param task 定时任务
      * @return ScheduledFuture结果
      */
-    public static ScheduledFuture<?> scheduleWithFixedDelay(SnapshotTask task, int intervalSeconds) {
+    public static ScheduledFuture<?> scheduleWithFixedDelay(Runnable task, int initialDelay, int delay, TimeUnit timeUnit) {
+        return SCHEDULED_EXECUTOR_SERVICE.scheduleWithFixedDelay(task, initialDelay, delay, timeUnit);
+    }
+
+    /**
+     * 运行定时任务
+     *
+     * @param task 定时任务
+     * @return ScheduledFuture结果
+     */
+    public static ScheduledFuture<?> scheduleAtFixedRate(Runnable task, int initialDelay, int period, TimeUnit timeUnit) {
+        return SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(task, initialDelay, period, timeUnit);
+    }
+
+    /**
+     * 运行定时任务
+     *
+     * @param task 定时任务
+     * @return ScheduledFuture结果
+     */
+    public static ScheduledFuture<?> scheduleWithFixedDelay(Runnable task, int intervalSeconds) {
         return SCHEDULED_EXECUTOR_SERVICE.scheduleWithFixedDelay(task, intervalSeconds, intervalSeconds, TimeUnit.SECONDS);
     }
 }

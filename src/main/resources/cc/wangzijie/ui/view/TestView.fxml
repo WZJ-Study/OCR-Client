@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
@@ -9,6 +10,12 @@
             <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK" strokeType="INSIDE" translateX="-100.0" translateY="-100.0" width="200.0" />
+            <ChoiceBox prefWidth="150.0" />
+            <ComboBox  prefWidth="150.0" promptText="aa" translateX="111.0" translateY="111.0" >
+                <items>
+
+                </items>
+            </ComboBox>
             </children>
         </StackPane>
     </children>

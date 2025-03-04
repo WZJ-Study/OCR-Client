@@ -13,13 +13,17 @@ import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -30,20 +34,30 @@ public class ScreenshotAreaModel {
     private final ObjectProperty<Cursor> screenshotImageCursor = new SimpleObjectProperty<>();
     private final StringProperty screenshotImageHint = new SimpleStringProperty();
     private final BooleanProperty screenshotImageHintVisible = new SimpleBooleanProperty(true);
-    private final BooleanProperty screenshotAreaHasImageFlag = new SimpleBooleanProperty(false);
+    private final BooleanProperty screenshotAreaNoImageFlag = new SimpleBooleanProperty(true);
+
+    @Resource
+    private DataListAreaModel dataListAreaModel;
+
+    @Resource
+    private MainWindowModel mainWindowModel;
 
     @Resource
     private IOcrSectionResultService ocrSectionResultService;
-
 
     @Resource
     private SnapshotCameraConfig snapshotCameraConfig;
 
     @Getter
-    private final OCRManager ocrManager = new OCRManager(this, ocrSectionResultService,  snapshotCameraConfig);
+    private OCRManager ocrManager;
+
+    @PostConstruct
+    public void init() {
+        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, ocrSectionResultService,  snapshotCameraConfig);
+    }
 
     @Getter
-    private final List<Rectangle> rectList = new ArrayList<>();
+    private final Map<String, Rectangle> rectMap = new ConcurrentHashMap<>();
 
     @Getter
     @Setter
@@ -63,13 +77,14 @@ public class ScreenshotAreaModel {
             log.info("==== 执行截屏 === 未选定截屏区域！默认截屏整个屏幕！");
             try {
                 // 捕获屏幕区域‌
-                this.screenshot = new Robot().createScreenCapture(new java.awt.Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+                this.screenshot = AwtRobotUtils.createScreenCapture();
+                Objects.requireNonNull(this.screenshot);
 
                 // 转换为JavaFX Image并显示预览‌
                 this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
                 this.setScreenshotImageCursor(Cursor.CROSSHAIR);
                 this.setScreenshotImageHintVisible(false);
-                this.setScreenshotAreaHasImageFlag(true);
+                this.setScreenshotAreaNoImageFlag(false);
                 this.setImageHeight(this.screenshot.getHeight());
                 this.setImageWidth(this.screenshot.getWidth());
             } catch (Exception ex) {
@@ -85,7 +100,7 @@ public class ScreenshotAreaModel {
                 this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
                 this.setScreenshotImageCursor(Cursor.CROSSHAIR);
                 this.setScreenshotImageHintVisible(false);
-                this.setScreenshotAreaHasImageFlag(true);
+                this.setScreenshotAreaNoImageFlag(false);
                 this.setImageHeight(this.screenshot.getHeight());
                 this.setImageWidth(this.screenshot.getWidth());
             } catch (Exception ex) {
@@ -94,12 +109,36 @@ public class ScreenshotAreaModel {
         }
     }
 
-    public void clearRectList() {
-        rectList.clear();
+    public Collection<Rectangle> getRectList() {
+        return this.rectMap.values();
     }
 
-    public void addRect(Rectangle rectangle) {
-        rectList.add(rectangle);
+
+    public synchronized void clearRectMap() {
+        this.rectMap.clear();
+    }
+
+    public synchronized void addRect(String key, Rectangle rectangle) {
+        rectMap.put(key, rectangle);
+    }
+
+    public synchronized Rectangle removeRect(String key) {
+        return rectMap.remove(key);
+    }
+
+    public void setScreenshot(BufferedImage screenshot) {
+        if (null == screenshot) {
+            return;
+        }
+        this.screenshot = screenshot;
+
+        // 转换为JavaFX Image并显示预览‌
+        this.setScreenshotImage(SwingFXUtils.toFXImage(this.screenshot, null));
+        this.setScreenshotImageCursor(Cursor.CROSSHAIR);
+        this.setScreenshotImageHintVisible(false);
+        this.setScreenshotAreaNoImageFlag(false);
+        this.setImageHeight(this.screenshot.getHeight());
+        this.setImageWidth(this.screenshot.getWidth());
     }
 
     public Rectangle getScreenshotArea() {
@@ -162,16 +201,16 @@ public class ScreenshotAreaModel {
         this.screenshotImageHintVisible.set(screenshotImageHintVisible);
     }
 
-    public boolean isScreenshotAreaHasImageFlag() {
-        return screenshotAreaHasImageFlag.get();
+    public boolean isScreenshotAreaNoImageFlag() {
+        return screenshotAreaNoImageFlag.get();
     }
 
-    public BooleanProperty screenshotAreaHasImageFlagProperty() {
-        return screenshotAreaHasImageFlag;
+    public BooleanProperty screenshotAreaNoImageFlagProperty() {
+        return screenshotAreaNoImageFlag;
     }
 
-    public void setScreenshotAreaHasImageFlag(boolean screenshotAreaHasImageFlag) {
-        this.screenshotAreaHasImageFlag.set(screenshotAreaHasImageFlag);
+    public void setScreenshotAreaNoImageFlag(boolean screenshotAreaNoImageFlag) {
+        this.screenshotAreaNoImageFlag.set(screenshotAreaNoImageFlag);
     }
 
 

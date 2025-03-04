@@ -18,7 +18,7 @@ public class GuiCameraTest {
 
     public static void main(String[] args) throws InterruptedException {
         Rectangle rect = initScreenRect();
-        SnapshotCamera cam = new SnapshotCamera(null);
+        SnapshotCamera cam = new SnapshotCamera(null, null);
         cam.snapshot(rect);
         TimeUnit.SECONDS.sleep(10L);
         cam.snapshot(rect);

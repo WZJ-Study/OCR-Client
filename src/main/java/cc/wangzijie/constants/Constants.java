@@ -1,5 +1,8 @@
 package cc.wangzijie.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
 
     public static final String MAIN_WINDOW_TITLE = "OCR Client v0.1 by 王子杰";
@@ -8,6 +11,9 @@ public class Constants {
 
     public static final String SCREENSHOT_IMAGE_HINT = "点击【截取】按钮，即可截取屏幕";
     public static final String DATA_LIST_TITLE = "数据信息";
+
+    public static final List<String> DATA_TYPE_LIST = Arrays.asList("文本", "数字");
+
     /*
      * Logo图片
      */

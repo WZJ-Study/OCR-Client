@@ -19,6 +19,19 @@ public class AwtRobotUtils {
         }
     }
 
+    private static Rectangle initScreenRect() {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        log.info("==== 初始化 截屏区域 ==== 屏幕尺寸: {}", d);
+        return new Rectangle(0, 0, d.width, d.height);
+    }
+
+    public static BufferedImage createScreenCapture() {
+        if (null == robot) {
+            return null;
+        }
+        return robot.createScreenCapture(initScreenRect());
+    }
+
     public static BufferedImage createScreenCapture(java.awt.Rectangle rect) {
         if (null == rect || null == robot) {
             return null;

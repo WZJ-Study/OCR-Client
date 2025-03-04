@@ -9,8 +9,14 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
@@ -22,7 +28,45 @@ public class DataListAreaModel {
     private final ObjectProperty<Image> dataListTitleBarSearchButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> dataListTitleBarDeleteButtonImage = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<ObservableList<OcrSectionResultVO>> ocrSectionResultList = new SimpleObjectProperty<>();
+    private final ObjectProperty<ObservableList<OcrSectionResult>> ocrSectionResultList = new SimpleObjectProperty<>();
+
+    @Getter
+    private final Map<String, OcrSectionResult> dataMap = new LinkedHashMap<>();
+
+    public synchronized void clearDataMap() {
+        this.dataMap.clear();
+        this.ocrSectionResultList.get().clear();
+    }
+
+    public synchronized void addData(String key, OcrSectionResult data) {
+        OcrSectionResult oldData = this.dataMap.put(key, data);
+        if (oldData != null) {
+            // 更新
+            int index = this.ocrSectionResultList.get().indexOf(oldData);
+            if (index != -1) {
+                // 替换
+                this.ocrSectionResultList.get().set(index, data);
+                this.ocrSectionResultList.get().remove(oldData);
+            } else {
+                // 新增
+                this.ocrSectionResultList.get().add(data);
+            }
+        } else {
+            // 首次新增
+            this.ocrSectionResultList.get().add(data);
+        }
+    }
+
+    public synchronized OcrSectionResult removeData(String key) {
+        if (!this.dataMap.containsKey(key)) {
+            return null;
+        }
+        OcrSectionResult oldData = this.dataMap.remove(key);
+        if (oldData != null) {
+            this.ocrSectionResultList.get().remove(oldData);
+        }
+        return oldData;
+    }
 
 
     public Image getDataListTitleBarMenuButtonImage() {
@@ -74,29 +118,16 @@ public class DataListAreaModel {
     }
 
 
-    public ObservableList<OcrSectionResultVO> getOcrSectionResultList() {
+    public ObservableList<OcrSectionResult> getOcrSectionResultList() {
         return ocrSectionResultList.get();
     }
 
-    public ObjectProperty<ObservableList<OcrSectionResultVO>> ocrSectionResultListProperty() {
+    public ObjectProperty<ObservableList<OcrSectionResult>> ocrSectionResultListProperty() {
         return ocrSectionResultList;
     }
 
-    public void setOcrSectionResultList(ObservableList<OcrSectionResultVO> ocrSectionResultList) {
+    public void setOcrSectionResultList(ObservableList<OcrSectionResult> ocrSectionResultList) {
         this.ocrSectionResultList.set(ocrSectionResultList);
     }
 
-    public boolean addToOcrSectionResultList(OcrSectionResultVO vo) {
-        if (null == ocrSectionResultList.get()) {
-            ocrSectionResultList.set(FXCollections.observableArrayList());
-        }
-        return ocrSectionResultList.get().add(vo);
-    }
-
-    public boolean addToOcrSectionResultList(OcrSectionResult ocrSectionResult) {
-        if (null == ocrSectionResultList.get()) {
-            ocrSectionResultList.set(FXCollections.observableArrayList());
-        }
-        return ocrSectionResultList.get().add(new OcrSectionResultVO(ocrSectionResult));
-    }
 }

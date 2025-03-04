@@ -1,9 +1,6 @@
 package cc.wangzijie.ui.model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,8 +21,8 @@ public class MainWindowModel {
     private final ObjectProperty<Image> historyDataMenuButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> screenshotMenuButtonImage = new SimpleObjectProperty<>();
     private final ObjectProperty<Image> withdrawMenuButtonImage = new SimpleObjectProperty<>();
-    private final ObjectProperty<Image> startCollectMenuButtonImage = new SimpleObjectProperty<>();
-    private final ObjectProperty<Image> stopCollectMenuButtonImage = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> toggleCollectStatusMenuButtonImage = new SimpleObjectProperty<>();
+    private final SimpleStringProperty collectCountDownText = new SimpleStringProperty();
     private final BooleanProperty collectRunningFlag = new SimpleBooleanProperty(false);
 
 
@@ -150,30 +147,29 @@ public class MainWindowModel {
         this.withdrawMenuButtonImage.set(withdrawMenuButtonImage);
     }
 
-    public Image getStartCollectMenuButtonImage() {
-        return startCollectMenuButtonImage.get();
+    public Image getToggleCollectStatusMenuButtonImage() {
+        return toggleCollectStatusMenuButtonImage.get();
     }
 
-    public ObjectProperty<Image> startCollectMenuButtonImageProperty() {
-        return startCollectMenuButtonImage;
+    public ObjectProperty<Image> toggleCollectStatusMenuButtonImageProperty() {
+        return toggleCollectStatusMenuButtonImage;
     }
 
-    public void setStartCollectMenuButtonImage(Image startCollectMenuButtonImage) {
-        this.startCollectMenuButtonImage.set(startCollectMenuButtonImage);
+    public void setToggleCollectStatusMenuButtonImage(Image toggleCollectStatusMenuButtonImage) {
+        this.toggleCollectStatusMenuButtonImage.set(toggleCollectStatusMenuButtonImage);
     }
 
-    public Image getStopCollectMenuButtonImage() {
-        return stopCollectMenuButtonImage.get();
+    public String getCollectCountDownText() {
+        return collectCountDownText.get();
     }
 
-    public ObjectProperty<Image> stopCollectMenuButtonImageProperty() {
-        return stopCollectMenuButtonImage;
+    public SimpleStringProperty collectCountDownTextProperty() {
+        return collectCountDownText;
     }
 
-    public void setStopCollectMenuButtonImage(Image stopCollectMenuButtonImage) {
-        this.stopCollectMenuButtonImage.set(stopCollectMenuButtonImage);
+    public void setCollectCountDownText(String collectCountDownText) {
+        this.collectCountDownText.set(collectCountDownText);
     }
-
 
     public boolean isCollectRunningFlag() {
         return collectRunningFlag.get();
