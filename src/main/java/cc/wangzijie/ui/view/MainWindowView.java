@@ -2,9 +2,9 @@ package cc.wangzijie.ui.view;
 
 
 import cc.wangzijie.constants.Constants;
-import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.entity.OcrSection;
-import cc.wangzijie.server.service.IOcrResultService;
+import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.server.service.IOcrSectionService;
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
@@ -37,7 +37,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Slf4j
@@ -45,7 +44,7 @@ import java.util.ResourceBundle;
 public class MainWindowView implements Initializable {
 
     @Resource
-    private IOcrResultService ocrResultService;
+    private IOcrSectionResultService ocrResultService;
 
     @Resource
     private IOcrSectionService ocrSectionService;
@@ -62,6 +61,7 @@ public class MainWindowView implements Initializable {
 
     @Resource
     private DataListAreaModel dataListAreaModel;
+
 
 
     @FXML
@@ -129,7 +129,7 @@ public class MainWindowView implements Initializable {
 
     private RectBuilder rectBuilder;
 
-    private List<Rectangle> rectList;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -195,8 +195,8 @@ public class MainWindowView implements Initializable {
 
         varValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-        // todo初始化数据列表
-        dataListAreaModel.setOcrSectionResultList(FXCollections.observableArrayList(OcrSectionResultVO.dummyList()));
+        // 初始化数据列表
+        dataListAreaModel.setOcrSectionResultList(FXCollections.observableArrayList());
 
 
         // 处理model属性 - 标题栏logo
@@ -319,6 +319,8 @@ public class MainWindowView implements Initializable {
         // 删除所有选中框
         screenshotImageStackPane.getChildren().removeAll(screenshotAreaModel.getRectList());
         screenshotAreaModel.clearRectList();
+        // 删除所有数据列表
+        dataListAreaModel.getOcrSectionResultList().clear();
     }
 
 
@@ -357,6 +359,7 @@ public class MainWindowView implements Initializable {
             return;
         }
         mainWindowModel.setCollectRunningFlag(true);
+        screenshotAreaModel.getOcrManager().start();
     }
 
     @FXML
@@ -367,6 +370,7 @@ public class MainWindowView implements Initializable {
             return;
         }
         mainWindowModel.setCollectRunningFlag(false);
+        screenshotAreaModel.getOcrManager().stop();
 
     }
 
@@ -377,7 +381,7 @@ public class MainWindowView implements Initializable {
         if (event.getButton() == MouseButton.PRIMARY) {
             if (!screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
                 // 触发截图功能
-                log.info("==== onScreenshotImageMouseClicked ==== [鼠标左键]点击[截图区域]，尚无截图，触发截图功能！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                log.debug("==== onScreenshotImageMouseClicked ==== [鼠标左键]点击[截图区域]，尚无截图，触发截图功能！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
                         event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
                 Stage stage = stageManager.getMainWindowStage();
                 ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, screenshotAreaModel);
@@ -391,7 +395,7 @@ public class MainWindowView implements Initializable {
         event.consume();
         if (event.getButton() == MouseButton.PRIMARY) {
             if (screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
-                log.info("==== onScreenshotImageMousePressed ==== [鼠标左键]按下，[截图区域]已有截图，开始创建[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                log.debug("==== onScreenshotImageMousePressed ==== [鼠标左键]按下，[截图区域]已有截图，开始创建[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
                         event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
                 this.rectBuilder = new RectBuilder(screenshotImageStackPane, screenshotAreaModel);
                 this.rectBuilder.onMousePressed(event);
@@ -418,13 +422,14 @@ public class MainWindowView implements Initializable {
         event.consume();
         if (event.getButton() == MouseButton.PRIMARY) {
             if (screenshotAreaModel.isScreenshotAreaHasImageFlag()) {
-                log.info("==== onScreenshotImageMouseReleased ==== [鼠标左键]按下后释放，[截图区域]已有截图，完成正在创建的[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
+                log.debug("==== onScreenshotImageMouseReleased ==== [鼠标左键]按下后释放，[截图区域]已有截图，完成正在创建的[框选区域]！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
                         event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
                 Rectangle rect = this.rectBuilder.onMouseReleased(event);
                 OcrSection ocrSection = ocrSectionService.createNewSection(rect);
-                OcrResult ocrResult = ocrSection.newResult(null);
-                ocrResultService.save(ocrResult);
-                this.dataListAreaModel.addToOcrSectionResultList(ocrResult);
+                screenshotAreaModel.getOcrManager().addOcrSection(ocrSection);
+                OcrSectionResult ocrSectionResult = ocrSection.newResult(null);
+                ocrResultService.save(ocrSectionResult);
+                dataListAreaModel.addToOcrSectionResultList(ocrSectionResult);
             }
         }
     }

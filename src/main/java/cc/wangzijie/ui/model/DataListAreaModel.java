@@ -1,6 +1,6 @@
 package cc.wangzijie.ui.model;
 
-import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.ui.vo.OcrSectionResultVO;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -93,10 +93,10 @@ public class DataListAreaModel {
         return ocrSectionResultList.get().add(vo);
     }
 
-    public boolean addToOcrSectionResultList(OcrResult ocrResult) {
+    public boolean addToOcrSectionResultList(OcrSectionResult ocrSectionResult) {
         if (null == ocrSectionResultList.get()) {
             ocrSectionResultList.set(FXCollections.observableArrayList());
         }
-        return ocrSectionResultList.get().add(new OcrSectionResultVO(ocrResult));
+        return ocrSectionResultList.get().add(new OcrSectionResultVO(ocrSectionResult));
     }
 }

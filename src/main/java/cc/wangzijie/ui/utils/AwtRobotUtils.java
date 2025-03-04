@@ -20,14 +20,23 @@ public class AwtRobotUtils {
     }
 
     public static BufferedImage createScreenCapture(java.awt.Rectangle rect) {
+        if (null == rect || null == robot) {
+            return null;
+        }
         return robot.createScreenCapture(rect);
     }
 
     public static BufferedImage createScreenCapture(javafx.scene.shape.Rectangle rect) {
+        if (null == rect) {
+            return null;
+        }
         return createScreenCapture(convert(rect));
     }
 
     public static Rectangle convert(javafx.scene.shape.Rectangle rect) {
+        if (null == rect) {
+            return null;
+        }
         return new java.awt.Rectangle(
                 (int) rect.getLayoutX(),
                 (int) rect.getLayoutY(),

@@ -82,10 +82,7 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
         OcrSection entity = new OcrSection();
         entity.setId(IdWorker.getId());
         entity.setName("字段#" + IdWorker.getMillisecond());
-        entity.setX((int) rect.getTranslateX());
-        entity.setY((int) rect.getTranslateY());
-        entity.setWidth((int) rect.getWidth());
-        entity.setHeight((int) rect.getHeight());
+        entity.fillByRect(rect);
         entity.displayPosition();
         entity.setType("文本");
         baseMapper.insert(entity);

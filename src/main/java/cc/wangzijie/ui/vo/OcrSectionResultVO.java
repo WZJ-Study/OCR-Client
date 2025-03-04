@@ -1,20 +1,12 @@
 package cc.wangzijie.ui.vo;
 
-import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.entity.OcrSectionResult;
 import javafx.beans.property.*;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 
 public class OcrSectionResultVO {
-
-
-    public static List<OcrSectionResultVO> dummyList() {
-        Date now = new Date();
-        return Arrays.asList(new OcrSectionResultVO(false, 1L, 1L, "名称1", "位置1", 1, 2, 3, 4, "文本", "取值#1", now), new OcrSectionResultVO(true, 2L, 2L, "名称2", "位置2", 1, 2, 3, 4, "文本", "取值#2", now), new OcrSectionResultVO(true, 3L, 3L, "名称3", "位置3", 1, 2, 3, 4, "文本", "取值#3", now), new OcrSectionResultVO(false, 4L, 4L, "名称4", "位置4", 1, 2, 3, 4, "数字", "取值#4", now), new OcrSectionResultVO(false, 5L, 5L, "名称5", "位置5", 1, 2, 3, 4, "数字", "取值#5", now));
-    }
 
 
     /**
@@ -93,7 +85,7 @@ public class OcrSectionResultVO {
         this.collectTime = new SimpleObjectProperty<>(this, "collectTime", collectTime);
     }
 
-    public OcrSectionResultVO(OcrResult data) {
+    public OcrSectionResultVO(OcrSectionResult data) {
         this.checkedFlag = new SimpleBooleanProperty(this, "checkedFlag", false);
         this.resultId = new SimpleLongProperty(this, "resultId", data.getId());
         this.sectionId = new SimpleLongProperty(this, "sectionId", data.getSectionId());

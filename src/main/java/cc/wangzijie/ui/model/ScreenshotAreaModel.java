@@ -1,15 +1,21 @@
 package cc.wangzijie.ui.model;
 
+import cc.wangzijie.ocr.OCRManager;
+import cc.wangzijie.ocr.config.SnapshotCameraConfig;
+import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -26,9 +32,29 @@ public class ScreenshotAreaModel {
     private final BooleanProperty screenshotImageHintVisible = new SimpleBooleanProperty(true);
     private final BooleanProperty screenshotAreaHasImageFlag = new SimpleBooleanProperty(false);
 
+    @Resource
+    private IOcrSectionResultService ocrSectionResultService;
+
+
+    @Resource
+    private SnapshotCameraConfig snapshotCameraConfig;
+
+    @Getter
+    private final OCRManager ocrManager = new OCRManager(this, ocrSectionResultService,  snapshotCameraConfig);
+
+    @Getter
     private final List<Rectangle> rectList = new ArrayList<>();
 
     @Getter
+    @Setter
+    private Integer imageHeight;
+
+    @Getter
+    @Setter
+    private Integer imageWidth;
+
+    @Getter
+    @Setter
     private BufferedImage screenshot;
 
     public void doScreenshot() {
@@ -44,6 +70,8 @@ public class ScreenshotAreaModel {
                 this.setScreenshotImageCursor(Cursor.CROSSHAIR);
                 this.setScreenshotImageHintVisible(false);
                 this.setScreenshotAreaHasImageFlag(true);
+                this.setImageHeight(this.screenshot.getHeight());
+                this.setImageWidth(this.screenshot.getWidth());
             } catch (Exception ex) {
                 log.error("==== 执行截屏 === 全屏截图失败！", ex);
             }
@@ -58,12 +86,21 @@ public class ScreenshotAreaModel {
                 this.setScreenshotImageCursor(Cursor.CROSSHAIR);
                 this.setScreenshotImageHintVisible(false);
                 this.setScreenshotAreaHasImageFlag(true);
+                this.setImageHeight(this.screenshot.getHeight());
+                this.setImageWidth(this.screenshot.getWidth());
             } catch (Exception ex) {
                 log.error("==== 执行截屏 === 区域截图失败！", ex);
             }
         }
     }
 
+    public void clearRectList() {
+        rectList.clear();
+    }
+
+    public void addRect(Rectangle rectangle) {
+        rectList.add(rectangle);
+    }
 
     public Rectangle getScreenshotArea() {
         return screenshotArea.get();
@@ -138,15 +175,5 @@ public class ScreenshotAreaModel {
     }
 
 
-    public List<Rectangle> getRectList() {
-        return rectList;
-    }
 
-    public void clearRectList() {
-        rectList.clear();
-    }
-
-    public boolean addRect(Rectangle rectangle) {
-        return rectList.add(rectangle);
-    }
 }

@@ -3,6 +3,9 @@
 .mainWindow {
     -fx-background-color: #454855;
     -fx-background-radius: 5px;
+}
+
+.mainWindowBorder {
     -fx-border-color: red;
     -fx-border-style: solid;
     -fx-border-width: 1px;
@@ -105,11 +108,27 @@
     -fx-border-insets: 2px;
 }
 
+.screenshotAreaBorder {
+    -fx-background-color: #404455;
+    -fx-background-radius: 2px;
+    -fx-border-color: WHITE;
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 2px;
+}
+
+
 .screenshotArea {
-    -fx-background-color: #454855;
+    -fx-background-color: #404455;
+    -fx-background-radius: 2px;
     -fx-border-color: blue;
-    -fx-border-width: 1px;
     -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+}
+
+.screenshotImage {
+    -fx-background-color: #404455;
 }
 
 .dataListTitleBar {

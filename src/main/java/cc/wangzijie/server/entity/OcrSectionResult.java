@@ -8,8 +8,8 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-@TableName("ocr_result")
-public class OcrResult {
+@TableName("ocr_section_result")
+public class OcrSectionResult {
 
     /**
      * 主键ID
@@ -31,15 +31,27 @@ public class OcrResult {
      */
     private String position;
 
+
     /**
-     * 字段位置-x
+     * 字段位置-x（以左上点坐标系计算的坐标）
      */
     private Integer x;
 
     /**
-     * 字段位置-y
+     * 字段位置-y（以左上点坐标系计算的坐标）
      */
     private Integer y;
+
+
+    /**
+     * 字段位置-transX（以中点坐标系计算的坐标）
+     */
+    private Integer transX;
+
+    /**
+     * 字段位置-transY（以中点坐标系计算的坐标）
+     */
+    private Integer transY;
 
     /**
      * 字段位置-width

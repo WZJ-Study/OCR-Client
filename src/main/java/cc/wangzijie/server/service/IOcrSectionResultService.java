@@ -1,10 +1,11 @@
 package cc.wangzijie.server.service;
 
-import cc.wangzijie.server.entity.OcrResult;
+import cc.wangzijie.server.entity.OcrSectionResult;
 
+import java.util.Collection;
 import java.util.List;
 
-public interface IOcrResultService {
+public interface IOcrSectionResultService {
 
     /**
      * 查询VO不分页列表
@@ -12,7 +13,7 @@ public interface IOcrResultService {
      * @param entity     查询参数
      * @return 不分页列表
      */
-    List<OcrResult> getList(OcrResult entity);
+    List<OcrSectionResult> getList(OcrSectionResult entity);
 
     /**
      * 根据ID查询单条VO记录
@@ -20,7 +21,7 @@ public interface IOcrResultService {
      * @param id      ID
      * @return 单条记录
      */
-    OcrResult getById(Long id);
+    OcrSectionResult getById(Long id);
 
     /**
      * 创建新增
@@ -28,7 +29,15 @@ public interface IOcrResultService {
      * @param entity  实体类对象
      * @return 操作是否成功
      */
-    boolean save(OcrResult entity);
+    boolean save(OcrSectionResult entity);
+
+    /**
+     * 批量创建新增
+     *
+     * @param entityList 实体类对象列表
+     * @return 操作是否成功
+     */
+    boolean saveBatch(Collection<OcrSectionResult> entityList);
 
     /**
      * 编辑修改
@@ -36,7 +45,7 @@ public interface IOcrResultService {
      * @param entity  实体类对象
      * @return 操作是否成功
      */
-    boolean updateById(OcrResult entity);
+    boolean updateById(OcrSectionResult entity);
 
     /**
      * 根据IDs批量删除（软删除）

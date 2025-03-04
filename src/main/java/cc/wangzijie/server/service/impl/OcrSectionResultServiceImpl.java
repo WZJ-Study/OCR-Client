@@ -1,22 +1,24 @@
 package cc.wangzijie.server.service.impl;
 
-import cc.wangzijie.server.entity.OcrResult;
-import cc.wangzijie.server.mapper.IOcrResultMapper;
-import cc.wangzijie.server.service.IOcrResultService;
+import cc.wangzijie.server.entity.OcrSectionResult;
+import cc.wangzijie.server.mapper.IOcrSectionResultMapper;
+import cc.wangzijie.server.service.IOcrSectionResultService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.BatchResult;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
 @Service
-public class OcrResultServiceImpl implements IOcrResultService {
+public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
 
     @Resource
-    private IOcrResultMapper baseMapper;
+    private IOcrSectionResultMapper baseMapper;
 
 
     /**
@@ -26,8 +28,8 @@ public class OcrResultServiceImpl implements IOcrResultService {
      * @return 不分页列表
      */
     @Override
-    public List<OcrResult> getList(OcrResult entity) {
-        LambdaQueryWrapper<OcrResult> lqw = Wrappers.lambdaQuery(entity);
+    public List<OcrSectionResult> getList(OcrSectionResult entity) {
+        LambdaQueryWrapper<OcrSectionResult> lqw = Wrappers.lambdaQuery(entity);
         return baseMapper.selectList(lqw);
     }
 
@@ -38,7 +40,7 @@ public class OcrResultServiceImpl implements IOcrResultService {
      * @return 单条记录
      */
     @Override
-    public OcrResult getById(Long id) {
+    public OcrSectionResult getById(Long id) {
         return baseMapper.selectById(id);
     }
 
@@ -49,8 +51,21 @@ public class OcrResultServiceImpl implements IOcrResultService {
      * @return 操作是否成功
      */
     @Override
-    public boolean save(OcrResult entity) {
+    public boolean save(OcrSectionResult entity) {
         return baseMapper.insert(entity) > 0;
+    }
+
+    /**
+     * 批量创建新增
+     *
+     * @param entityList 实体类对象列表
+     * @return 操作是否成功
+     */
+    @Override
+    public boolean saveBatch(Collection<OcrSectionResult> entityList) {
+        List<BatchResult> batchResults = baseMapper.insert(entityList);
+        log.info("批量新增：{}", batchResults);
+        return true;
     }
 
     /**
@@ -60,7 +75,7 @@ public class OcrResultServiceImpl implements IOcrResultService {
      * @return 操作是否成功
      */
     @Override
-    public boolean updateById(OcrResult entity) {
+    public boolean updateById(OcrSectionResult entity) {
         return baseMapper.updateById(entity) > 0;
     }
 

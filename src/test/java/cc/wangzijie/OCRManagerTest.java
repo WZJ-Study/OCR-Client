@@ -9,14 +9,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class OCRManagerTest {
 
-    public static void main(String[] args) throws InterruptedException, AWTException {
-        OCRManager ocrManager = new OCRManager();
+    public static void main(String[] args) throws InterruptedException {
+        OCRManager ocrManager = new OCRManager(null,null);
         ocrManager.setIntervalSeconds(5);
-        ocrManager.addOcrRect("section#1", new Rectangle(0, 0, 100, 100));
-        ocrManager.addOcrRect("section#2", new Rectangle(100, 200, 100, 100));
-        ocrManager.addOcrRect("section#3", new Rectangle(200, 300, 100, 100));
-        ocrManager.addOcrRect("section#4", new Rectangle(300, 400, 100, 100));
-        ocrManager.addOcrRect("section#5", new Rectangle(500, 600, 100, 100));
+        // ocrManager.addOcrSection(new OcrSection());
         log.info("==== 主线程 ==== 1. 启动OCR Manager");
         ocrManager.start();
         log.info("==== 主线程 ==== 1. 休眠 60 秒");

@@ -1,178 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<VBox alignment="CENTER" maxHeight="4320.0" maxWidth="7680.0" minHeight="800.0" minWidth="1200.0"
-      styleClass="mainWindow" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="cc.wangzijie.ui.view.MainWindowView">
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" maxHeight="4320.0" maxWidth="7680.0" minHeight="800.0" minWidth="1200.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.wangzijie.ui.view.MainWindowView">
     <children>
         <!-- 标题栏 & 菜单栏 -->
-        <BorderPane maxHeight="100.0" minHeight="100.0" onMouseDragged="#onMainWindowMouseDragged"
-                    onMousePressed="#onMainWindowMousePressed" prefHeight="100.0" styleClass="windowTitleBar"
-                    VBox.vgrow="NEVER">
+        <BorderPane maxHeight="100.0" minHeight="100.0" onMouseDragged="#onMainWindowMouseDragged" onMousePressed="#onMainWindowMousePressed" prefHeight="100.0" styleClass="windowTitleBar" VBox.vgrow="NEVER">
             <!-- 标题栏（左侧logo） -->
             <left>
-                <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0"
-                      styleClass="windowTitleBarLogoArea" BorderPane.alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0" styleClass="windowTitleBarLogoArea" BorderPane.alignment="CENTER_LEFT">
                     <children>
-                        <ImageView fx:id="mainWindowLogoImage" fitHeight="40.0" pickOnBounds="true"
-                                   preserveRatio="true"/>
+                        <ImageView fx:id="mainWindowLogoImage" fitHeight="40.0" pickOnBounds="true" preserveRatio="true" />
                     </children>
                     <BorderPane.margin>
-                        <Insets left="10.0" right="10.0"/>
+                        <Insets left="10.0" right="10.0" />
                     </BorderPane.margin>
                 </HBox>
             </left>
             <!-- 标题栏（右侧窗口按钮） -->
             <right>
-                <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0"
-                      styleClass="windowTitleBarBtnArea" BorderPane.alignment="CENTER_RIGHT">
+                <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0" styleClass="windowTitleBarBtnArea" BorderPane.alignment="CENTER_RIGHT">
                     <children>
-                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                onAction="#onReloadButtonClick" prefHeight="32.0" prefWidth="32.0"
-                                styleClass="windowButton">
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onReloadButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="windowButton">
                             <graphic>
-                                <ImageView fx:id="reloadMainWindowButtonImage" fitHeight="24.0" fitWidth="24.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="reloadMainWindowButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                onAction="#onOpenSettingsWindowButtonClick" prefHeight="32.0" prefWidth="32.0"
-                                styleClass="windowButton">
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onOpenSettingsWindowButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="windowButton">
                             <graphic>
-                                <ImageView fx:id="openSettingsWindowButtonImage" fitHeight="24.0" fitWidth="24.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="openSettingsWindowButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                onAction="#onMinimizeWindowButtonClick" prefHeight="32.0" prefWidth="32.0"
-                                styleClass="windowButton">
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onMinimizeWindowButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="windowButton">
                             <graphic>
-                                <ImageView fx:id="minimizeWindowButtonImage" fitHeight="24.0" fitWidth="24.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="minimizeWindowButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                onAction="#onMaximizeWindowButtonClick" prefHeight="32.0" prefWidth="32.0"
-                                styleClass="windowButton">
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onMaximizeWindowButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="windowButton">
                             <graphic>
-                                <ImageView fx:id="maximizeWindowButtonImage" fitHeight="24.0" fitWidth="24.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="maximizeWindowButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                onAction="#onCloseWindowButtonClick" prefHeight="32.0" prefWidth="32.0"
-                                styleClass="windowButton">
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onCloseWindowButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="windowButton">
                             <graphic>
-                                <ImageView fx:id="closeWindowButtonImage" fitHeight="24.0" fitWidth="24.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="closeWindowButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
                     </children>
                     <BorderPane.margin>
-                        <Insets left="10.0" right="10.0"/>
+                        <Insets left="10.0" right="10.0" />
                     </BorderPane.margin>
                     <padding>
-                        <Insets bottom="2.0" top="2.0"/>
+                        <Insets bottom="2.0" top="2.0" />
                     </padding>
                 </HBox>
             </right>
             <!-- 菜单栏 -->
             <bottom>
-                <HBox alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" spacing="10.0"
-                      styleClass="windowTitleBarMenuArea" BorderPane.alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" spacing="10.0" styleClass="windowTitleBarMenuArea" BorderPane.alignment="CENTER_LEFT">
                     <children>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onOpenFullMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onOpenFullMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="openFullMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="openFullMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onHistoryDataMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onHistoryDataMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="historyDataMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="historyDataMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onScreenshotMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onScreenshotMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="screenshotMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="screenshotMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onWithdrawMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onWithdrawMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="withdrawMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="withdrawMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onStartCollectMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onStartCollectMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="startCollectMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="startCollectMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
-                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0"
-                                onAction="#onStopCollectMenuButtonClick" prefHeight="50.0" prefWidth="50.0"
-                                styleClass="menuButton">
+                        <Button maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" onAction="#onStopCollectMenuButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="menuButton">
                             <graphic>
-                                <ImageView fx:id="stopCollectMenuButtonImage" fitHeight="40.0" fitWidth="40.0"
-                                           pickOnBounds="true" preserveRatio="true"/>
+                                <ImageView fx:id="stopCollectMenuButtonImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
                             </graphic>
                         </Button>
                     </children>
                     <BorderPane.margin>
-                        <Insets left="10.0" right="10.0"/>
+                        <Insets left="10.0" right="10.0" />
                     </BorderPane.margin>
                 </HBox>
             </bottom>
         </BorderPane>
         <!-- 主界面部分 -->
-        <HBox maxHeight="4220.0" minHeight="700.0" spacing="10.0" VBox.vgrow="ALWAYS">
+        <HBox maxHeight="4220.0" minHeight="700.0" spacing="10.0" styleClass="mainWindow" VBox.vgrow="ALWAYS">
             <children>
                 <!-- 主界面部分-截图预览 -->
-                <ScrollPane HBox.hgrow="ALWAYS" StackPane.alignment="CENTER">
+                <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="screenshotAreaBorder" HBox.hgrow="ALWAYS" StackPane.alignment="CENTER">
                     <content>
-                        <StackPane fx:id="screenshotImageStackPane" alignment="TOP_LEFT" styleClass="screenshotArea">
+                        <StackPane fx:id="screenshotImageStackPane" styleClass="screenshotArea">
                             <children>
-                                <ImageView fx:id="screenshotImage" onMouseClicked="#onScreenshotImageMouseClicked"
-                                           onMouseDragged="#onScreenshotImageMouseDragged"
-                                           onMousePressed="#onScreenshotImageMousePressed"
-                                           onMouseReleased="#onScreenshotImageMouseReleased" pickOnBounds="true"
-                                           preserveRatio="true" VBox.vgrow="ALWAYS">
+                                <ImageView fx:id="screenshotImage" onMouseClicked="#onScreenshotImageMouseClicked" onMouseDragged="#onScreenshotImageMouseDragged" onMousePressed="#onScreenshotImageMousePressed" onMouseReleased="#onScreenshotImageMouseReleased" pickOnBounds="true" preserveRatio="true" styleClass="screenshotImage" VBox.vgrow="ALWAYS">
                                     <cursor>
-                                        <Cursor fx:constant="CROSSHAIR"/>
+                                        <Cursor fx:constant="CROSSHAIR" />
                                     </cursor>
                                 </ImageView>
-                                <Label fx:id="screenshotImageHint" minHeight="32.0" text="截屏提示语"
-                                       textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS"
-                                       StackPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                                <Label fx:id="screenshotImageHint" minHeight="32.0" styleClass="screenshotImage" text="截屏提示语" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" StackPane.alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
                                     <font>
-                                        <Font name="Microsoft YaHei UI" size="18.0"/>
+                                        <Font name="Microsoft YaHei UI" size="18.0" />
                                     </font>
                                     <StackPane.margin>
-                                        <Insets/>
+                                        <Insets bottom="100.0" />
                                     </StackPane.margin>
                                 </Label>
                             </children>
                         </StackPane>
                     </content>
                     <HBox.margin>
-                        <Insets top="5.0"/>
+                        <Insets bottom="5.0" top="5.0" />
                     </HBox.margin>
                 </ScrollPane>
 
@@ -180,73 +134,54 @@
                 <VBox maxWidth="450.0" minWidth="450.0" prefWidth="450.0" HBox.hgrow="ALWAYS">
                     <!-- 主界面部分-数据列表-标题栏 -->
                     <children>
-                        <BorderPane maxHeight="40.0" minHeight="40.0" prefHeight="40.0" styleClass="dataListTitleBar"
-                                    BorderPane.alignment="CENTER" VBox.vgrow="NEVER">
+                        <BorderPane maxHeight="40.0" minHeight="40.0" prefHeight="40.0" styleClass="dataListTitleBar" BorderPane.alignment="CENTER" VBox.vgrow="NEVER">
                             <left>
-                                <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0"
-                                      spacing="10.0" BorderPane.alignment="CENTER_LEFT">
+                                <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
                                     <children>
-                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                                onAction="#onDataListTitleBarMenuButtonClick" prefHeight="32.0"
-                                                prefWidth="32.0" styleClass="dataListTitleBarButton" HBox.hgrow="NEVER">
+                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onDataListTitleBarMenuButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="dataListTitleBarButton" HBox.hgrow="NEVER">
                                             <graphic>
-                                                <ImageView fx:id="dataListTitleBarMenuButtonImage" fitHeight="24.0"
-                                                           fitWidth="24.0" pickOnBounds="true" preserveRatio="true"/>
+                                                <ImageView fx:id="dataListTitleBarMenuButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
-                                        <Label fx:id="dataListTitleBarMenuTitle" minHeight="32.0" prefHeight="32.0"
-                                               text="数据信息" textFill="WHITE" textOverrun="CENTER_ELLIPSIS">
+                                        <Label fx:id="dataListTitleBarMenuTitle" minHeight="32.0" prefHeight="32.0" text="数据信息" textFill="WHITE" textOverrun="CENTER_ELLIPSIS">
                                             <font>
-                                                <Font name="Microsoft YaHei UI" size="18.0"/>
+                                                <Font name="Microsoft YaHei UI" size="18.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </HBox>
                             </left>
                             <right>
-                                <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0"
-                                      spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+                                <HBox alignment="CENTER_RIGHT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
                                     <children>
-                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                                onAction="#onDataListTitleBarSearchButtonClick" prefHeight="32.0"
-                                                prefWidth="32.0" styleClass="dataListTitleBarButton">
+                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onDataListTitleBarSearchButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="dataListTitleBarButton">
                                             <graphic>
-                                                <ImageView fx:id="dataListTitleBarSearchButtonImage" fitHeight="24.0"
-                                                           fitWidth="24.0" pickOnBounds="true" preserveRatio="true"/>
+                                                <ImageView fx:id="dataListTitleBarSearchButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
-                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0"
-                                                onAction="#onDataListTitleBarDeleteButtonClick" prefHeight="32.0"
-                                                prefWidth="32.0" styleClass="dataListTitleBarButton">
+                                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" onAction="#onDataListTitleBarDeleteButtonClick" prefHeight="32.0" prefWidth="32.0" styleClass="dataListTitleBarButton">
                                             <graphic>
-                                                <ImageView fx:id="dataListTitleBarDeleteButtonImage" fitHeight="24.0"
-                                                           fitWidth="24.0" pickOnBounds="true" preserveRatio="true"/>
+                                                <ImageView fx:id="dataListTitleBarDeleteButtonImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                                             </graphic>
                                         </Button>
                                     </children>
                                 </HBox>
                             </right>
                         </BorderPane>
-                        <TableView fx:id="ocrSectionTable" editable="true" maxWidth="450.0" minWidth="450.0"
-                                   prefWidth="450.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="ocrSectionTable" editable="true" maxWidth="450.0" minWidth="450.0" prefWidth="450.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="varChecked" maxWidth="30.0" minWidth="30.0" prefWidth="30.0"
-                                             resizable="false" text=""/>
-                                <TableColumn fx:id="varName" maxWidth="512.0" minWidth="50.0" prefWidth="100.0"
-                                             resizable="false" text="字段名称"/>
-                                <TableColumn fx:id="varPosition" maxWidth="512.0" minWidth="50.0" prefWidth="100.0"
-                                             resizable="false" text="字段位置"/>
-                                <TableColumn fx:id="varType" maxWidth="512.0" minWidth="50.0" prefWidth="100.0"
-                                             resizable="false" text="字段类型"/>
-                                <TableColumn fx:id="varValue" maxWidth="512.0" minWidth="50.0" prefWidth="100.0"
-                                             resizable="false" text="最新值"/>
+                                <TableColumn fx:id="varChecked" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="" />
+                                <TableColumn fx:id="varName" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段名称" />
+                                <TableColumn fx:id="varPosition" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段位置" />
+                                <TableColumn fx:id="varType" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段类型" />
+                                <TableColumn fx:id="varValue" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="最新值" />
                             </columns>
                         </TableView>
                     </children>
                 </VBox>
             </children>
             <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0"/>
+                <Insets bottom="10.0" left="10.0" right="10.0" />
             </VBox.margin>
         </HBox>
     </children>

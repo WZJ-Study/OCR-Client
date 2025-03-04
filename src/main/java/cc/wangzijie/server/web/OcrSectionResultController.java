@@ -16,8 +16,8 @@
 
 package cc.wangzijie.server.web;
 
-import cc.wangzijie.server.entity.OcrResult;
-import cc.wangzijie.server.service.IOcrResultService;
+import cc.wangzijie.server.entity.OcrSectionResult;
+import cc.wangzijie.server.service.IOcrSectionResultService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,34 +25,34 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/ocr-result")
-public class OcrResultController {
+@RequestMapping("/ocr-section-result")
+public class OcrSectionResultController {
 
     @Resource
-    private IOcrResultService ocrResultService;
+    private IOcrSectionResultService ocrResultService;
 
     @GetMapping("/all")
-    public List<OcrResult> getList() {
-        return ocrResultService.getList(new OcrResult());
+    public List<OcrSectionResult> getList() {
+        return ocrResultService.getList(new OcrSectionResult());
     }
 
     @PostMapping("/list")
-    public List<OcrResult> getList(@RequestBody OcrResult entity) {
+    public List<OcrSectionResult> getList(@RequestBody OcrSectionResult entity) {
         return ocrResultService.getList(entity);
     }
 
     @GetMapping("/get")
-    public OcrResult voGet(@RequestParam Long id) {
+    public OcrSectionResult voGet(@RequestParam Long id) {
         return ocrResultService.getById(id);
     }
 
     @PostMapping("/create")
-    public boolean create(@RequestBody OcrResult entity) {
+    public boolean create(@RequestBody OcrSectionResult entity) {
         return ocrResultService.save(entity);
     }
 
     @PostMapping("/update")
-    public boolean update(@RequestBody OcrResult entity) {
+    public boolean update(@RequestBody OcrSectionResult entity) {
         return ocrResultService.updateById(entity);
     }
 

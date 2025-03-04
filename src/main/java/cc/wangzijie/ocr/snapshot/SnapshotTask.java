@@ -4,10 +4,11 @@ package cc.wangzijie.ocr.snapshot;
 import cc.wangzijie.ocr.OCRManager;
 import cc.wangzijie.ocr.component.TaskExecutor;
 import cc.wangzijie.ocr.task.OcrProcessTask;
+import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.function.Supplier;
 
 @Slf4j
 public class SnapshotTask implements Runnable {
@@ -22,24 +23,24 @@ public class SnapshotTask implements Runnable {
      */
     private final SnapshotCamera snapshotCamera;
 
-    public SnapshotTask(OCRManager ocrManager, SnapshotCamera snapshotCamera) {
+    private final Supplier<Rectangle> snapshotRectSupplier;
+
+    public SnapshotTask(OCRManager ocrManager, SnapshotCamera snapshotCamera, Supplier<Rectangle> snapshotRectSupplier) {
         this.ocrManager = ocrManager;
         this.snapshotCamera = snapshotCamera;
+        this.snapshotRectSupplier = snapshotRectSupplier;
     }
 
     @Override
     public void run() {
-        try {
-            File file = this.snapshotCamera.snapshot();
-            if (null != file && file.exists()) {
-                OcrProcessTask task = this.ocrManager.createTask(file);
-                log.info("==== 截屏定时任务 ==== 截屏成功，图片文件【{}】已创建处理任务！", file.getName());
-                TaskExecutor.run(task);
-            } else {
-                log.error("==== 截屏定时任务 ==== 截屏失败，截屏图片文件不存在！");
-            }
-        } catch (IOException e) {
-            log.error("==== 截屏定时任务 ==== 截屏失败，捕获到异常！", e);
+        Rectangle rect = this.snapshotRectSupplier.get();
+        File file = this.snapshotCamera.snapshot(rect);
+        if (null != file && file.exists()) {
+            OcrProcessTask task = this.ocrManager.createTask(file);
+            log.info("==== 截屏定时任务 ==== 截屏成功，图片文件【{}】已创建处理任务！", file.getName());
+            TaskExecutor.run(task);
+        } else {
+            log.error("==== 截屏定时任务 ==== 截屏失败，截屏图片文件不存在！");
         }
     }
 
