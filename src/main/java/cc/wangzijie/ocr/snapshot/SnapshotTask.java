@@ -38,7 +38,7 @@ public class SnapshotTask implements Runnable {
         if (null != file && file.exists()) {
             OcrProcessTask task = this.ocrManager.createTask(file);
             log.info("==== 截屏定时任务 ==== 截屏成功，图片文件【{}】已创建处理任务！", file.getName());
-            TaskExecutor.run(task);
+            TaskExecutor.execute(task);
         } else {
             log.error("==== 截屏定时任务 ==== 截屏失败，截屏图片文件不存在！");
         }

@@ -1,7 +1,7 @@
 package cc.wangzijie.ocr.snapshot;
 
 
-import cc.wangzijie.ocr.config.SnapshotCameraConfig;
+import cc.wangzijie.config.SnapshotCameraConfig;
 import cc.wangzijie.ocr.utils.DateFormat;
 import cc.wangzijie.ocr.utils.DateUtils;
 import cc.wangzijie.ocr.utils.FileSizeUtils;

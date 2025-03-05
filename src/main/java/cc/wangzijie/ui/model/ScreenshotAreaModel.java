@@ -1,7 +1,7 @@
 package cc.wangzijie.ui.model;
 
 import cc.wangzijie.ocr.OCRManager;
-import cc.wangzijie.ocr.config.SnapshotCameraConfig;
+import cc.wangzijie.config.SnapshotCameraConfig;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;

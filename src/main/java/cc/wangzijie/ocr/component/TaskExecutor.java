@@ -20,15 +20,23 @@ public class TaskExecutor {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(CORE_POOL_SIZE);
 
     /**
-     * 运行OCR识别处理任务
+     * 运行任务
      *
-     * @param task OCR识别处理任务
-     * @return Future结果
+     * @param task 任务
      */
-    public static Future<?> run(OcrProcessTask task) {
-        return EXECUTOR_SERVICE.submit(task);
+    public static void execute(Runnable task) {
+        EXECUTOR_SERVICE.submit(task);
     }
 
+    /**
+     * 运行任务
+     *
+     * @param task 任务
+     * @return Future结果
+     */
+    public static Future<?> run(Runnable task) {
+        return EXECUTOR_SERVICE.submit(task);
+    }
 
 
     /**

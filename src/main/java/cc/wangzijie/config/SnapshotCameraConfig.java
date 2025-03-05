@@ -1,4 +1,4 @@
-package cc.wangzijie.ocr.config;
+package cc.wangzijie.config;
 
 import lombok.Getter;
 import lombok.Setter;

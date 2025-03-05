@@ -51,7 +51,6 @@ public class CustomTextFieldTableCell extends TableCell<OcrSectionResult, String
 
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        log.info("==== 单元格更新文本 ==== 内容：{} empty: {}", item, empty);
 
         if (this.isEmpty()) {
             this.setText(null);

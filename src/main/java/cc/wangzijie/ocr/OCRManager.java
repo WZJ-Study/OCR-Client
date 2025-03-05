@@ -2,7 +2,7 @@ package cc.wangzijie.ocr;
 
 
 import cc.wangzijie.ocr.component.TaskExecutor;
-import cc.wangzijie.ocr.config.SnapshotCameraConfig;
+import cc.wangzijie.config.SnapshotCameraConfig;
 import cc.wangzijie.ocr.snapshot.SnapshotCamera;
 import cc.wangzijie.ocr.snapshot.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
@@ -125,7 +125,8 @@ public class OCRManager {
             return;
         }
         // 开始定时截屏采集
-        this.scheduledFuture = TaskExecutor.scheduleWithFixedDelay(new SnapshotTask(this, this.snapshotCamera, this.screenshotAreaModel::getScreenshotArea), intervalSeconds);
+        SnapshotTask snapshotTask = new SnapshotTask(this, this.snapshotCamera, this.screenshotAreaModel::getScreenshotArea);
+        this.scheduledFuture = TaskExecutor.scheduleWithFixedDelay(snapshotTask, intervalSeconds, intervalSeconds, TimeUnit.SECONDS);
 
         // 开始倒计时
         this.countDownSeconds.set(this.intervalSeconds);

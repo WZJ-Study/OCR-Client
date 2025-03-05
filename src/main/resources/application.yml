@@ -7,13 +7,19 @@ spring:
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
-  datasource:
-    url: jdbc:sqlite:sqlite/ocr.db3
-    driver-class-name: org.sqlite.JDBC
+
+sqlite-db:
+  url: jdbc:sqlite:sqlite/ocr.db3
+  file: sqlite/ocr.db3
+  test-sql: select * from ocr_section limit 1
+  init-db-sql: sqlite/init-db.sql
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
 
+logging:
+  level:
+    cc.wangzijie: INFO
 
 snapshot-camera:
   output-folder-path: D:/output
