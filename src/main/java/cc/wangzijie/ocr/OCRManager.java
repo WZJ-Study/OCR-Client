@@ -1,6 +1,7 @@
 package cc.wangzijie.ocr;
 
 
+import cc.wangzijie.constants.Constants;
 import cc.wangzijie.ocr.component.TaskExecutor;
 import cc.wangzijie.config.SnapshotCameraConfig;
 import cc.wangzijie.ocr.snapshot.SnapshotCamera;
@@ -78,7 +79,7 @@ public class OCRManager {
     /**
      * 定时截屏采集任务时间间隔
      */
-    private int intervalSeconds;
+    private volatile int intervalSeconds;
 
     /**
      * 倒计时显示的秒数
@@ -95,7 +96,7 @@ public class OCRManager {
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
         this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, null);
         // 默认时间间隔：10s
-        this.intervalSeconds = 10;
+        this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
         this.ocrSectionMap = new ConcurrentHashMap<>();
         // 设置运行标志=已停止
@@ -110,7 +111,7 @@ public class OCRManager {
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
         this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, cameraConfig);
         // 默认时间间隔：10s
-        this.intervalSeconds = 10;
+        this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
         this.ocrSectionMap = new ConcurrentHashMap<>();
         // 设置运行标志=已停止
@@ -160,11 +161,7 @@ public class OCRManager {
         });
     }
 
-    public void setIntervalSeconds(int intervalSeconds) {
-        if (this.running) {
-            log.error("正在运行中，不可修改采集时间间隔！请先停止运行！");
-            return;
-        }
+    public synchronized void setIntervalSeconds(int intervalSeconds) {
         this.intervalSeconds = intervalSeconds;
     }
 

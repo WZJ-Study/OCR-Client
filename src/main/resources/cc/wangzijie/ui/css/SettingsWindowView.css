@@ -1,0 +1,81 @@
+
+
+.settingsWindow {
+    -fx-background-color: #454855;
+    -fx-background-radius: 5px;
+    -fx-border-color: white;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-radius: 5px;
+}
+
+
+.settingsWindowBorder {
+    -fx-border-color: red;
+    -fx-border-style: solid;
+    -fx-border-width: 0;
+    -fx-border-radius: 5px;
+}
+
+.settingsWindowBottom {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+}
+
+.settingsRow {
+    -fx-background-color: #404455;
+    -fx-background-radius: 5px;
+    -fx-border-color: white;
+    -fx-border-style: dashed;
+    -fx-border-width: 1px;
+}
+
+
+.settingsWindowTitleBar {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+    -fx-border-color: orange;
+    -fx-border-style: solid;
+    -fx-border-width: 0;
+    -fx-border-radius: 5px;
+}
+
+
+.settingsWindowTitleBarBtnArea {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+    -fx-border-color: yellow;
+    -fx-border-style: solid;
+    -fx-border-width: 0;
+    -fx-border-radius: 5px;
+}
+
+.settingsWindowButton {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+    -fx-border-color: #2A2C37;
+    -fx-border-style: solid;
+    -fx-border-width: 1;
+    -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
+}
+
+.settingsWindowButton:hover {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
+}
+
+.settingsWindowButton:pressed {
+    -fx-background-color: #2A2C37;
+    -fx-background-radius: 5px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
+}

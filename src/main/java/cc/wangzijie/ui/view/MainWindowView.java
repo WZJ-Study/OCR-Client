@@ -2,6 +2,8 @@ package cc.wangzijie.ui.view;
 
 
 import cc.wangzijie.constants.Constants;
+import cc.wangzijie.fxml.FxmlViews;
+import cc.wangzijie.fxml.loader.SpringFxmlLoader;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
@@ -53,10 +55,14 @@ public class MainWindowView implements Initializable {
 
 
 
-
-
     @Resource
     private StageManager stageManager;
+
+    @Resource
+    private SpringFxmlLoader springFxmlLoader;
+
+
+
 
     @Resource
     private MainWindowModel mainWindowModel;
@@ -308,12 +314,16 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onOpenSettingsWindowButtonClick() {
         log.info("==== onOpenSettingsWindowButtonClick ==== 点击【打开[设置]窗口】按钮！");
-//        Stage settingsWindowStage = stageManager.getSettingsWindowStage();
-//        if (null == settingsWindowStage) {
-//            settingsWindowStage = new Stage();
-//            springFxmlLoader.loadTo(FxmlViews.SETTINGS_WINDOW, settingsWindowStage);
-//
-//        }
+        Stage settingsWindowStage = stageManager.getSettingsWindowStage();
+        if (null == settingsWindowStage) {
+            // 首次打开设置窗口，初始化
+            settingsWindowStage = new Stage();
+            springFxmlLoader.loadTo(FxmlViews.SETTINGS_WINDOW, settingsWindowStage);
+            stageManager.setSettingsWindowStage(settingsWindowStage);
+        } else {
+            // 打开设置窗口
+            Platform.runLater(settingsWindowStage::show);
+        }
     }
 
     @FXML

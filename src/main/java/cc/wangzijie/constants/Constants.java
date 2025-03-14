@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Constants {
+    // 默认时间间隔：10s
+    public static final int DEFAULT_INTERVAL_SECONDS = 10;
+    public static final int MIN_INTERVAL_SECONDS = 1;
+    public static final int MAX_INTERVAL_SECONDS = 120;
 
     public static final String MAIN_WINDOW_TITLE = "OCR Client v0.1 by 王子杰";
     public static final String SETTINGS_WINDOW_TITLE = "设置";
@@ -88,4 +92,8 @@ public class Constants {
     public static final String SEARCH_IMAGE_PATH = "/icons/main/Search.png";
     public static final String DELETE_IMAGE_PATH = "/icons/main/Delete.png";
 
+    /*
+     * 设置窗口图片 - 应用设置按钮
+     */
+    public static final String APPLY_IMAGE_PATH = "/icons/settings/Apply.png";
 }
