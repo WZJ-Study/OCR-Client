@@ -1,12 +1,10 @@
 package cc.wangzijie.ui.model;
 
 import cc.wangzijie.ocr.OCRManager;
-import cc.wangzijie.config.SnapshotCameraConfig;
+import cc.wangzijie.config.SnapshotFileConfig;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
@@ -48,14 +46,14 @@ public class ScreenshotAreaModel {
     private IOcrSectionResultService ocrSectionResultService;
 
     @Resource
-    private SnapshotCameraConfig snapshotCameraConfig;
+    private SnapshotFileConfig snapshotFileConfig;
 
     @Getter
     private OCRManager ocrManager;
 
     @PostConstruct
     public void init() {
-        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, ocrSectionResultService,  snapshotCameraConfig);
+        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, ocrSectionResultService, snapshotFileConfig);
         this.settingsWindowModel.intervalSecondsProperty().addListener((observableValue, oldValue, newValue) -> {
             log.info("==== 修改定时采集间隔 ==== 设置新的采集间隔：{}秒", newValue);
             this.ocrManager.setIntervalSeconds(newValue.intValue());

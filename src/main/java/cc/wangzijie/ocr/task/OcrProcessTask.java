@@ -1,7 +1,10 @@
 package cc.wangzijie.ocr.task;
 
 
+import cc.wangzijie.config.SnapshotFileConfig;
+import cc.wangzijie.ocr.utils.DateFormat;
 import cc.wangzijie.ocr.utils.DateUtils;
+import cc.wangzijie.ocr.utils.FileSizeUtils;
 import cc.wangzijie.ocr.utils.JacksonUtils;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
@@ -44,86 +47,129 @@ public class OcrProcessTask implements Runnable {
     private final InferenceEngine ocrEngine;
 
     /**
-     * 待OCR识别的截图文件
+     * 待OCR识别的截图图片
      */
-    private final File snapshotFile;
+    private final BufferedImage snapshotImage;
 
     /**
      * OCR识别框选区域
      */
     private final Map<String, OcrSection> ocrRectMap;
 
+    /**
+     * 截屏图片保存配置
+     */
+    private final String outputFolderPath;
+    private final String fileNamePrefix;
+    private final String imageFormat;
+    private final String nowStr;
 
-    public OcrProcessTask(DataListAreaModel dataListAreaModel, IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, File snapshotFile, Map<String, OcrSection> ocrRectMap) {
+    public OcrProcessTask(DataListAreaModel dataListAreaModel, IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, BufferedImage snapshotImage, Map<String, OcrSection> ocrRectMap, SnapshotFileConfig snapshotFileConfig) {
         this.dataListAreaModel = dataListAreaModel;
         this.ocrSectionResultService = ocrSectionResultService;
-        this.snapshotFile = snapshotFile;
+        this.snapshotImage = snapshotImage;
         this.ocrRectMap = ocrRectMap;
         this.ocrEngine = ocrEngine;
+        this.nowStr = DateUtils.nowStr(DateFormat.DUMMY_CODE);
+        if (snapshotFileConfig == null) {
+            this.outputFolderPath = SnapshotFileConfig.DEFAULT_OUTPUT_FOLDER_PATH + File.separator + nowStr;
+            this.fileNamePrefix = SnapshotFileConfig.DEFAULT_FILE_NAME_PREFIX;
+            this.imageFormat = SnapshotFileConfig.DEFAULT_IMAGE_FORMAT;
+        } else {
+            this.outputFolderPath = (snapshotFileConfig.getOutputFolderPath() == null ? SnapshotFileConfig.DEFAULT_OUTPUT_FOLDER_PATH : snapshotFileConfig.getOutputFolderPath()) + File.separator + nowStr;;
+            this.fileNamePrefix = snapshotFileConfig.getFileNamePrefix() == null ? SnapshotFileConfig.DEFAULT_FILE_NAME_PREFIX : snapshotFileConfig.getFileNamePrefix();
+            this.imageFormat = snapshotFileConfig.getImageFormat() == null ? SnapshotFileConfig.DEFAULT_IMAGE_FORMAT : snapshotFileConfig.getImageFormat();
+        }
+        log.info("==== 初始化 OcrProcessTask ==== 当前时间：{}\n截屏文件输出目录: {}\n文件命名前缀：{}\n图片格式：{}\n",
+                this.nowStr, this.outputFolderPath, this.fileNamePrefix, this.imageFormat);
     }
 
     @Override
     public void run() {
-        // 读取截屏图片文件
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(snapshotFile);
-            int height = image.getHeight();
-            int width = image.getWidth();
-            log.info("==== OCR识别处理 ==== 处理截屏图片文件【{}】，图片尺寸 height = {} width = {}", snapshotFile.getName(), height, width);
-        } catch (IOException e) {
-            log.error("==== OCR识别处理 ==== 截屏图片文件打开失败，捕获到异常！", e);
+        // 创建上级目录
+        this.initOutputFolder();
+
+        // OCR识别各框选区域
+        String collectTime = DateUtils.nowStr();
+        List<OcrSectionResult> resultList = new LinkedList<>();
+        for (String key : this.ocrRectMap.keySet()) {
+            try {
+                OcrSection ocrSection = this.ocrRectMap.get(key);
+
+                // 创建截取区域的新图片
+                BufferedImage rectImage = this.snapshotImage.getSubimage(ocrSection.getX(), ocrSection.getY(), ocrSection.getWidth(), ocrSection.getHeight());
+                String subFileName = String.format("%s-%s.OCR区域.%s.%s", this.fileNamePrefix, nowStr, key, this.imageFormat);
+                String subFilePath = String.format("%s%s%s", this.outputFolderPath, File.separator, subFileName);
+
+                // 保存截取区域的图片
+                ImageIO.write(rectImage, "png", new File(subFilePath));
+
+                // 执行OCR识别
+                OcrResult ocrResult = this.ocrEngine.runOcr(subFilePath);
+                log.info("==== OCR识别处理 ==== 截屏图片文件OCR识别成功，区域：{} ==> 识别结果：{}", key, ocrResult.toString());
+                OcrSectionResult result = ocrSection.newResult(ocrResult, collectTime);
+                resultList.add(result);
+
+                // OCR识别结果更新到UI视图模型中
+                dataListAreaModel.addData(ocrSection.displayPosition(), result);
+            } catch (Exception e) {
+                log.error("==== OCR识别处理 ==== 截屏图片文件OCR识别失败，捕获到异常！", e);
+            }
         }
 
-        // 处理该截屏图片
-        if (null != image) {
-            // OCR识别各框选区域
-            String collectTime = DateUtils.nowStr();
-            List<OcrSectionResult> resultList = new LinkedList<>();
-            for (String key : this.ocrRectMap.keySet()) {
-                try {
-                    OcrSection ocrSection = this.ocrRectMap.get(key);
+        // OCR识别结果保存到数据库
+        if (this.ocrSectionResultService != null && CollectionUtils.isNotEmpty(resultList)) {
+            this.ocrSectionResultService.saveBatch(resultList);
+        }
 
-                    // 创建截取区域的新图片
-                    BufferedImage rectImage = image.getSubimage(ocrSection.getX(), ocrSection.getY(), ocrSection.getWidth(), ocrSection.getHeight());
-                    String filePath = snapshotFile.getAbsolutePath() + ".OCR区域." + key + ".png";
+        // JSON文件保存OCR识别结果
+        this.outputAsJsonFile(resultList);
 
-                    // 保存修改后的图片
-                    ImageIO.write(rectImage, "png", new File(filePath));
+        // 保存截屏图片文件
+        this.saveToFile();
 
-                    // 执行OCR识别
-                    OcrResult ocrResult = this.ocrEngine.runOcr(filePath);
-                    log.info("==== OCR识别处理 ==== 截屏图片文件OCR识别成功，区域：{} ==> 识别结果：{}", key, ocrResult.toString());
-                    OcrSectionResult result = ocrSection.newResult(ocrResult, collectTime);
-                    resultList.add(result);
+        // 绘制各框选区域并保存图片
+        this.saveDrawImageToFile();
+    }
 
-                    // OCR识别结果更新到UI视图模型中
-                    dataListAreaModel.addData(ocrSection.displayPosition(), result);
-                } catch (Exception e) {
-                    log.error("==== OCR识别处理 ==== 截屏图片文件OCR识别失败，捕获到异常！", e);
-                }
+    /**
+     * 初始化输出目录
+     */
+    private void initOutputFolder() {
+        try {
+            File file = new File(this.outputFolderPath);
+            boolean mkdirsFlag = file.mkdirs();
+            if (mkdirsFlag) {
+                log.info("==== initOutputFolder ==== 初始化输出目录：{}", this.outputFolderPath);
             }
-
-            // OCR识别结果保存到数据库
-            if (this.ocrSectionResultService != null && CollectionUtils.isNotEmpty(resultList)) {
-                this.ocrSectionResultService.saveBatch(resultList);
-            }
-
-            // JSON文件保存OCR识别结果
-            this.outputAsJsonFile(resultList);
-
-            // 绘制各框选区域并保存图片
-            this.outputDrawImage(image);
+        } catch (Exception e) {
+            log.error("==== initOutputFolder ==== 初始化输出目录失败！", e);
         }
     }
 
-    private void outputDrawImage(BufferedImage image) {
-        if (null == image) {
-            return;
+    /**
+     * 截屏图片保存为文件
+     */
+    private void saveToFile() {
+        try {
+            int height = this.snapshotImage.getHeight();
+            int width = this.snapshotImage.getWidth();
+            log.info("==== 截屏图片保存为文件 ==== 保存截屏图片，图片尺寸 height = {} width = {}", height, width);
+            String fileName = String.format("%s-%s.%s", this.fileNamePrefix, this.nowStr, this.imageFormat);
+            String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
+            File file = new File(filePath);
+            ImageIO.write(this.snapshotImage, imageFormat, file);
+            log.info("==== 截屏图片保存为文件 ==== 截屏文件大小：{} \n保存为：{}", FileSizeUtils.displayFileSize(file), file.getAbsolutePath());
+        } catch (IOException e) {
+            log.error("==== 截屏图片保存为文件 ==== 截屏文件保存失败，捕获到异常！", e);
         }
+    }
 
+
+
+    private void saveDrawImageToFile() {
         // 创建Graphics2D对象
-        Graphics2D g2d = image.createGraphics();
+        Graphics2D g2d = this.snapshotImage.createGraphics();
 
         // 设置颜色和线宽
         g2d.setColor(Color.RED);
@@ -145,10 +191,11 @@ public class OcrProcessTask implements Runnable {
 
         // 保存修改后的图片
         try {
-            String filePath = snapshotFile.getAbsolutePath() + ".绘制框选区域.png";
-            ImageIO.write(image, "png", new File(filePath));
+            String fileName = String.format("%s-%s.绘制框选区域.%s", this.fileNamePrefix, this.nowStr, this.imageFormat);
+            String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
+            ImageIO.write(this.snapshotImage, this.imageFormat, new File(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("==== OCR识别处理 ==== 绘制框选区域图片文件保存失败，捕获到异常！", e);
         }
     }
 
@@ -157,7 +204,9 @@ public class OcrProcessTask implements Runnable {
             return;
         }
         String json = JacksonUtils.toJSONStringPretty(resultList);
-        String filePath = snapshotFile.getAbsolutePath() + ".OCR识别结果.json";
+
+        String fileName = String.format("%s-%s.OCR识别结果.json", this.fileNamePrefix, this.nowStr);
+        String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
         try (OutputStream os = new FileOutputStream(filePath)) {
             IOUtils.write(json, os, Charset.defaultCharset());
         } catch (IOException e) {

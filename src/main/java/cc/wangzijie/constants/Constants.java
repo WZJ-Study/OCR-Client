@@ -6,7 +6,7 @@ import java.util.List;
 public class Constants {
     // 默认时间间隔：10s
     public static final int DEFAULT_INTERVAL_SECONDS = 10;
-    public static final int MIN_INTERVAL_SECONDS = 1;
+    public static final int MIN_INTERVAL_SECONDS = 5;
     public static final int MAX_INTERVAL_SECONDS = 120;
 
     public static final String MAIN_WINDOW_TITLE = "OCR Client v0.1 by 王子杰";

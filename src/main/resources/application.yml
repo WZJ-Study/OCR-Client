@@ -21,7 +21,7 @@ logging:
   level:
     cc.wangzijie: INFO
 
-snapshot-camera:
+snapshot-file:
   output-folder-path: D:/output
   file-name-prefix: SnapShot
   image-format: png

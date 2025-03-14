@@ -19,14 +19,12 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -42,6 +40,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -123,6 +124,8 @@ public class MainWindowView implements Initializable {
 
 
     @FXML
+    public TextField dataListTitleBarSearchInput;
+    @FXML
     private ImageView dataListTitleBarSearchButtonImage;
     @FXML
     private ImageView dataListTitleBarDeleteButtonImage;
@@ -180,9 +183,10 @@ public class MainWindowView implements Initializable {
         dataListTitleBarMenuTitle.textProperty().bind(dataListAreaModel.dataListTitleBarMenuTitleProperty());
         dataListTitleBarSearchButtonImage.imageProperty().bindBidirectional(dataListAreaModel.dataListTitleBarSearchButtonImageProperty());
         dataListTitleBarDeleteButtonImage.imageProperty().bindBidirectional(dataListAreaModel.dataListTitleBarDeleteButtonImageProperty());
+        dataListTitleBarSearchInput.textProperty().bindBidirectional(dataListAreaModel.searchTextProperty());
 
         // 绑定FXML组件与model属性 - 主界面 - 右侧数据列表
-        ocrSectionTable.itemsProperty().bindBidirectional(dataListAreaModel.ocrSectionResultListProperty());
+        ocrSectionTable.itemsProperty().bindBidirectional(dataListAreaModel.searchedOcrSectionResultListProperty());
         varChecked.setCellValueFactory(new PropertyValueFactory<>("checkedFlag"));
         varName.setCellValueFactory(new PropertyValueFactory<>("name"));
         varPosition.setCellValueFactory(new PropertyValueFactory<>("position"));
@@ -214,7 +218,7 @@ public class MainWindowView implements Initializable {
 
         // 初始化数据列表
         dataListAreaModel.setOcrSectionResultList(FXCollections.observableArrayList());
-
+        dataListAreaModel.setSearchedOcrSectionResultList(FXCollections.observableArrayList());
 
         // 处理model属性 - 标题栏logo
         mainWindowModel.setMainWindowLogoImage(ImageLoader.load(Constants.LOGO_IMAGE_PATH));
@@ -464,19 +468,37 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onDataListTitleBarMenuButtonClick() {
         log.info("==== onDataListTitleBarMenuButtonClick ==== 点击【数据列表区域-菜单栏】按钮！");
-
+        dataListAreaModel.toggleSelectAllFlag();
+        varChecked.setCellFactory(tableColumn -> new CheckBoxTableCell<>(index -> {
+            final OcrSectionResult r = ocrSectionTable.getItems().get(index);
+            boolean checked = r.getCheckedFlag() != null && r.getCheckedFlag();
+            ObservableValue<Boolean> property = new SimpleBooleanProperty(r, "checkedFlag", checked);
+            property.addListener((observable, oldValue, newValue) -> r.setCheckedFlag(newValue));
+            return property;
+        }));
     }
 
     @FXML
     protected void onDataListTitleBarSearchButtonClick() {
         log.info("==== onDataListTitleBarSearchButtonClick ==== 点击【数据列表区域-菜单栏-搜索】按钮！");
-
+        dataListAreaModel.filterData();
     }
 
     @FXML
     protected void onDataListTitleBarDeleteButtonClick() {
         log.info("==== onDataListTitleBarDeleteButtonClick ==== 点击【数据列表区域-菜单栏-删除】按钮！");
-
+        FilteredList<OcrSectionResult> checkedList = dataListAreaModel.getOcrSectionResultList().filtered(OcrSectionResult::getCheckedFlag);
+        Set<String> removeKeySet = checkedList.stream().map(OcrSectionResult::getPosition).collect(Collectors.toSet());
+        for (String removeKey : removeKeySet) {
+            log.info("==== onDataListTitleBarDeleteButtonClick ==== 执行删除：{}", removeKey);
+            // 删除选中框
+            Rectangle rect = screenshotAreaModel.removeRect(removeKey);
+            screenshotImageStackPane.getChildren().remove(rect);
+            // 删除OCR识别区域
+            screenshotAreaModel.getOcrManager().removeOcrSection(removeKey);
+            // 删除数据列表行
+            dataListAreaModel.removeData(removeKey);
+        }
     }
 
 }

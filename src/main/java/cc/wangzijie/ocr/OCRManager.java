@@ -3,8 +3,7 @@ package cc.wangzijie.ocr;
 
 import cc.wangzijie.constants.Constants;
 import cc.wangzijie.ocr.component.TaskExecutor;
-import cc.wangzijie.config.SnapshotCameraConfig;
-import cc.wangzijie.ocr.snapshot.SnapshotCamera;
+import cc.wangzijie.config.SnapshotFileConfig;
 import cc.wangzijie.ocr.snapshot.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
 import cc.wangzijie.server.entity.OcrSection;
@@ -17,7 +16,7 @@ import io.github.mymonstercat.ocr.InferenceEngine;
 import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
+import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -51,15 +50,14 @@ public class OCRManager {
     private final IOcrSectionResultService ocrSectionResultService;
 
     /**
-     * 截屏工具
+     * 截屏图片保存配置
      */
-    private final SnapshotCamera snapshotCamera;
+    private final SnapshotFileConfig snapshotFileConfig;
 
     /**
      * RapidOCR识别引擎
      */
     private final InferenceEngine ocrEngine;
-
 
     /**
      * OCR识别框选区域
@@ -93,8 +91,8 @@ public class OCRManager {
         this.dataListAreaModel = dataListAreaModel;
         this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
+        this.snapshotFileConfig = null;
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
-        this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, null);
         // 默认时间间隔：10s
         this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
@@ -103,13 +101,13 @@ public class OCRManager {
         this.running = false;
     }
 
-    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService, SnapshotCameraConfig cameraConfig) {
+    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService, SnapshotFileConfig snapshotFileConfig) {
         this.screenshotAreaModel = screenshotAreaModel;
         this.dataListAreaModel = dataListAreaModel;
         this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
+        this.snapshotFileConfig = snapshotFileConfig;
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
-        this.snapshotCamera = new SnapshotCamera(screenshotAreaModel, cameraConfig);
         // 默认时间间隔：10s
         this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
@@ -126,7 +124,7 @@ public class OCRManager {
             return;
         }
         // 开始定时截屏采集
-        SnapshotTask snapshotTask = new SnapshotTask(this, this.snapshotCamera, this.screenshotAreaModel::getScreenshotArea);
+        SnapshotTask snapshotTask = new SnapshotTask(this.screenshotAreaModel, this, this.screenshotAreaModel.getScreenshotArea());
         this.scheduledFuture = TaskExecutor.scheduleWithFixedDelay(snapshotTask, intervalSeconds, intervalSeconds, TimeUnit.SECONDS);
 
         // 开始倒计时
@@ -175,20 +173,19 @@ public class OCRManager {
         }
     }
 
-    public synchronized boolean removeOcrSection(String key) {
+    public synchronized void removeOcrSection(String key) {
         OcrSection ocrSection = this.ocrSectionMap.remove(key);
         if (ocrSection != null) {
             log.info("删除识别区域：key={} \nocrSection={}", key, ocrSection);
         }
-        return true;
     }
 
     public synchronized void clearOcrSection() {
         this.ocrSectionMap.clear();
     }
 
-    public OcrProcessTask createTask(File file) {
-        return new OcrProcessTask(this.dataListAreaModel ,this.ocrSectionResultService, this.ocrEngine, file, this.ocrSectionMap);
+    public OcrProcessTask createTask(BufferedImage screenshot) {
+        return new OcrProcessTask(this.dataListAreaModel ,this.ocrSectionResultService, this.ocrEngine, screenshot, this.ocrSectionMap, this.snapshotFileConfig);
     }
 
 }

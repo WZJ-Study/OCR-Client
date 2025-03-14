@@ -12,19 +12,19 @@ import java.io.File;
 @Setter
 @ToString
 @Configuration
-public class SnapshotCameraConfig {
+public class SnapshotFileConfig {
 
     public final static String DEFAULT_OUTPUT_FOLDER_PATH = System.getProperty("user.dir") + File.separator + "snapshots";
     public final static String DEFAULT_FILE_NAME_PREFIX = "ScreenShot";
     public final static String DEFAULT_IMAGE_FORMAT = "png";
 
-    @Value("${snapshot-camera.output-folder-path}")
+    @Value("${snapshot-file.output-folder-path}")
     private String outputFolderPath;
 
-    @Value("${snapshot-camera.file-name-prefix}")
+    @Value("${snapshot-file.file-name-prefix}")
     private String fileNamePrefix;
 
-    @Value("${snapshot-camera.image-format}")
+    @Value("${snapshot-file.image-format}")
     private String imageFormat;
 
 }
