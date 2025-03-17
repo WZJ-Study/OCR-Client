@@ -11,6 +11,7 @@ import cc.wangzijie.server.service.IOcrSectionService;
 import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
 import cc.wangzijie.ui.model.DataListAreaModel;
+import cc.wangzijie.ui.model.HistoryDataWindowModel;
 import cc.wangzijie.ui.model.MainWindowModel;
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
 import cc.wangzijie.ui.screenshot.ScreenCaptureStage;
@@ -74,6 +75,8 @@ public class MainWindowView implements Initializable {
     @Resource
     private DataListAreaModel dataListAreaModel;
 
+    @Resource
+    private HistoryDataWindowModel historyDataWindowModel;
 
 
 
@@ -361,7 +364,19 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onHistoryDataMenuButtonClick() {
         log.info("==== onHistoryDataMenuButtonClick ==== 点击【历史数据】按钮！");
-
+        Stage historyDataWindowStage = stageManager.getHistoryDataWindowStage();
+        if (null == historyDataWindowStage) {
+            // 首次打开历史数据窗口，初始化
+            historyDataWindowStage = new Stage();
+            springFxmlLoader.loadTo(FxmlViews.HISTORY_DATA_WINDOW, historyDataWindowStage);
+            stageManager.setHistoryDataWindowStage(historyDataWindowStage);
+        } else {
+            // 打开历史数据窗口
+            Platform.runLater(historyDataWindowStage::show);
+        }
+        // 重置搜索区域，执行搜索
+        historyDataWindowModel.initSearchArea();
+        historyDataWindowModel.doSearch();
     }
 
     @FXML

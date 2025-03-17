@@ -177,11 +177,11 @@
                         </BorderPane>
                         <TableView fx:id="ocrSectionTable" editable="true" maxWidth="450.0" minWidth="450.0" prefWidth="450.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="varChecked" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="" />
-                                <TableColumn fx:id="varName" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段名称" />
-                                <TableColumn fx:id="varPosition" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段位置" />
-                                <TableColumn fx:id="varType" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="字段类型" />
-                                <TableColumn fx:id="varValue" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" resizable="false" text="最新值" />
+                                <TableColumn fx:id="varChecked" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                <TableColumn fx:id="varName" maxWidth="512.0" minWidth="50.0" prefWidth="120.0" text="字段名称" />
+                                <TableColumn fx:id="varPosition" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" text="字段位置" />
+                                <TableColumn fx:id="varType" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" text="字段类型" />
+                                <TableColumn fx:id="varValue" maxWidth="512.0" minWidth="50.0" prefWidth="100.0" text="最新值" />
                             </columns>
                         </TableView>
                     </children>

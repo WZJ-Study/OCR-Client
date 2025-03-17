@@ -135,6 +135,15 @@
             <version>${javafx.version}</version>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/org.jfxtras/jfxtras-agenda -->
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jfxtras-agenda</artifactId>
+            <version>11-r2</version>
+        </dependency>
+
+
         <!--  以下是 RapidOCR 组件     -->
         <dependency>
             <groupId>io.github.mymonstercat</groupId>

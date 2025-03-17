@@ -13,7 +13,7 @@ public enum FxmlViews {
 
     MAIN_WINDOW(0, Constants.MAIN_WINDOW_TITLE, "/cc/wangzijie/ui/view/MainWindowView.fxml", "/cc/wangzijie/ui/css/MainWindowView.css", StageStyle.TRANSPARENT, true, -1.0, -1.0, 1200.0, 800.0),
     SETTINGS_WINDOW(1, Constants.SETTINGS_WINDOW_TITLE, "/cc/wangzijie/ui/view/SettingsWindowView.fxml", "/cc/wangzijie/ui/css/SettingsWindowView.css", StageStyle.TRANSPARENT, false, -1.0, -1.0,800.0, 600.0),
-    HISTORY_DATA_WINDOW(2, Constants.HISTORY_DATA_WINDOW_TITLE, "/cc/wangzijie/ui/view/HistoryDataWindowView.fxml", "/cc/wangzijie/ui/css/HistoryDataWindowView.css", StageStyle.DECORATED, true, -1.0, -1.0,800.0, 600.0),
+    HISTORY_DATA_WINDOW(2, Constants.HISTORY_DATA_WINDOW_TITLE, "/cc/wangzijie/ui/view/HistoryDataWindowView.fxml", "/cc/wangzijie/ui/css/HistoryDataWindowView.css", StageStyle.TRANSPARENT, false, -1.0, -1.0,1100.0, 600.0),
     ;
 
     private final Integer id;

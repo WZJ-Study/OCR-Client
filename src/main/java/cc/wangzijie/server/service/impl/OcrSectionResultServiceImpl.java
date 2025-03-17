@@ -6,6 +6,7 @@ import cc.wangzijie.server.service.IOcrSectionResultService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.BatchResult;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,21 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
     @Resource
     private IOcrSectionResultMapper baseMapper;
 
+
+    @Override
+    public List<OcrSectionResult> searchList(String collectTimeBegin, String collectTimeEnd, String name) {
+        LambdaQueryWrapper<OcrSectionResult> lqw = Wrappers.lambdaQuery();
+        if (StringUtils.isNotBlank(collectTimeBegin)) {
+            lqw.ge(OcrSectionResult::getCollectTime, collectTimeBegin);
+        }
+        if (StringUtils.isNotBlank(collectTimeEnd)) {
+            lqw.le(OcrSectionResult::getCollectTime, collectTimeEnd);
+        }
+        if (StringUtils.isNotBlank(name)) {
+            lqw.like(OcrSectionResult::getName, name);
+        }
+        return baseMapper.selectList(lqw);
+    }
 
     /**
      * 查询VO不分页列表

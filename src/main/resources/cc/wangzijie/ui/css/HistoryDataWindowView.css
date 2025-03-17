@@ -1,6 +1,6 @@
 
 
-.settingsWindow {
+.historyDataWindow {
     -fx-background-color: #454855;
     -fx-background-radius: 5px;
     -fx-border-color: white;
@@ -10,19 +10,19 @@
 }
 
 
-.settingsWindowBorder {
+.historyDataWindowBorder {
     -fx-border-color: red;
     -fx-border-style: solid;
     -fx-border-width: 0;
     -fx-border-radius: 5px;
 }
 
-.settingsWindowBottom {
+.historyDataWindowBottom {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
 }
 
-.settingsRow {
+.historyDataRow {
     -fx-background-color: #404455;
     -fx-background-radius: 5px;
     -fx-border-color: white;
@@ -31,7 +31,7 @@
 }
 
 
-.settingsWindowTitleBar {
+.historyDataWindowTitleBar {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: orange;
@@ -41,7 +41,7 @@
 }
 
 
-.settingsWindowTitleBarLogoArea {
+.historyDataWindowTitleBarLogoArea {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: yellow;
@@ -50,7 +50,7 @@
     -fx-border-radius: 5px;
 }
 
-.settingsWindowTitleBarBtnArea {
+.historyDataWindowTitleBarBtnArea {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: yellow;
@@ -59,7 +59,7 @@
     -fx-border-radius: 5px;
 }
 
-.settingsWindowButton {
+.historyDataWindowButton {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: #2A2C37;
@@ -69,7 +69,7 @@
     -fx-border-insets: 2px;
 }
 
-.settingsWindowButton:hover {
+.historyDataWindowButton:hover {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;
@@ -79,7 +79,7 @@
     -fx-border-insets: 2px;
 }
 
-.settingsWindowButton:pressed {
+.historyDataWindowButton:pressed {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;
     -fx-border-color: #FFFFFF;

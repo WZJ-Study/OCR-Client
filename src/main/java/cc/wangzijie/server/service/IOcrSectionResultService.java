@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IOcrSectionResultService {
 
+    List<OcrSectionResult> searchList(String collectTimeBegin, String collectTimeEnd, String name);
+
     /**
      * 查询VO不分页列表
      *
