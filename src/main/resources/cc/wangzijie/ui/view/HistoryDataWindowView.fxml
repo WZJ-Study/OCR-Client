@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import jfxtras.scene.control.*?>
 
-<VBox alignment="CENTER" maxHeight="1200.0" maxWidth="1600.0" minHeight="600.0" minWidth="1100.0" styleClass="historyDataWindow" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.wangzijie.ui.view.HistoryDataWindowView">
+<VBox alignment="CENTER" maxHeight="1200.0" maxWidth="1600.0" minHeight="600.0" minWidth="1100.0" styleClass="historyDataWindow" xmlns="http://javafx.com/javafx/17.0.14" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.wangzijie.ui.view.HistoryDataWindowView">
     <children>
         <!-- 标题栏 & 菜单栏 -->
         <BorderPane maxHeight="40.0" minHeight="40.0" onMouseDragged="#onHistoryDataWindowMouseDragged" onMousePressed="#onHistoryDataWindowMousePressed" prefHeight="40.0" styleClass="historyDataWindowTitleBar" VBox.vgrow="NEVER">

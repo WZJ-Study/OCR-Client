@@ -20,7 +20,7 @@
         <rapidocr.version>0.0.7</rapidocr.version>
 
         <!-- 以下是 JavaFX 组件版本号 -->
-        <javafx.version>17.0.6</javafx.version>
+        <javafx.version>17.0.14</javafx.version>
 
         <!-- 以下是 postgres数据库 组件版本号 -->
         <postgres.version>42.7.4</postgres.version>
