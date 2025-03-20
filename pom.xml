@@ -150,11 +150,7 @@
             <artifactId>rapidocr</artifactId>
             <version>${rapidocr.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.mymonstercat</groupId>
-            <artifactId>rapidocr-onnx-platform</artifactId>
-            <version>${rapidocr.version}</version>
-        </dependency>
+
 
     </dependencies>
     <dependencyManagement>
@@ -170,6 +166,7 @@
     </dependencyManagement>
 
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -188,6 +185,7 @@
                 <configuration>
                     <mainClass>cc.wangzijie.OcrClientApplication</mainClass>
                     <skip>true</skip>
+                    <includeSystemScope>true</includeSystemScope>
                 </configuration>
                 <executions>
                     <execution>
@@ -199,16 +197,101 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.6</version>
+                <configuration>
+                    <name>PT.OCR</name>
+                    <!--程序入口文件/启动类 -->
+                    <mainClass>cc.wangzijie.OcrClientApplication</mainClass>
+                    <!-- 精简版jre -->
+                    <bundleJre>true</bundleJre>
+                    <!--平台-->
+                    <platform>windows</platform>
+                    <!-- exe 名称，通过引用的方式 -->
+                    <displayName>PT.OCR</displayName>
+                    <!--生成压缩包-->
+                    <createZipball>true</createZipball>
+                    <!--生成安装程序-->
+                    <generateInstaller>true</generateInstaller>
+                    <!-- 不使用管理员身份打开程序 -->
+                    <administratorRequired>false</administratorRequired>
+
+                    <!--                            &lt;!&ndash;  添加精简jre缺少的模块  &ndash;&gt;-->
+                    <!--                            <additionalModules>-->
+                    <!--                                &lt;!&ndash;  我这里自动生成的精简jre缺少这个模块，运行会报错  &ndash;&gt;-->
+                    <!--                                <additionalModule>jdk.charsets</additionalModule>-->
+                    <!--                            </additionalModules>-->
+                    <!--                            &lt;!&ndash; 将指定文件夹包含到生成的程序路径 &ndash;&gt;-->
+                    <!--                            <additionalResources>-->
+                    <!--                                <additionalResource>D:\projects\aio\config</additionalResource>-->
+                    <!--                                <additionalResource>D:\projects\aio\logs</additionalResource>-->
+                    <!--                                <additionalResource>D:\projects\aio\parameter</additionalResource>-->
+                    <!--                            </additionalResources>-->
+
+                    <!--                            &lt;!&ndash; 虚拟机参数 &ndash;&gt;-->
+                    <!--                            <vmArgs>-->
+                    <!--                                <vmArg>-Dfile.encoding=utf-8</vmArg>-->
+                    <!--                                <vmArg>&#45;&#45;add-opens java.base/java.lang=ALL-UNNAMED</vmArg>-->
+                    <!--                            </vmArgs>-->
+
+
+                    <!-- 特定平台参数 -->
+                    <winConfig>
+                        <wrapJar>true</wrapJar>
+                        <!--生成安装程序-->
+                        <generateSetup>true</generateSetup>
+                        <!--生成Msi-->
+                        <generateMsi>true</generateMsi>
+                        <!--标头类型 console-->
+                        <headerType>gui</headerType>
+                        <!--文件版本-->
+                        <fileVersion>1.0.0.0</fileVersion>
+                        <!--txt文件版本-->
+                        <txtFileVersion>${project.version}</txtFileVersion>
+                        <!--产品版本-->
+                        <productVersion>1.0.0.0</productVersion>
+                        <!--txt产品版本-->
+                        <txtProductVersion>${project.version}</txtProductVersion>
+                        <!--文件描述-->
+                        <fileDescription>${project.description}</fileDescription>
+                        <!--产品名称-->
+                        <productName>${project.name}</productName>
+                        <!--内部名称-->
+                        <internalName>${project.name}</internalName>
+                        <!--原始文件名-->
+                        <originalFilename>${project.name}.exe</originalFilename>
+                        <!--exe创建工具 winrun4j  launch4j-->
+                        <exeCreationTool>winrun4j</exeCreationTool>
+                        <!--设置模式-->
+                        <setupMode>installForAllUsers</setupMode>
+                        <!--设置语言-->
+                        <setupLanguages>
+                            <ChineseSimplified>compiler:Languages\ChineseSimplified.isl</ChineseSimplified>
+                        </setupLanguages>
+                        <!--禁用目录页-->
+                        <disableDirPage>false</disableDirPage>
+                        <!--禁用程序组页面-->
+                        <disableProgramGroupPage>false</disableProgramGroupPage>
+                        <!--禁用已完成页面-->
+                        <disableFinishedPage>false</disableFinishedPage>
+                        <!--禁用安装后运行-->
+                        <disableRunAfterInstall>false</disableRunAfterInstall>
+                        <!--禁用欢迎页面-->
+                        <disableWelcomePage>false</disableWelcomePage>
+                        <!--创建桌面图标任务-->
+                        <createDesktopIconTask>true</createDesktopIconTask>
+
+                        <!-- 软件图标 -->
+                        <icoFile>${project.basedir}/src/main/resources/icons/OCR.ico</icoFile>
+                    </winConfig>
+                </configuration>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>cc.wangzijie.OcrClientApplication</mainClass>
-                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
