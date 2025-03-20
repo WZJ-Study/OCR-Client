@@ -2,11 +2,15 @@ package cc.wangzijie.server.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -22,10 +26,9 @@ public class SqliteUtils {
         try (Connection connection = dataSource.getConnection()) {
             if (!testDb(connection, testSql)) {
                 log.info("==== 初始化数据库 ==== 数据库表结构初始化！执行Sql文件：{}", initDbSqlFile);
-                File file = new File(initDbSqlFile);
-                String initDbSqls = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-                log.info("==== 初始化数据库 ==== 数据库表结构初始化！执行Sql文件内容：{}", initDbSqls);
-                doInitSqliteDb(connection, testSql, initDbSqls.split(";"));
+                String initDbSql = parseSql(initDbSqlFile);
+                log.info("==== 初始化数据库 ==== 数据库表结构初始化！执行Sql文件内容：{}", initDbSql);
+                doInitSqliteDb(connection, testSql, initDbSql.split(";"));
                 // 再次检查
                 if (testDb(connection, testSql)) {
                     log.info("==== 初始化数据库 ==== 数据库表结构初始化成功！");
@@ -35,6 +38,17 @@ public class SqliteUtils {
             }
         } catch (Exception e) {
             log.error("==== 初始化数据库 ==== 数据库初始化失败！", e);
+        }
+    }
+
+    protected static String parseSql(String initDbSqlFile) {
+        try (InputStream is = SqliteUtils.class.getClassLoader().getResourceAsStream(initDbSqlFile)) {
+            if (is != null) {
+                return IOUtils.toString(is, StandardCharsets.UTF_8);
+            }
+            return "";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -1,4 +1,5 @@
 out/
+sqlite/
 
 HELP.md
 target/
