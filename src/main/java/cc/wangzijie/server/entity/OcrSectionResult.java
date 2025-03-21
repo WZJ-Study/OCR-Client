@@ -1,18 +1,14 @@
 package cc.wangzijie.server.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("ocr_section_result")
 public class OcrSectionResult {
 
 
     /**
      * checkBox选中情况
      */
-    @TableField(exist = false)
     private Boolean checkedFlag = false;
 
     /**

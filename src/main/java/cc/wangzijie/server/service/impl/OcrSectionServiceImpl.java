@@ -1,48 +1,34 @@
 package cc.wangzijie.server.service.impl;
 
 import cc.wangzijie.server.entity.OcrSection;
-import cc.wangzijie.server.mapper.IOcrSectionMapper;
 import cc.wangzijie.server.service.IOcrSectionService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cc.wangzijie.utils.PreparedStatementHelper;
+import cc.wangzijie.utils.SnowflakeIdWorker;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 
 @Slf4j
 @Service
 public class OcrSectionServiceImpl implements IOcrSectionService {
 
     @Resource
-    private IOcrSectionMapper baseMapper;
+    private IOcrSectionService service;
 
+    @Resource
+    private DataSource dataSource;
 
-    /**
-     * 查询VO不分页列表
-     *
-     * @param entity 查询参数
-     * @return 不分页列表
-     */
-    @Override
-    public List<OcrSection> getList(OcrSection entity) {
-        LambdaQueryWrapper<OcrSection> lqw = Wrappers.lambdaQuery(entity);
-        return baseMapper.selectList(lqw);
-    }
+    private static final String INSERT_SQL = "insert into ocr_section " +
+                                             "( id, name, position, x, y, trans_x, trans_y, width, height, type ) " +
+                                             "values " +
+                                             "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
 
-    /**
-     * 根据ID查询单条VO记录
-     *
-     * @param id ID
-     * @return 单条记录
-     */
-    @Override
-    public OcrSection getById(Long id) {
-        return baseMapper.selectById(id);
-    }
 
     /**
      * 创建新增
@@ -52,40 +38,40 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
      */
     @Override
     public boolean save(OcrSection entity) {
-        return baseMapper.insert(entity) > 0;
-    }
-
-    /**
-     * 编辑修改
-     *
-     * @param entity 实体类对象
-     * @return 操作是否成功
-     */
-    @Override
-    public boolean updateById(OcrSection entity) {
-        return baseMapper.updateById(entity) > 0;
-    }
-
-    /**
-     * 根据IDs批量删除（软删除）
-     *
-     * @param ids ID列表
-     * @return 操作是否成功
-     */
-    @Override
-    public boolean removeByIds(List<Long> ids) {
-        return baseMapper.deleteByIds(ids) > 0;
+        if (entity == null) {
+            return false;
+        }
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
+            ps.setLong(1, entity.getId() == null ? SnowflakeIdWorker.generateId() : entity.getId());
+            PreparedStatementHelper.setStringOrNull(ps,2, entity.getName());
+            PreparedStatementHelper.setStringOrNull(ps,3, entity.getPosition());
+            PreparedStatementHelper.setIntOrNull(ps,4, entity.getX());
+            PreparedStatementHelper.setIntOrNull(ps,5, entity.getY());
+            PreparedStatementHelper.setIntOrNull(ps,6, entity.getTransX());
+            PreparedStatementHelper.setIntOrNull(ps,7, entity.getTransY());
+            PreparedStatementHelper.setIntOrNull(ps,8, entity.getWidth());
+            PreparedStatementHelper.setIntOrNull(ps,9, entity.getHeight());
+            PreparedStatementHelper.setStringOrNull(ps,10, entity.getType());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            log.error("==== save ==== 保存失败！", e);
+        }
+        return false;
     }
 
     @Override
     public OcrSection createNewSection(Rectangle rect) {
         OcrSection entity = new OcrSection();
-        entity.setId(IdWorker.getId());
-        entity.setName("字段#" + IdWorker.getMillisecond());
+        entity.setId(SnowflakeIdWorker.generateId());
+        entity.setName("字段#" + System.currentTimeMillis());
         entity.fillByRect(rect);
         entity.displayPosition();
         entity.setType("文本");
-        baseMapper.insert(entity);
+
+        if (service.save(entity)) {
+            log.info("==== createNewSection ==== 向数据库中保存成功！");
+        };
 
         return entity;
     }

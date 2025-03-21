@@ -1,17 +1,21 @@
 package cc.wangzijie.server.service.impl;
 
 import cc.wangzijie.server.entity.OcrSectionResult;
-import cc.wangzijie.server.mapper.IOcrSectionResultMapper;
 import cc.wangzijie.server.service.IOcrSectionResultService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cc.wangzijie.utils.PreparedStatementHelper;
+import cc.wangzijie.utils.SnowflakeIdWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.executor.BatchResult;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -19,46 +23,56 @@ import java.util.List;
 public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
 
     @Resource
-    private IOcrSectionResultMapper baseMapper;
+    private DataSource dataSource;
 
+    private static final String INSERT_SQL = "insert into ocr_section_result " +
+            "( id, section_id, name, position, x, y, trans_x, trans_y, width, height, type, value, collect_time ) " +
+            "values " +
+            "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+    private static final int BATCH_SIZE = 100;
 
     @Override
     public List<OcrSectionResult> searchList(String collectTimeBegin, String collectTimeEnd, String name) {
-        LambdaQueryWrapper<OcrSectionResult> lqw = Wrappers.lambdaQuery();
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(" SELECT * FROM ocr_section_result WHERE 1=1 ");
         if (StringUtils.isNotBlank(collectTimeBegin)) {
-            lqw.ge(OcrSectionResult::getCollectTime, collectTimeBegin);
+            sqlBuilder.append(" and collect_time >= '").append(collectTimeBegin).append("' ");
         }
         if (StringUtils.isNotBlank(collectTimeEnd)) {
-            lqw.le(OcrSectionResult::getCollectTime, collectTimeEnd);
+            sqlBuilder.append(" and collect_time <= '").append(collectTimeEnd).append("' ");
         }
         if (StringUtils.isNotBlank(name)) {
-            lqw.like(OcrSectionResult::getName, name);
+            sqlBuilder.append(" and name like '%' || '").append(name).append("' || '%'");
         }
-        return baseMapper.selectList(lqw);
+        String sql = sqlBuilder.toString();
+        log.info("==== searchList ==== 准备SQL：{}", sql);
+        List<OcrSectionResult> resultList = new LinkedList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                OcrSectionResult result = new OcrSectionResult();
+                result.setId(rs.getLong("id"));
+                result.setSectionId(rs.getLong("section_id"));
+                result.setName(rs.getString("name"));
+                result.setPosition(rs.getString("position"));
+                result.setX(rs.getInt("x"));
+                result.setY(rs.getInt("y"));
+                result.setTransX(rs.getInt("trans_x"));
+                result.setTransY(rs.getInt("trans_y"));
+                result.setWidth(rs.getInt("width"));
+                result.setHeight(rs.getInt("height"));
+                result.setType(rs.getString("type"));
+                result.setValue(rs.getString("value"));
+                result.setCollectTime(rs.getString("collect_time"));
+                resultList.add(result);
+            }
+        } catch (Exception e) {
+            log.error("==== searchList ==== 查询失败！", e);
+        }
+        return resultList;
     }
 
-    /**
-     * 查询VO不分页列表
-     *
-     * @param entity 查询参数
-     * @return 不分页列表
-     */
-    @Override
-    public List<OcrSectionResult> getList(OcrSectionResult entity) {
-        LambdaQueryWrapper<OcrSectionResult> lqw = Wrappers.lambdaQuery(entity);
-        return baseMapper.selectList(lqw);
-    }
-
-    /**
-     * 根据ID查询单条VO记录
-     *
-     * @param id ID
-     * @return 单条记录
-     */
-    @Override
-    public OcrSectionResult getById(Long id) {
-        return baseMapper.selectById(id);
-    }
 
     /**
      * 创建新增
@@ -68,7 +82,29 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
      */
     @Override
     public boolean save(OcrSectionResult entity) {
-        return baseMapper.insert(entity) > 0;
+        if (entity == null) {
+            return false;
+        }
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
+            ps.setLong(1, entity.getId() == null ? SnowflakeIdWorker.generateId() : entity.getId());
+            PreparedStatementHelper.setLongOrNull(ps, 2, entity.getSectionId());
+            PreparedStatementHelper.setStringOrNull(ps, 3, entity.getName());
+            PreparedStatementHelper.setStringOrNull(ps, 4, entity.getPosition());
+            PreparedStatementHelper.setIntOrNull(ps, 5, entity.getX());
+            PreparedStatementHelper.setIntOrNull(ps,6, entity.getY());
+            PreparedStatementHelper.setIntOrNull(ps,7, entity.getTransX());
+            PreparedStatementHelper.setIntOrNull(ps,8, entity.getTransY());
+            PreparedStatementHelper.setIntOrNull(ps,9, entity.getWidth());
+            PreparedStatementHelper.setIntOrNull(ps,10, entity.getHeight());
+            PreparedStatementHelper.setStringOrNull(ps, 11, entity.getType());
+            PreparedStatementHelper.setStringOrNull(ps, 12, entity.getValue());
+            PreparedStatementHelper.setStringOrNull(ps, 13, entity.getCollectTime());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            log.error("==== save ==== 保存失败！", e);
+        }
+        return false;
     }
 
     /**
@@ -79,30 +115,40 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
      */
     @Override
     public boolean saveBatch(Collection<OcrSectionResult> entityList) {
-        List<BatchResult> batchResults = baseMapper.insert(entityList);
-        log.info("批量新增：{}", batchResults);
-        return true;
+        if (CollectionUtils.isEmpty(entityList)) {
+            return false;
+        }
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
+            int index = 0;
+            int total = entityList.size();
+            for (OcrSectionResult entity : entityList) {
+                index++;
+                ps.setLong(1, entity.getId() == null ? SnowflakeIdWorker.generateId() : entity.getId());
+                PreparedStatementHelper.setLongOrNull(ps, 2, entity.getSectionId());
+                PreparedStatementHelper.setStringOrNull(ps, 3, entity.getName());
+                PreparedStatementHelper.setStringOrNull(ps, 4, entity.getPosition());
+                PreparedStatementHelper.setIntOrNull(ps, 5, entity.getX());
+                PreparedStatementHelper.setIntOrNull(ps,6, entity.getY());
+                PreparedStatementHelper.setIntOrNull(ps,7, entity.getTransX());
+                PreparedStatementHelper.setIntOrNull(ps,8, entity.getTransY());
+                PreparedStatementHelper.setIntOrNull(ps,9, entity.getWidth());
+                PreparedStatementHelper.setIntOrNull(ps,10, entity.getHeight());
+                PreparedStatementHelper.setStringOrNull(ps, 11, entity.getType());
+                PreparedStatementHelper.setStringOrNull(ps, 12, entity.getValue());
+                PreparedStatementHelper.setStringOrNull(ps, 13, entity.getCollectTime());
+                ps.addBatch();
+                if ((index % BATCH_SIZE == 0) || index == total) {
+                    ps.executeBatch();
+                    connection.commit();
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("==== save ==== 保存失败！", e);
+        }
+        return false;
     }
 
-    /**
-     * 编辑修改
-     *
-     * @param entity 实体类对象
-     * @return 操作是否成功
-     */
-    @Override
-    public boolean updateById(OcrSectionResult entity) {
-        return baseMapper.updateById(entity) > 0;
-    }
-
-    /**
-     * 根据IDs批量删除（软删除）
-     *
-     * @param ids ID列表
-     * @return 操作是否成功
-     */
-    @Override
-    public boolean removeByIds(List<Long> ids) {
-        return baseMapper.deleteByIds(ids) > 0;
-    }
 }

@@ -1,14 +1,12 @@
 package cc.wangzijie.server.entity;
 
 import cc.wangzijie.ocr.utils.DateUtils;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import cc.wangzijie.utils.SnowflakeIdWorker;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import javafx.scene.shape.Rectangle;
 import lombok.Data;
 
 @Data
-@TableName("ocr_section")
 public class OcrSection {
 
     /**
@@ -85,7 +83,7 @@ public class OcrSection {
 
     public OcrSectionResult newResult(String value) {
         OcrSectionResult result = new OcrSectionResult();
-        result.setId(IdWorker.getId());
+        result.setId(SnowflakeIdWorker.generateId());
         result.setSectionId(this.id);
         result.setName(this.name);
         result.setPosition(this.position);
@@ -103,7 +101,7 @@ public class OcrSection {
 
     public OcrSectionResult newResult(OcrResult ocrResult, String collectTime) {
         OcrSectionResult result = new OcrSectionResult();
-        result.setId(IdWorker.getId());
+        result.setId(SnowflakeIdWorker.generateId());
         result.setSectionId(this.id);
         result.setName(this.name);
         result.setPosition(this.position);

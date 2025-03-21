@@ -61,13 +61,13 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 以下是 postgres数据库 组件 -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgres.version}</version>
-            <scope>runtime</scope>
-        </dependency>
+<!--        &lt;!&ndash; 以下是 postgres数据库 组件 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--            <version>${postgres.version}</version>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
         <!-- 以下是 sqlite数据库 组件 -->
         <dependency>
@@ -77,12 +77,20 @@
         </dependency>
 
 
-        <!-- 以下是 mybatis-plus 组件 -->
+<!--        &lt;!&ndash; 以下是 mybatis-plus 组件 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.baomidou</groupId>-->
+<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
+<!--            <version>${mybatis-plus.version}</version>-->
+<!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>2.7.18</version>
         </dependency>
+
 
         <!-- 以下是 Apache Commons工具包 组件 -->
         <dependency>
@@ -144,13 +152,17 @@
         </dependency>
 
 
-        <!--  以下是 RapidOCR 组件     -->
+        <!--  以下是 RapidOCR 组件 （github Fork重写）  -->
         <dependency>
-            <groupId>io.github.mymonstercat</groupId>
+            <groupId>cc.wangzijie</groupId>
             <artifactId>rapidocr</artifactId>
             <version>${rapidocr.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>cc.wangzijie</groupId>
+            <artifactId>rapidocr-onnx-platform</artifactId>
+            <version>${rapidocr.version}</version>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>
