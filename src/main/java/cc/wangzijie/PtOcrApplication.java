@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
-public class OcrClientApplication {
+public class PtOcrApplication {
 
     public static void main(String[] args) {
-        SpringApplicationBuilder builder = new SpringApplicationBuilder(OcrClientApplication.class);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(PtOcrApplication.class);
         builder.headless(false);
         SpringHelper.setApplicationContext(builder.run(args));
         JavaFxApplication.main(args);

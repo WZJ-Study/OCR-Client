@@ -8,14 +8,14 @@ import java.util.List;
 
 public class Constants {
     // 默认时间间隔：10s
-    public static final int DEFAULT_INTERVAL_SECONDS = 10;
+    public static final int DEFAULT_INTERVAL_SECONDS = 5;
     public static final int MIN_INTERVAL_SECONDS = 5;
     public static final int MAX_INTERVAL_SECONDS = 120;
 
     public static final DateTimeFormatter DT_FORMAT = DateTimeFormatter.ofPattern(DateFormat.YYYY_MM_DD_HH_MM_SS);
 
 
-    public static final String MAIN_WINDOW_TITLE = "OCR Client v0.1 by 王子杰";
+    public static final String MAIN_WINDOW_TITLE = "PT.OCR v0.1";
     public static final String SETTINGS_WINDOW_TITLE = "设置";
     public static final String HISTORY_DATA_WINDOW_TITLE = "历史数据";
 

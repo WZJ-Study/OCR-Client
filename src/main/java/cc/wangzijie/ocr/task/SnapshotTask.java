@@ -1,4 +1,4 @@
-package cc.wangzijie.ocr.snapshot;
+package cc.wangzijie.ocr.task;
 
 import cc.wangzijie.ocr.OCRManager;
 import cc.wangzijie.ocr.component.TaskExecutor;
@@ -8,7 +8,6 @@ import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.image.BufferedImage;
-import java.util.function.Supplier;
 
 @Slf4j
 public class SnapshotTask implements Runnable {

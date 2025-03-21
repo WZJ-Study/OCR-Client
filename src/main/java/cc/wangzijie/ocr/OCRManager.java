@@ -4,7 +4,7 @@ package cc.wangzijie.ocr;
 import cc.wangzijie.constants.Constants;
 import cc.wangzijie.ocr.component.TaskExecutor;
 import cc.wangzijie.config.SnapshotFileConfig;
-import cc.wangzijie.ocr.snapshot.SnapshotTask;
+import cc.wangzijie.ocr.task.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.service.IOcrSectionResultService;
@@ -92,7 +92,7 @@ public class OCRManager {
         this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.snapshotFileConfig = null;
-        this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
+        this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V4);
         // 默认时间间隔：10s
         this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
@@ -107,7 +107,7 @@ public class OCRManager {
         this.mainWindowModel = mainWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.snapshotFileConfig = snapshotFileConfig;
-        this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V3);
+        this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V4);
         // 默认时间间隔：10s
         this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
