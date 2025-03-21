@@ -19,6 +19,18 @@ public class TaskExecutor {
      */
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(CORE_POOL_SIZE);
 
+    static {
+        // 清理代码，例如关闭数据库连接、停止线程等
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!SCHEDULED_EXECUTOR_SERVICE.isShutdown()) {
+                SCHEDULED_EXECUTOR_SERVICE.shutdown();
+            }
+            if (!EXECUTOR_SERVICE.isShutdown()) {
+                EXECUTOR_SERVICE.shutdown();
+            }
+        }));
+    }
+
     /**
      * 运行任务
      *

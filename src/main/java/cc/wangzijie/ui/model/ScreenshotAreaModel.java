@@ -54,7 +54,13 @@ public class ScreenshotAreaModel {
             log.info("==== 修改定时采集间隔 ==== 设置新的采集间隔：{}秒", newValue);
             this.ocrManager.setIntervalSeconds(newValue.intValue());
         });
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // 清理代码，例如关闭数据库连接、停止线程等
+            this.ocrManager.stop();
+        }));
     }
+
 
     @Getter
     private final Map<String, Rectangle> rectMap = new ConcurrentHashMap<>();

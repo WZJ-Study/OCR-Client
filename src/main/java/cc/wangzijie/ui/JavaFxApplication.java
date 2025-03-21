@@ -19,6 +19,7 @@ public class JavaFxApplication extends Application {
     public void stop(){
         SpringHelper.close();
         Platform.exit();
+        System.exit(0);
     }
 
     public static void main(String[] args) {
