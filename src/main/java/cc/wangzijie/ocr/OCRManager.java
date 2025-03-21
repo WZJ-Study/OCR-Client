@@ -133,9 +133,17 @@ public class OCRManager {
      */
     public synchronized void stop() {
         // 停止截屏定时任务
-        this.scheduledFuture.cancel(true);
+        if (null != this.scheduledFuture) {
+            if (!this.scheduledFuture.isCancelled() || !this.scheduledFuture.isDone()) {
+                this.scheduledFuture.cancel(true);
+            }
+        }
         // 结束倒计时
-        this.countDownFuture.cancel(true);
+        if (null != this.countDownFuture) {
+            if (!this.countDownFuture.isCancelled() || !this.countDownFuture.isDone()) {
+                this.countDownFuture.cancel(true);
+            }
+        }
         // 设置运行标志=已停止
         this.running = false;
         // 确保UI更新在JavaFX线程中执行
