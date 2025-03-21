@@ -78,6 +78,14 @@ public class OcrSectionResult {
      */
     private String collectTime;
 
+    public OcrSection toSection() {
+        OcrSection section = new OcrSection();
+        section.setId(this.sectionId);
+        section.setName(this.name);
+        section.setType(this.type);
+        return section;
+    }
+
     public OcrSectionResultDisplayVO toDisplay() {
         OcrSectionResultDisplayVO vo = new OcrSectionResultDisplayVO();
         vo.setName(this.name);

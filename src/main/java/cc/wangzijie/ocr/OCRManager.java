@@ -166,6 +166,15 @@ public class OCRManager {
         }
     }
 
+    public synchronized void onSectionEdit(String key, String name, String type) {
+        OcrSection ocrSection = this.ocrSectionMap.get(key);
+        if (ocrSection != null) {
+            ocrSection.setName(name);
+            ocrSection.setType(type);
+            log.info("更新识别区域：key={} \nname={}\ntype={}", key, name, type);
+        }
+    }
+
     public synchronized OcrSection removeOcrSection(String key) {
         OcrSection ocrSection = this.ocrSectionMap.remove(key);
         if (ocrSection != null) {

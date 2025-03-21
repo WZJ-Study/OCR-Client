@@ -6,6 +6,7 @@ import cc.wangzijie.utils.PreparedStatementHelper;
 import cc.wangzijie.utils.SnowflakeIdWorker;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,16 +31,16 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
                                              "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
 
 
+
     /**
      * 创建新增
      *
      * @param entity 实体类对象
-     * @return 操作是否成功
      */
     @Override
-    public boolean save(OcrSection entity) {
+    public void save(OcrSection entity) {
         if (entity == null) {
-            return false;
+            return;
         }
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
@@ -53,12 +54,51 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
             PreparedStatementHelper.setIntOrNull(ps,8, entity.getWidth());
             PreparedStatementHelper.setIntOrNull(ps,9, entity.getHeight());
             PreparedStatementHelper.setStringOrNull(ps,10, entity.getType());
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
         } catch (Exception e) {
             log.error("==== save ==== 保存失败！", e);
         }
-        return false;
     }
+
+    /**
+     * 根据ID更新
+     *
+     * @param id   区域ID
+     * @param name 区域名称
+     * @param type 区域类型
+     */
+    @Override
+    public void updateNameTypeById(Long id, String name, String type) {
+        if (id == null) {
+            return;
+        } else if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
+            return;
+        }
+        StringBuilder sql = new StringBuilder(" update ocr_section set ");
+        boolean commaFlag = false;
+        if (StringUtils.isNotEmpty(name)) {
+            sql.append(" name = '").append(name).append("'");
+            commaFlag = true;
+        }
+        if (StringUtils.isNotEmpty(type)) {
+            if (commaFlag) {
+                sql.append(",");
+            }
+            sql.append(" type = '").append(type).append("'");
+        }
+        sql.append(" where id = '").append(id).append("' ");
+        String sqlStr = sql.toString();
+        log.info("==== updateNameTypeById ==== 准备SQL：{}", sqlStr);
+
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(sqlStr);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            log.error("==== updateNameTypeById ==== 保存失败！", e);
+        }
+    }
+
+
 
     @Override
     public OcrSection createNewSection(Rectangle rect) {
@@ -68,11 +108,7 @@ public class OcrSectionServiceImpl implements IOcrSectionService {
         entity.fillByRect(rect);
         entity.displayPosition();
         entity.setType("文本");
-
-        if (service.save(entity)) {
-            log.info("==== createNewSection ==== 向数据库中保存成功！");
-        };
-
+        service.save(entity);
         return entity;
     }
 }

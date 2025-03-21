@@ -161,12 +161,12 @@
 
         <!--  以下是 RapidOCR 组件 （github Fork重写）  -->
         <dependency>
-            <groupId>cc.wangzijie</groupId>
+            <groupId>io.github.mymonstercat</groupId>
             <artifactId>rapidocr</artifactId>
             <version>${rapidocr.version}</version>
         </dependency>
         <dependency>
-            <groupId>cc.wangzijie</groupId>
+            <groupId>io.github.mymonstercat</groupId>
             <artifactId>rapidocr-onnx-platform</artifactId>
             <version>${rapidocr.version}</version>
         </dependency>

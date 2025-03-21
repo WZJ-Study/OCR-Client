@@ -78,12 +78,11 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
      * 创建新增
      *
      * @param entity 实体类对象
-     * @return 操作是否成功
      */
     @Override
-    public boolean save(OcrSectionResult entity) {
+    public void save(OcrSectionResult entity) {
         if (entity == null) {
-            return false;
+            return;
         }
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL);
@@ -100,23 +99,21 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
             PreparedStatementHelper.setStringOrNull(ps, 11, entity.getType());
             PreparedStatementHelper.setStringOrNull(ps, 12, entity.getValue());
             PreparedStatementHelper.setStringOrNull(ps, 13, entity.getCollectTime());
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
         } catch (Exception e) {
             log.error("==== save ==== 保存失败！", e);
         }
-        return false;
     }
 
     /**
      * 批量创建新增
      *
      * @param entityList 实体类对象列表
-     * @return 操作是否成功
      */
     @Override
-    public boolean saveBatch(Collection<OcrSectionResult> entityList) {
+    public void saveBatch(Collection<OcrSectionResult> entityList) {
         if (CollectionUtils.isEmpty(entityList)) {
-            return false;
+            return;
         }
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
@@ -144,11 +141,9 @@ public class OcrSectionResultServiceImpl implements IOcrSectionResultService {
                     connection.commit();
                 }
             }
-            return true;
         } catch (Exception e) {
             log.error("==== save ==== 保存失败！", e);
         }
-        return false;
     }
 
 }

@@ -14,9 +14,17 @@ public interface IOcrSectionService {
      * 创建新增
      *
      * @param entity  实体类对象
-     * @return 操作是否成功
      */
-    boolean save(OcrSection entity);
+    void save(OcrSection entity);
+
+    /**
+     * 根据ID更新
+     *
+     * @param id 区域ID
+     * @param name 区域名称
+     * @param type 区域类型
+     */
+    void updateNameTypeById(Long id, String name, String type);
 
     OcrSection createNewSection(Rectangle rect);
 }

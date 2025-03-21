@@ -213,12 +213,14 @@ public class MainWindowView implements Initializable {
                     int row = event.getTablePosition().getRow();
                     OcrSectionResult r = event.getTableView().getItems().get(row);
                     r.setName(event.getNewValue());
+                    onSectionEdit(r);
                 });
         varType.setOnEditCommit(
                 event -> {
                     int row = event.getTablePosition().getRow();
                     OcrSectionResult r = event.getTableView().getItems().get(row);
                     r.setType(event.getNewValue());
+                    onSectionEdit(r);
                 });
 
         // 初始化数据列表
@@ -257,6 +259,13 @@ public class MainWindowView implements Initializable {
         dataListAreaModel.setDataListTitleBarSearchButtonImage(ImageLoader.load(Constants.SEARCH_IMAGE_PATH));
         dataListAreaModel.setDataListTitleBarDeleteButtonImage(ImageLoader.load(Constants.DELETE_IMAGE_PATH));
     }
+
+
+    private void onSectionEdit(OcrSectionResult result) {
+        this.screenshotAreaModel.getOcrManager().onSectionEdit(result.getPosition(), result.getName(), result.getType());
+        this.ocrSectionService.updateNameTypeById(result.getSectionId(), result.getName(), result.getType());
+    }
+
 
     @FXML
     protected void onMainWindowMousePressed(MouseEvent event) {

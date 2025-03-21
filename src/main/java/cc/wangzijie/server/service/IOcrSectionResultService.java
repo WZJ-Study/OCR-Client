@@ -13,17 +13,15 @@ public interface IOcrSectionResultService {
      * 创建新增
      *
      * @param entity  实体类对象
-     * @return 操作是否成功
      */
-    boolean save(OcrSectionResult entity);
+    void save(OcrSectionResult entity);
 
     /**
      * 批量创建新增
      *
      * @param entityList 实体类对象列表
-     * @return 操作是否成功
      */
-    boolean saveBatch(Collection<OcrSectionResult> entityList);
+    void saveBatch(Collection<OcrSectionResult> entityList);
 
 
 }
