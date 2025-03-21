@@ -3,7 +3,6 @@ package cc.wangzijie.ocr;
 
 import cc.wangzijie.constants.Constants;
 import cc.wangzijie.ocr.component.TaskExecutor;
-import cc.wangzijie.config.SnapshotFileConfig;
 import cc.wangzijie.ocr.task.SnapshotTask;
 import cc.wangzijie.ocr.task.OcrProcessTask;
 import cc.wangzijie.server.entity.OcrSection;
@@ -11,6 +10,7 @@ import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.model.DataListAreaModel;
 import cc.wangzijie.ui.model.MainWindowModel;
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
+import cc.wangzijie.ui.model.SettingsWindowModel;
 import io.github.mymonstercat.Model;
 import io.github.mymonstercat.ocr.InferenceEngine;
 import javafx.application.Platform;
@@ -40,6 +40,11 @@ public class OCRManager {
     private final DataListAreaModel dataListAreaModel;
 
     /**
+     * 设置弹窗区域模型
+     */
+    private final SettingsWindowModel settingsWindowModel;
+
+    /**
      * 主窗口模型
      */
     private final MainWindowModel mainWindowModel;
@@ -48,11 +53,6 @@ public class OCRManager {
      * OCR识别结果数据库保存服务
      */
     private final IOcrSectionResultService ocrSectionResultService;
-
-    /**
-     * 截屏图片保存配置
-     */
-    private final SnapshotFileConfig snapshotFileConfig;
 
     /**
      * RapidOCR识别引擎
@@ -86,29 +86,14 @@ public class OCRManager {
 
     private volatile boolean running;
 
-    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService) {
+    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, SettingsWindowModel settingsWindowModel, IOcrSectionResultService ocrSectionResultService) {
         this.screenshotAreaModel = screenshotAreaModel;
         this.dataListAreaModel = dataListAreaModel;
         this.mainWindowModel = mainWindowModel;
+        this.settingsWindowModel = settingsWindowModel;
         this.ocrSectionResultService = ocrSectionResultService;
-        this.snapshotFileConfig = null;
         this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V4);
-        // 默认时间间隔：10s
-        this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
-        this.countDownSeconds = new AtomicInteger(0);
-        this.ocrSectionMap = new ConcurrentHashMap<>();
-        // 设置运行标志=已停止
-        this.running = false;
-    }
-
-    public OCRManager(ScreenshotAreaModel screenshotAreaModel, DataListAreaModel dataListAreaModel, MainWindowModel mainWindowModel, IOcrSectionResultService ocrSectionResultService, SnapshotFileConfig snapshotFileConfig) {
-        this.screenshotAreaModel = screenshotAreaModel;
-        this.dataListAreaModel = dataListAreaModel;
-        this.mainWindowModel = mainWindowModel;
-        this.ocrSectionResultService = ocrSectionResultService;
-        this.snapshotFileConfig = snapshotFileConfig;
-        this.ocrEngine = InferenceEngine.getInstance(Model.ONNX_PPOCR_V4);
-        // 默认时间间隔：10s
+        // 默认时间间隔：5s
         this.intervalSeconds = Constants.DEFAULT_INTERVAL_SECONDS;
         this.countDownSeconds = new AtomicInteger(0);
         this.ocrSectionMap = new ConcurrentHashMap<>();
@@ -186,7 +171,7 @@ public class OCRManager {
     }
 
     public OcrProcessTask createTask(BufferedImage screenshot) {
-        return new OcrProcessTask(this.dataListAreaModel ,this.ocrSectionResultService, this.ocrEngine, screenshot, this.ocrSectionMap, this.snapshotFileConfig);
+        return new OcrProcessTask(this.dataListAreaModel, this.settingsWindowModel, this.ocrSectionResultService, this.ocrEngine, screenshot, this.ocrSectionMap);
     }
 
 }

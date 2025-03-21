@@ -1,7 +1,6 @@
 package cc.wangzijie.ui.model;
 
 import cc.wangzijie.ocr.OCRManager;
-import cc.wangzijie.config.SnapshotFileConfig;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
 import javafx.beans.property.*;
@@ -45,15 +44,12 @@ public class ScreenshotAreaModel {
     @Resource
     private IOcrSectionResultService ocrSectionResultService;
 
-    @Resource
-    private SnapshotFileConfig snapshotFileConfig;
-
     @Getter
     private OCRManager ocrManager;
 
     @PostConstruct
     public void init() {
-        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, ocrSectionResultService, snapshotFileConfig);
+        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, settingsWindowModel, ocrSectionResultService);
         this.settingsWindowModel.intervalSecondsProperty().addListener((observableValue, oldValue, newValue) -> {
             log.info("==== 修改定时采集间隔 ==== 设置新的采集间隔：{}秒", newValue);
             this.ocrManager.setIntervalSeconds(newValue.intValue());

@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -43,6 +44,8 @@ public class SettingsWindowView implements Initializable {
     @FXML
     public TextField intervalSecondsInput;
 
+    @FXML
+    public TextField outputFolderPathInput;
 
     private double offsetX;
     private double offsetY;
@@ -57,6 +60,9 @@ public class SettingsWindowView implements Initializable {
 
         // 设置#1.定时采集间隔（秒）
         intervalSecondsInput.setText(String.valueOf(Constants.DEFAULT_INTERVAL_SECONDS));
+
+        // 设置#2.输出文件夹路径
+        outputFolderPathInput.setText(Constants.DEFAULT_OUTPUT_FOLDER_PATH);
 
         // 处理model属性 - 标题栏右侧窗口按钮
         settingsWindowModel.setCloseWindowButtonImage(ImageLoader.load(Constants.CLOSE_IMAGE_PATH));
@@ -97,6 +103,12 @@ public class SettingsWindowView implements Initializable {
         int seconds = this.processIntervalSecondsInput(intervalSecondsInput.getText());
         intervalSecondsInput.setText(String.valueOf(seconds));
         settingsWindowModel.setIntervalSeconds(seconds);
+
+
+        // 设置#2.输出文件夹路径
+        String outputFolderPath = this.processOutputFolderPathInput(outputFolderPathInput.getText());
+        outputFolderPathInput.setText(outputFolderPath);
+        settingsWindowModel.setOutputFolderPath(outputFolderPath);
     }
 
 
@@ -129,4 +141,20 @@ public class SettingsWindowView implements Initializable {
         return value;
     }
 
+    private String processOutputFolderPathInput(String input) {
+        log.info("==== 处理输入值 ==== 原始输入：{}", input);
+        if (StringUtils.isNotBlank(input)) {
+            File file = new File(input);
+            if (file.exists()) {
+                if (file.isDirectory()) {
+                    return input;
+                }
+            } else {
+                if (file.mkdirs()) {
+                    return input;
+                }
+            }
+        }
+        return Constants.DEFAULT_OUTPUT_FOLDER_PATH;
+    }
 }

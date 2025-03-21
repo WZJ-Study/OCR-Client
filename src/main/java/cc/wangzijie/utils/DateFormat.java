@@ -1,4 +1,4 @@
-package cc.wangzijie.ocr.utils;
+package cc.wangzijie.utils;
 
 public class DateFormat {
 

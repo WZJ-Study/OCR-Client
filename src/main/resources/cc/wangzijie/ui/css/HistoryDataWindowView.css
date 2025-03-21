@@ -10,25 +10,6 @@
 }
 
 
-.historyDataWindowBorder {
-    -fx-border-color: red;
-    -fx-border-style: solid;
-    -fx-border-width: 0;
-    -fx-border-radius: 5px;
-}
-
-.historyDataWindowBottom {
-    -fx-background-color: #2A2C37;
-    -fx-background-radius: 5px;
-}
-
-.historyDataRow {
-    -fx-background-color: #404455;
-    -fx-background-radius: 5px;
-    -fx-border-color: white;
-    -fx-border-style: dashed;
-    -fx-border-width: 1px;
-}
 
 
 .historyDataWindowTitleBar {

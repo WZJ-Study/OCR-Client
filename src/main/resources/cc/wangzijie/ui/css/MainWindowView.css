@@ -3,13 +3,16 @@
 .mainWindow {
     -fx-background-color: #454855;
     -fx-background-radius: 5px;
+    -fx-border-color: white;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-border-radius: 5px;
 }
 
-.mainWindowBorder {
-    -fx-border-color: red;
-    -fx-border-style: solid;
-    -fx-border-width: 0;
-    -fx-border-radius: 5px;
+
+.mainPanel {
+    -fx-background-color: #454855;
+    -fx-background-radius: 5px;
 }
 
 .windowTitleBar {

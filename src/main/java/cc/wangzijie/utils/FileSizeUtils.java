@@ -1,4 +1,4 @@
-package cc.wangzijie.ocr.utils;
+package cc.wangzijie.utils;
 
 import java.io.File;
 import java.text.DecimalFormat;

@@ -1,4 +1,4 @@
-package cc.wangzijie.ocr.utils;
+package cc.wangzijie.utils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -8,20 +8,9 @@ spring:
     allow-circular-references: true
     allow-bean-definition-overriding: true
 
-sqlite-db:
-  url: jdbc:sqlite:sqlite/ocr.db3
-  file: sqlite/ocr.db3
-  test-sql: select * from ocr_section limit 1
-  init-db-sql: sqlite/init-db.sql
-
-mybatis-plus:
-  mapper-locations: classpath:mapper/*.xml
-
 logging:
-  level:
-    cc.wangzijie: INFO
-
-snapshot-file:
-  output-folder-path: D:/output
-  file-name-prefix: SnapShot
-  image-format: png
+  charset:
+    console: UTF-8
+    file: UTF-8
+  file:
+    path: ./logs

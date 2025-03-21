@@ -1,4 +1,6 @@
 out/
+logs/
+Screenshots/
 sqlite/
 
 HELP.md

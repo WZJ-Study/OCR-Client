@@ -10,13 +10,6 @@
 }
 
 
-.settingsWindowBorder {
-    -fx-border-color: red;
-    -fx-border-style: solid;
-    -fx-border-width: 0;
-    -fx-border-radius: 5px;
-}
-
 .settingsWindowBottom {
     -fx-background-color: #2A2C37;
     -fx-background-radius: 5px;

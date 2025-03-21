@@ -14,6 +14,8 @@ public class SettingsWindowModel {
 
     private final IntegerProperty intervalSeconds = new SimpleIntegerProperty();
 
+    private final StringProperty outputFolderPath = new SimpleStringProperty();
+
     public Image getCloseWindowButtonImage() {
         return closeWindowButtonImage.get();
     }
@@ -48,5 +50,17 @@ public class SettingsWindowModel {
 
     public void setIntervalSeconds(int intervalSeconds) {
         this.intervalSeconds.set(intervalSeconds);
+    }
+
+    public String getOutputFolderPath() {
+        return outputFolderPath.get();
+    }
+
+    public StringProperty outputFolderPathProperty() {
+        return outputFolderPath;
+    }
+
+    public void setOutputFolderPath(String outputFolderPath) {
+        this.outputFolderPath.set(outputFolderPath);
     }
 }

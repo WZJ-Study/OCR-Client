@@ -108,7 +108,7 @@
             </bottom>
         </BorderPane>
         <!-- 主界面部分 -->
-        <HBox maxHeight="4220.0" minHeight="700.0" spacing="10.0" styleClass="mainWindow" VBox.vgrow="ALWAYS">
+        <HBox maxHeight="4220.0" minHeight="700.0" spacing="10.0" styleClass="mainPanel" VBox.vgrow="ALWAYS">
             <children>
                 <!-- 主界面部分-截图预览 -->
                 <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="screenshotAreaBorder" HBox.hgrow="ALWAYS" StackPane.alignment="CENTER">

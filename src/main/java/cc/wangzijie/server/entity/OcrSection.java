@@ -1,6 +1,6 @@
 package cc.wangzijie.server.entity;
 
-import cc.wangzijie.ocr.utils.DateUtils;
+import cc.wangzijie.utils.DateUtils;
 import cc.wangzijie.utils.SnowflakeIdWorker;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import javafx.scene.shape.Rectangle;

@@ -1,11 +1,11 @@
 package cc.wangzijie.ocr.task;
 
-
-import cc.wangzijie.config.SnapshotFileConfig;
-import cc.wangzijie.ocr.utils.DateFormat;
-import cc.wangzijie.ocr.utils.DateUtils;
-import cc.wangzijie.ocr.utils.FileSizeUtils;
-import cc.wangzijie.ocr.utils.JacksonUtils;
+import cc.wangzijie.constants.Constants;
+import cc.wangzijie.ui.model.SettingsWindowModel;
+import cc.wangzijie.utils.DateFormat;
+import cc.wangzijie.utils.DateUtils;
+import cc.wangzijie.utils.FileSizeUtils;
+import cc.wangzijie.utils.JacksonUtils;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
@@ -60,28 +60,22 @@ public class OcrProcessTask implements Runnable {
      * 截屏图片保存配置
      */
     private final String outputFolderPath;
-    private final String fileNamePrefix;
-    private final String imageFormat;
     private final String nowStr;
 
-    public OcrProcessTask(DataListAreaModel dataListAreaModel, IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, BufferedImage snapshotImage, Map<String, OcrSection> ocrRectMap, SnapshotFileConfig snapshotFileConfig) {
+    public OcrProcessTask(DataListAreaModel dataListAreaModel, SettingsWindowModel settingsWindowModel, IOcrSectionResultService ocrSectionResultService, InferenceEngine ocrEngine, BufferedImage snapshotImage, Map<String, OcrSection> ocrRectMap) {
         this.dataListAreaModel = dataListAreaModel;
         this.ocrSectionResultService = ocrSectionResultService;
         this.snapshotImage = snapshotImage;
         this.ocrRectMap = ocrRectMap;
         this.ocrEngine = ocrEngine;
         this.nowStr = DateUtils.nowStr(DateFormat.DUMMY_CODE);
-        if (snapshotFileConfig == null) {
-            this.outputFolderPath = SnapshotFileConfig.DEFAULT_OUTPUT_FOLDER_PATH + File.separator + nowStr;
-            this.fileNamePrefix = SnapshotFileConfig.DEFAULT_FILE_NAME_PREFIX;
-            this.imageFormat = SnapshotFileConfig.DEFAULT_IMAGE_FORMAT;
+        if (settingsWindowModel == null || settingsWindowModel.getOutputFolderPath() == null) {
+            this.outputFolderPath = Constants.DEFAULT_OUTPUT_FOLDER_PATH + File.separator + nowStr;
         } else {
-            this.outputFolderPath = (snapshotFileConfig.getOutputFolderPath() == null ? SnapshotFileConfig.DEFAULT_OUTPUT_FOLDER_PATH : snapshotFileConfig.getOutputFolderPath()) + File.separator + nowStr;;
-            this.fileNamePrefix = snapshotFileConfig.getFileNamePrefix() == null ? SnapshotFileConfig.DEFAULT_FILE_NAME_PREFIX : snapshotFileConfig.getFileNamePrefix();
-            this.imageFormat = snapshotFileConfig.getImageFormat() == null ? SnapshotFileConfig.DEFAULT_IMAGE_FORMAT : snapshotFileConfig.getImageFormat();
+            this.outputFolderPath = settingsWindowModel.getOutputFolderPath() + File.separator + nowStr;
         }
-        log.info("==== 初始化 OcrProcessTask ==== 当前时间：{}\n截屏文件输出目录: {}\n文件命名前缀：{}\n图片格式：{}\n",
-                this.nowStr, this.outputFolderPath, this.fileNamePrefix, this.imageFormat);
+        log.info("==== 初始化 OcrProcessTask ==== 当前时间：{}\n截屏文件输出目录: {}\n",
+                this.nowStr, this.outputFolderPath);
     }
 
     @Override
@@ -98,11 +92,11 @@ public class OcrProcessTask implements Runnable {
 
                 // 创建截取区域的新图片
                 BufferedImage rectImage = this.snapshotImage.getSubimage(ocrSection.getX(), ocrSection.getY(), ocrSection.getWidth(), ocrSection.getHeight());
-                String subFileName = String.format("%s-%s.OCR区域.%s.%s", this.fileNamePrefix, nowStr, key, this.imageFormat);
+                String subFileName = String.format("截屏图片-%s.OCR区域.%s.%s", nowStr, key, Constants.IMAGE_FORMAT);
                 String subFilePath = String.format("%s%s%s", this.outputFolderPath, File.separator, subFileName);
 
                 // 保存截取区域的图片
-                ImageIO.write(rectImage, "png", new File(subFilePath));
+                ImageIO.write(rectImage, Constants.IMAGE_FORMAT, new File(subFilePath));
 
                 // 执行OCR识别
                 OcrResult ocrResult = this.ocrEngine.runOcr(subFilePath);
@@ -155,10 +149,10 @@ public class OcrProcessTask implements Runnable {
             int height = this.snapshotImage.getHeight();
             int width = this.snapshotImage.getWidth();
             log.info("==== 截屏图片保存为文件 ==== 保存截屏图片，图片尺寸 height = {} width = {}", height, width);
-            String fileName = String.format("%s-%s.%s", this.fileNamePrefix, this.nowStr, this.imageFormat);
+            String fileName = String.format("截屏图片-%s.%s", this.nowStr, Constants.IMAGE_FORMAT);
             String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
             File file = new File(filePath);
-            ImageIO.write(this.snapshotImage, imageFormat, file);
+            ImageIO.write(this.snapshotImage, Constants.IMAGE_FORMAT, file);
             log.info("==== 截屏图片保存为文件 ==== 截屏文件大小：{} \n保存为：{}", FileSizeUtils.displayFileSize(file), file.getAbsolutePath());
         } catch (IOException e) {
             log.error("==== 截屏图片保存为文件 ==== 截屏文件保存失败，捕获到异常！", e);
@@ -191,9 +185,9 @@ public class OcrProcessTask implements Runnable {
 
         // 保存修改后的图片
         try {
-            String fileName = String.format("%s-%s.绘制框选区域.%s", this.fileNamePrefix, this.nowStr, this.imageFormat);
+            String fileName = String.format("截屏图片-%s.绘制框选区域.%s", this.nowStr, Constants.IMAGE_FORMAT);
             String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
-            ImageIO.write(this.snapshotImage, this.imageFormat, new File(filePath));
+            ImageIO.write(this.snapshotImage, Constants.IMAGE_FORMAT, new File(filePath));
         } catch (IOException e) {
             log.error("==== OCR识别处理 ==== 绘制框选区域图片文件保存失败，捕获到异常！", e);
         }
@@ -205,7 +199,7 @@ public class OcrProcessTask implements Runnable {
         }
         String json = JacksonUtils.toJSONStringPretty(resultList);
 
-        String fileName = String.format("%s-%s.OCR识别结果.json", this.fileNamePrefix, this.nowStr);
+        String fileName = String.format("截屏图片-%s.OCR识别结果.json", this.nowStr);
         String filePath = String.format("%s%s%s", this.outputFolderPath, File.separator, fileName);
         try (OutputStream os = new FileOutputStream(filePath)) {
             IOUtils.write(json, os, Charset.defaultCharset());

@@ -1,7 +1,8 @@
 package cc.wangzijie.constants;
 
-import cc.wangzijie.ocr.utils.DateFormat;
+import cc.wangzijie.utils.DateFormat;
 
+import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +15,10 @@ public class Constants {
 
     public static final DateTimeFormatter DT_FORMAT = DateTimeFormatter.ofPattern(DateFormat.YYYY_MM_DD_HH_MM_SS);
 
+    public static final String DEFAULT_OUTPUT_FOLDER_PATH = System.getProperty("user.dir") + File.separator + "Screenshots";
+    public static final String IMAGE_FORMAT = "png";
 
-    public static final String MAIN_WINDOW_TITLE = "PT.OCR v0.1";
+    public static final String MAIN_WINDOW_TITLE = "PT.OCR v0.0.1";
     public static final String SETTINGS_WINDOW_TITLE = "设置";
     public static final String HISTORY_DATA_WINDOW_TITLE = "历史数据";
 

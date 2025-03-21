@@ -1,19 +1,16 @@
 package cc.wangzijie.ui.model;
 
 import cc.wangzijie.constants.Constants;
-import cc.wangzijie.ocr.utils.DateFormat;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.web.format.DateTimeFormatters;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
