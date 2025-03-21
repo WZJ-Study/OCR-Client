@@ -78,4 +78,13 @@ public class OcrSectionResult {
      */
     private String collectTime;
 
+    public OcrSectionResultDisplayVO toDisplay() {
+        OcrSectionResultDisplayVO vo = new OcrSectionResultDisplayVO();
+        vo.setName(this.name);
+        vo.setPosition(this.position);
+        vo.setType(this.type);
+        vo.setValue(this.value);
+        vo.setCollectTime(this.collectTime);
+        return vo;
+    }
 }

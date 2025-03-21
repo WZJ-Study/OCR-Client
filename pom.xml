@@ -209,6 +209,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- 用法：先 compile 再 package -->
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
                 <version>1.7.6</version>
@@ -217,7 +218,7 @@
                     <!--程序入口文件/启动类 -->
                     <mainClass>cc.wangzijie.OcrClientApplication</mainClass>
                     <!-- 精简版jre -->
-                    <bundleJre>true</bundleJre>
+                    <bundleJre>false</bundleJre>
                     <!--平台-->
                     <platform>windows</platform>
                     <!-- exe 名称，通过引用的方式 -->
@@ -225,15 +226,15 @@
                     <!--生成压缩包-->
                     <createZipball>true</createZipball>
                     <!--生成安装程序-->
-                    <generateInstaller>true</generateInstaller>
+                    <generateInstaller>false</generateInstaller>
                     <!-- 不使用管理员身份打开程序 -->
                     <administratorRequired>false</administratorRequired>
 
-                    <!--                            &lt;!&ndash;  添加精简jre缺少的模块  &ndash;&gt;-->
-                    <!--                            <additionalModules>-->
-                    <!--                                &lt;!&ndash;  我这里自动生成的精简jre缺少这个模块，运行会报错  &ndash;&gt;-->
-                    <!--                                <additionalModule>jdk.charsets</additionalModule>-->
-                    <!--                            </additionalModules>-->
+<!--                    &lt;!&ndash;  添加精简jre缺少的模块  &ndash;&gt;-->
+<!--                    <additionalModules>-->
+<!--                        &lt;!&ndash;  我这里自动生成的精简jre缺少这个模块，运行会报错  &ndash;&gt;-->
+<!--                        <additionalModule>spring.boot.autoconfigure</additionalModule>-->
+<!--                    </additionalModules>-->
                     <!--                            &lt;!&ndash; 将指定文件夹包含到生成的程序路径 &ndash;&gt;-->
                     <!--                            <additionalResources>-->
                     <!--                                <additionalResource>D:\projects\aio\config</additionalResource>-->
@@ -252,9 +253,9 @@
                     <winConfig>
                         <wrapJar>true</wrapJar>
                         <!--生成安装程序-->
-                        <generateSetup>true</generateSetup>
+                        <generateSetup>false</generateSetup>
                         <!--生成Msi-->
-                        <generateMsi>true</generateMsi>
+                        <generateMsi>false</generateMsi>
                         <!--标头类型 console-->
                         <headerType>gui</headerType>
                         <!--文件版本-->

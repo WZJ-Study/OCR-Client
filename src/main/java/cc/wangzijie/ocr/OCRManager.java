@@ -173,11 +173,12 @@ public class OCRManager {
         }
     }
 
-    public synchronized void removeOcrSection(String key) {
+    public synchronized OcrSection removeOcrSection(String key) {
         OcrSection ocrSection = this.ocrSectionMap.remove(key);
         if (ocrSection != null) {
             log.info("删除识别区域：key={} \nocrSection={}", key, ocrSection);
         }
+        return ocrSection;
     }
 
     public synchronized void clearOcrSection() {

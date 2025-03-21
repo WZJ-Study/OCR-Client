@@ -9,13 +9,12 @@ import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.server.service.IOcrSectionService;
 import cc.wangzijie.spring.SpringHelper;
+import cc.wangzijie.ui.enums.ActionTypeEnum;
 import cc.wangzijie.ui.helper.StageManager;
-import cc.wangzijie.ui.model.DataListAreaModel;
-import cc.wangzijie.ui.model.HistoryDataWindowModel;
-import cc.wangzijie.ui.model.MainWindowModel;
-import cc.wangzijie.ui.model.ScreenshotAreaModel;
+import cc.wangzijie.ui.model.*;
 import cc.wangzijie.ui.screenshot.ScreenCaptureStage;
 import cc.wangzijie.ui.utils.*;
+import cc.wangzijie.ui.vo.ActionVO;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -78,7 +77,8 @@ public class MainWindowView implements Initializable {
     @Resource
     private HistoryDataWindowModel historyDataWindowModel;
 
-
+    @Resource
+    private WithdrawModel withdrawModel;
 
 
     @FXML
@@ -173,7 +173,9 @@ public class MainWindowView implements Initializable {
         toggleCollectStatusMenuButtonImage.imageProperty().bindBidirectional(mainWindowModel.toggleCollectStatusMenuButtonImageProperty());
         collectCountDownText.textProperty().bindBidirectional(mainWindowModel.collectCountDownTextProperty());
 
+        withdrawMenuButtonImage.disableProperty().bind(withdrawModel.canWithdrawFlagProperty());
         toggleCollectStatusMenuButton.disableProperty().bindBidirectional(screenshotAreaModel.screenshotAreaNoImageFlagProperty());
+
 
         // 绑定FXML组件与model属性 - 主界面 - 左侧截屏图片预览
         screenshotImage.imageProperty().bindBidirectional(screenshotAreaModel.screenshotImageProperty());
@@ -276,8 +278,8 @@ public class MainWindowView implements Initializable {
     @FXML
     protected void onCloseWindowButtonClick() {
         log.info("==== onCloseWindowButtonClick ==== 点击【关闭窗口】按钮，退出！");
-        Platform.exit();
         SpringHelper.close();
+        Platform.exit();
     }
 
     @FXML
@@ -344,6 +346,10 @@ public class MainWindowView implements Initializable {
         screenshotAreaModel.setScreenshotImageCursor(Cursor.DEFAULT);
         screenshotAreaModel.setScreenshotImageHintVisible(true);
         screenshotAreaModel.setScreenshotAreaNoImageFlag(true);
+        this.onReload();
+    }
+
+    public void onReload() {
         // 删除所有选中框
         screenshotImageStackPane.getChildren().removeAll(screenshotAreaModel.getRectList());
         screenshotAreaModel.clearRectMap();
@@ -351,8 +357,9 @@ public class MainWindowView implements Initializable {
         screenshotAreaModel.getOcrManager().clearOcrSection();
         // 删除所有数据列表
         dataListAreaModel.clearDataMap();
+        // 重置撤回动作队列
+        withdrawModel.resetActionDeque();
     }
-
 
     @FXML
     protected void onOpenFullMenuButtonClick() {
@@ -383,14 +390,17 @@ public class MainWindowView implements Initializable {
     protected void onScreenshotMenuButtonClick() {
         log.info("==== onScreenshotMenuButtonClick ==== 点击【截屏】按钮！");
         Stage stage = stageManager.getMainWindowStage();
-        ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, screenshotAreaModel);
+        ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, this, screenshotAreaModel);
         screenCaptureStage.show();
     }
 
     @FXML
     protected void onWithdrawMenuButtonClick() {
         log.info("==== onWithdrawMenuButtonClick ==== 点击【撤回上一步】按钮！");
-
+        if (!withdrawModel.isCanWithdrawFlag()) {
+            log.info("没有可撤回的动作，跳过！");
+        }
+        withdrawModel.doWithdraw();
     }
 
     @FXML
@@ -422,7 +432,7 @@ public class MainWindowView implements Initializable {
                 log.debug("==== onScreenshotImageMouseClicked ==== [鼠标左键]点击[截图区域]，尚无截图，触发截图功能！\nevent button={}\nevent x={}, y={}\nscene x={} y={}\nscreen x={} y={}",
                         event.getButton(), event.getX(), event.getY(), event.getSceneX(), event.getSceneY(), event.getScreenX(), event.getScreenY());
                 Stage stage = stageManager.getMainWindowStage();
-                ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, screenshotAreaModel);
+                ScreenCaptureStage screenCaptureStage = new ScreenCaptureStage(stage, this, screenshotAreaModel);
                 screenCaptureStage.show();
             }
         }
@@ -473,6 +483,14 @@ public class MainWindowView implements Initializable {
                 OcrSectionResult ocrSectionResult = ocrSection.newResult(null);
                 ocrSectionResultService.save(ocrSectionResult);
                 dataListAreaModel.addData(key, ocrSectionResult);
+
+                // 记录动作 - 新增OCR识别区域
+                ActionVO action = new ActionVO();
+                action.setType(ActionTypeEnum.ADD_RECT);
+                action.setKey(key);
+                action.setRect(rect);
+                action.setOcrSection(ocrSection);
+                withdrawModel.addAction(action);
             }
         }
     }
@@ -510,10 +528,40 @@ public class MainWindowView implements Initializable {
             Rectangle rect = screenshotAreaModel.removeRect(removeKey);
             screenshotImageStackPane.getChildren().remove(rect);
             // 删除OCR识别区域
-            screenshotAreaModel.getOcrManager().removeOcrSection(removeKey);
+            OcrSection ocrSection = screenshotAreaModel.getOcrManager().removeOcrSection(removeKey);
             // 删除数据列表行
             dataListAreaModel.removeData(removeKey);
+
+            // 记录动作 - 删除OCR识别区域
+            ActionVO action = new ActionVO();
+            action.setType(ActionTypeEnum.REMOVE_RECT);
+            action.setKey(removeKey);
+            action.setRect(rect);
+            action.setOcrSection(ocrSection);
+            withdrawModel.addAction(action);
         }
     }
 
+
+
+    public void doWithdrawAddRect(ActionVO action) {
+        // 删除选中框
+        Rectangle rect = screenshotAreaModel.removeRect(action.getKey());
+        screenshotImageStackPane.getChildren().remove(rect);
+        // 删除OCR识别区域
+        screenshotAreaModel.getOcrManager().removeOcrSection(action.getKey());
+        // 删除数据列表行
+        dataListAreaModel.removeData(action.getKey());
+    }
+
+    public void doWithdrawRemoveRect(ActionVO action) {
+        // 注册选中框
+        screenshotAreaModel.addRect(action.getKey(), action.getRect());
+        // 注册OCR识别区域
+        screenshotAreaModel.getOcrManager().addOcrSection(action.getOcrSection());
+        // 注册数据列表
+        OcrSectionResult ocrSectionResult = action.getOcrSection().newResult(null);
+        ocrSectionResultService.save(ocrSectionResult);
+        dataListAreaModel.addData(action.getKey(), ocrSectionResult);
+    }
 }

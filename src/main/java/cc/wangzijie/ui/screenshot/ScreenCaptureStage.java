@@ -1,6 +1,7 @@
 package cc.wangzijie.ui.screenshot;
 
 import cc.wangzijie.ui.model.ScreenshotAreaModel;
+import cc.wangzijie.ui.view.MainWindowView;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ScreenCaptureStage {
     private final Stage mainWindowStage;
+    private final MainWindowView mainWindowView;
     private final ScreenshotAreaModel screenshotAreaModel;
     private Stage stage;
     private Scene scene;
@@ -24,8 +26,9 @@ public class ScreenCaptureStage {
     // 鼠标拖拽起点
     private Point2D dragStart = null;
 
-    public ScreenCaptureStage(Stage mainWindowStage, ScreenshotAreaModel screenshotAreaModel) {
+    public ScreenCaptureStage(Stage mainWindowStage, MainWindowView mainWindowView, ScreenshotAreaModel screenshotAreaModel) {
         this.mainWindowStage = mainWindowStage;
+        this.mainWindowView = mainWindowView;
         this.screenshotAreaModel = screenshotAreaModel;
         // 1. 初始化全屏遮罩窗口
         initScreenshotStage();
@@ -118,6 +121,8 @@ public class ScreenCaptureStage {
             if (null != mainWindowStage && !mainWindowStage.isShowing()) {
                 Platform.runLater(mainWindowStage::show);
             }
+
+            this.mainWindowView.onReload();
         } catch (Exception ex) {
             log.error("截图失败！", ex);
         }
