@@ -1,5 +1,6 @@
 package cc.wangzijie.ui.model;
 
+import cc.wangzijie.config.ServerConfig;
 import cc.wangzijie.ocr.OCRManager;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.ui.utils.AwtRobotUtils;
@@ -33,6 +34,9 @@ public class ScreenshotAreaModel {
     private final BooleanProperty screenshotAreaNoImageFlag = new SimpleBooleanProperty(true);
 
     @Resource
+    private ServerConfig serverConfig;
+
+    @Resource
     private DataListAreaModel dataListAreaModel;
 
     @Resource
@@ -49,7 +53,7 @@ public class ScreenshotAreaModel {
 
     @PostConstruct
     public void init() {
-        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, settingsWindowModel, ocrSectionResultService);
+        this.ocrManager = new OCRManager(this, dataListAreaModel, mainWindowModel, settingsWindowModel, ocrSectionResultService, serverConfig);
         this.settingsWindowModel.intervalSecondsProperty().addListener((observableValue, oldValue, newValue) -> {
             log.info("==== 修改定时采集间隔 ==== 设置新的采集间隔：{}秒", newValue);
             this.ocrManager.setIntervalSeconds(newValue.intValue());

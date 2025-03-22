@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Constants {
+
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+
     // 默认时间间隔：10s
     public static final int DEFAULT_INTERVAL_SECONDS = 5;
     public static final int MIN_INTERVAL_SECONDS = 5;
@@ -17,6 +21,9 @@ public class Constants {
 
     public static final String DEFAULT_OUTPUT_FOLDER_PATH = System.getProperty("user.dir") + File.separator + "Screenshots";
     public static final String IMAGE_FORMAT = "png";
+    public static final String IMAGE_FORMAT_WITH_DOT = ".png";
+
+    public static final String DEFAULT_CALLBACK_HOOK_URI = "/ocr/callback";
 
     public static final String MAIN_WINDOW_TITLE = "PT.OCR v0.0.1";
     public static final String SETTINGS_WINDOW_TITLE = "设置";

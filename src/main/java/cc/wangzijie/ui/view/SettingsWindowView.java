@@ -1,16 +1,17 @@
 package cc.wangzijie.ui.view;
 
 
+import cc.wangzijie.config.ConfigManager;
+import cc.wangzijie.config.ServerConfig;
+import cc.wangzijie.constants.ConfigKeys;
 import cc.wangzijie.constants.Constants;
-import cc.wangzijie.fxml.loader.SpringFxmlLoader;
-import cc.wangzijie.spring.SpringHelper;
 import cc.wangzijie.ui.helper.StageManager;
 import cc.wangzijie.ui.model.SettingsWindowModel;
 import cc.wangzijie.ui.utils.ImageLoader;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,12 +22,20 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Slf4j
 @Component
 public class SettingsWindowView implements Initializable {
+
+    @Resource
+    private ServerConfig serverConfig;
+
+    @Resource
+    private ConfigManager configManager;
 
     @Resource
     private StageManager stageManager;
@@ -46,6 +55,13 @@ public class SettingsWindowView implements Initializable {
 
     @FXML
     public TextField outputFolderPathInput;
+    @FXML
+    public CheckBox outputFolderEnabledInput;
+
+    @FXML
+    public TextField callbackHookUrlInput;
+    @FXML
+    public CheckBox callbackHookEnabledInput;
 
     private double offsetX;
     private double offsetY;
@@ -58,11 +74,57 @@ public class SettingsWindowView implements Initializable {
         // 绑定FXML组件与model属性 - 窗口底部应用设置按钮
         applySettingButtonImage.imageProperty().bindBidirectional(settingsWindowModel.applySettingButtonImageProperty());
 
+        boolean savePropertiesFlag = false;
+
         // 设置#1.定时采集间隔（秒）
-        intervalSecondsInput.setText(String.valueOf(Constants.DEFAULT_INTERVAL_SECONDS));
+        String intervalSeconds = configManager.getProperty(ConfigKeys.KEY_INTERVAL_SECONDS);
+        if (StringUtils.isBlank(intervalSeconds)) {
+            intervalSeconds = String.valueOf(Constants.DEFAULT_INTERVAL_SECONDS);
+            configManager.setProperty(ConfigKeys.KEY_INTERVAL_SECONDS, intervalSeconds);
+            savePropertiesFlag = true;
+        }
+        intervalSecondsInput.setText(intervalSeconds);
 
         // 设置#2.输出文件夹路径
-        outputFolderPathInput.setText(Constants.DEFAULT_OUTPUT_FOLDER_PATH);
+        String outputFolderPath = configManager.getProperty(ConfigKeys.KEY_OUTPUT_FOLDER_PATH);
+        if (StringUtils.isBlank(outputFolderPath)) {
+            outputFolderPath = Constants.DEFAULT_OUTPUT_FOLDER_PATH;
+            configManager.setProperty(ConfigKeys.KEY_OUTPUT_FOLDER_PATH, outputFolderPath);
+            savePropertiesFlag = true;
+        }
+        outputFolderPathInput.setText(outputFolderPath);
+
+        // 设置#2.输出文件夹路径 - 是否启用
+        String outputFolderEnabledFlag = configManager.getProperty(ConfigKeys.KEY_OUTPUT_FOLDER_ENABLED_FLAG);
+        if (StringUtils.isBlank(outputFolderEnabledFlag)) {
+            outputFolderEnabledFlag = Constants.TRUE;
+            configManager.setProperty(ConfigKeys.KEY_OUTPUT_FOLDER_ENABLED_FLAG, outputFolderEnabledFlag);
+            savePropertiesFlag = true;
+        }
+        outputFolderEnabledInput.setSelected(Objects.equals(outputFolderEnabledFlag, Constants.TRUE));
+
+        // 设置#3.Hook回调URL
+        String callbackHookUrl = configManager.getProperty(ConfigKeys.KEY_CALLBACK_HOOK_URL);
+        if (StringUtils.isBlank(callbackHookUrl)) {
+            callbackHookUrl = serverConfig.buildUrl(Constants.DEFAULT_CALLBACK_HOOK_URI);
+            configManager.setProperty(ConfigKeys.KEY_CALLBACK_HOOK_URL, callbackHookUrl);
+            savePropertiesFlag = true;
+        }
+        callbackHookUrlInput.setText(callbackHookUrl);
+
+        // 设置#3.Hook回调URL - 是否启用
+        String callbackHookEnabledFlag = configManager.getProperty(ConfigKeys.KEY_CALLBACK_HOOK_ENABLED_FLAG);
+        if (StringUtils.isBlank(callbackHookEnabledFlag)) {
+            callbackHookEnabledFlag = Constants.TRUE;
+            configManager.setProperty(ConfigKeys.KEY_CALLBACK_HOOK_ENABLED_FLAG, callbackHookEnabledFlag);
+            savePropertiesFlag = true;
+        }
+        callbackHookEnabledInput.setSelected(Objects.equals(callbackHookEnabledFlag, Constants.TRUE));
+
+        // 保存配置文件
+        if (savePropertiesFlag) {
+            configManager.saveProperties();
+        }
 
         // 处理model属性 - 标题栏右侧窗口按钮
         settingsWindowModel.setCloseWindowButtonImage(ImageLoader.load(Constants.CLOSE_IMAGE_PATH));
@@ -100,15 +162,42 @@ public class SettingsWindowView implements Initializable {
     @FXML
     protected void onApplySettings() {
         // 设置#1.定时采集间隔（秒）
-        int seconds = this.processIntervalSecondsInput(intervalSecondsInput.getText());
-        intervalSecondsInput.setText(String.valueOf(seconds));
-        settingsWindowModel.setIntervalSeconds(seconds);
-
+        int intervalSeconds = this.processIntervalSecondsInput(intervalSecondsInput.getText());
+        String intervalSecondsText = String.valueOf(intervalSeconds);
+        intervalSecondsInput.setText(intervalSecondsText);
+        settingsWindowModel.setIntervalSeconds(intervalSeconds);
+        configManager.setProperty(ConfigKeys.KEY_INTERVAL_SECONDS, intervalSecondsText);
 
         // 设置#2.输出文件夹路径
         String outputFolderPath = this.processOutputFolderPathInput(outputFolderPathInput.getText());
         outputFolderPathInput.setText(outputFolderPath);
         settingsWindowModel.setOutputFolderPath(outputFolderPath);
+        configManager.setProperty(ConfigKeys.KEY_OUTPUT_FOLDER_PATH, outputFolderPath);
+
+        // 设置#2.输出文件夹路径 - 是否启用
+        boolean outputFolderEnabledFlag = outputFolderEnabledInput.isSelected();
+        settingsWindowModel.setOutputFolderEnabledFlag(outputFolderEnabledFlag);
+        configManager.setProperty(ConfigKeys.KEY_OUTPUT_FOLDER_ENABLED_FLAG, outputFolderEnabledFlag ? Constants.TRUE : Constants.FALSE);
+
+        // 设置#3.Hook回调URL
+        String callbackHookUrl = this.processCallbackHookUrlInput(callbackHookUrlInput.getText());
+        callbackHookUrlInput.setText(callbackHookUrl);
+        settingsWindowModel.setCallbackHookUrl(callbackHookUrl);
+        configManager.setProperty(ConfigKeys.KEY_CALLBACK_HOOK_URL, callbackHookUrl);
+
+        // 设置#3.Hook回调URL - 是否启用
+        boolean callbackHookEnabledFlag = callbackHookEnabledInput.isSelected();
+        settingsWindowModel.setCallbackHookEnabledFlag(callbackHookEnabledFlag);
+        configManager.setProperty(ConfigKeys.KEY_CALLBACK_HOOK_ENABLED_FLAG, callbackHookEnabledFlag ? Constants.TRUE : Constants.FALSE);
+
+        // 保存配置文件
+        configManager.saveProperties();
+
+        // 关闭窗口
+        Stage stage = stageManager.getSettingsWindowStage();
+        if (null != stage) {
+            Platform.runLater(stage::hide);
+        }
     }
 
 
@@ -157,4 +246,22 @@ public class SettingsWindowView implements Initializable {
         }
         return Constants.DEFAULT_OUTPUT_FOLDER_PATH;
     }
+
+    private String processCallbackHookUrlInput(String input) {
+        log.info("==== 处理输入值 ==== 原始输入：{}", input);
+        if (StringUtils.isNotBlank(input)) {
+            if (input.startsWith("http://") || input.startsWith("https://")) {
+                try {
+                    // This will throw an exception if the URL is malformed
+                    new URL(input);
+                    return input;
+                } catch (MalformedURLException e) {
+                    log.error("URL格式错误！>> " + input, e);
+                }
+            }
+        }
+        return serverConfig.buildUrl(Constants.DEFAULT_CALLBACK_HOOK_URI);
+    }
+
+
 }

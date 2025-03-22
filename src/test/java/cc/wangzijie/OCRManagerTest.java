@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class OCRManagerTest {
 
     public static void main(String[] args) throws InterruptedException {
-        OCRManager ocrManager = new OCRManager(null, null,null,null, null);
+        OCRManager ocrManager = new OCRManager(null,null, null,null,null, null);
         ocrManager.setIntervalSeconds(5);
         // ocrManager.addOcrSection(new OcrSection());
         log.info("==== 主线程 ==== 1. 启动OCR Manager");

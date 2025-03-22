@@ -3,7 +3,7 @@ package cc.wangzijie.fxml.loader.impl;
 
 import cc.wangzijie.fxml.FxmlViews;
 import cc.wangzijie.fxml.loader.SpringFxmlLoader;
-import cc.wangzijie.spring.SpringHelper;
+import cc.wangzijie.utils.SpringHelper;
 import cc.wangzijie.ui.utils.CssLoader;
 import cc.wangzijie.ui.utils.DrawUtils;
 import javafx.fxml.FXMLLoader;

@@ -1,4 +1,4 @@
-package cc.wangzijie.server.config;
+package cc.wangzijie.config;
 
 import cc.wangzijie.utils.SqliteBuilder;
 import cc.wangzijie.utils.SqliteUtils;

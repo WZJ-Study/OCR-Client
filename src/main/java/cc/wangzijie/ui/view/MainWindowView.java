@@ -8,7 +8,7 @@ import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
 import cc.wangzijie.server.service.IOcrSectionResultService;
 import cc.wangzijie.server.service.IOcrSectionService;
-import cc.wangzijie.spring.SpringHelper;
+import cc.wangzijie.utils.SpringHelper;
 import cc.wangzijie.ui.enums.ActionTypeEnum;
 import cc.wangzijie.ui.helper.StageManager;
 import cc.wangzijie.ui.model.*;
@@ -41,7 +41,6 @@ import javax.annotation.Resource;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Slf4j

@@ -1,4 +1,4 @@
-package cc.wangzijie.spring;
+package cc.wangzijie.utils;
 
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
