@@ -210,7 +210,7 @@ public class OCRManager {
     }
 
     public DatabaseOutputTask createDatabaseOutputTask(List<OcrSectionResult> resultList) {
-        return new DatabaseOutputTask(this.ocrSectionResultService, resultList);
+        return new DatabaseOutputTask(this.ocrSectionResultService, resultList, this.settingsWindowModel);
     }
 
     public CallbackHookTask createCallbackHookTask(List<OcrSectionResult> resultList) {

@@ -20,6 +20,8 @@ public class SettingsWindowModel {
     private final StringProperty callbackHookUrl = new SimpleStringProperty();
     private final BooleanProperty callbackHookEnabledFlag = new SimpleBooleanProperty(true);
 
+    private final BooleanProperty databaseEnabledFlag = new SimpleBooleanProperty(true);
+
     public Image getCloseWindowButtonImage() {
         return closeWindowButtonImage.get();
     }
@@ -102,5 +104,17 @@ public class SettingsWindowModel {
 
     public void setCallbackHookEnabledFlag(boolean callbackHookEnabledFlag) {
         this.callbackHookEnabledFlag.set(callbackHookEnabledFlag);
+    }
+
+    public boolean isDatabaseEnabledFlag() {
+        return databaseEnabledFlag.get();
+    }
+
+    public BooleanProperty databaseEnabledFlagProperty() {
+        return databaseEnabledFlag;
+    }
+
+    public void setDatabaseEnabledFlag(boolean databaseEnabledFlag) {
+        this.databaseEnabledFlag.set(databaseEnabledFlag);
     }
 }

@@ -63,6 +63,9 @@ public class SettingsWindowView implements Initializable {
     @FXML
     public CheckBox callbackHookEnabledInput;
 
+    @FXML
+    public CheckBox databaseEnabledInput;
+
     private double offsetX;
     private double offsetY;
 
@@ -120,6 +123,15 @@ public class SettingsWindowView implements Initializable {
             savePropertiesFlag = true;
         }
         callbackHookEnabledInput.setSelected(Objects.equals(callbackHookEnabledFlag, Constants.TRUE));
+
+        // 设置#4.输出到本地SQLite数据库 - 是否启用
+        String databaseEnabledFlag = configManager.getProperty(ConfigKeys.KEY_DATABASE_ENABLED_FLAG);
+        if (StringUtils.isBlank(databaseEnabledFlag)) {
+            databaseEnabledFlag = Constants.TRUE;
+            configManager.setProperty(ConfigKeys.KEY_DATABASE_ENABLED_FLAG, databaseEnabledFlag);
+            savePropertiesFlag = true;
+        }
+        databaseEnabledInput.setSelected(Objects.equals(databaseEnabledFlag, Constants.TRUE));
 
         // 保存配置文件
         if (savePropertiesFlag) {
@@ -189,6 +201,11 @@ public class SettingsWindowView implements Initializable {
         boolean callbackHookEnabledFlag = callbackHookEnabledInput.isSelected();
         settingsWindowModel.setCallbackHookEnabledFlag(callbackHookEnabledFlag);
         configManager.setProperty(ConfigKeys.KEY_CALLBACK_HOOK_ENABLED_FLAG, callbackHookEnabledFlag ? Constants.TRUE : Constants.FALSE);
+
+        // 设置#4.输出到本地SQLite数据库 - 是否启用
+        boolean databaseEnabledFlag = databaseEnabledInput.isSelected();
+        settingsWindowModel.setDatabaseEnabledFlag(databaseEnabledFlag);
+        configManager.setProperty(ConfigKeys.KEY_DATABASE_ENABLED_FLAG, databaseEnabledFlag ? Constants.TRUE : Constants.FALSE);
 
         // 保存配置文件
         configManager.saveProperties();

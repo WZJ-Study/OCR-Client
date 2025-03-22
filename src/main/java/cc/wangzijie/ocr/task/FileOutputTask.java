@@ -66,6 +66,7 @@ public class FileOutputTask implements Runnable {
     @Override
     public void run() {
         if (!this.enabledFlag) {
+            log.info("==== FileOutputTask ==== 已禁用截屏文件输出目录，跳过！");
             return;
         }
         log.info("==== FileOutputTask ==== 当前时间：{}\n截屏文件输出目录: {}\n", this.nowStr, this.outputFolderPath);

@@ -10,5 +10,6 @@ public class ConfigKeys {
     public static final String KEY_CALLBACK_HOOK_URL = "callbackHookUrl";
     public static final String KEY_CALLBACK_HOOK_ENABLED_FLAG = "callbackHookEnabledFlag";
 
+    public static final String KEY_DATABASE_ENABLED_FLAG = "databaseEnabledFlag";
 
 }

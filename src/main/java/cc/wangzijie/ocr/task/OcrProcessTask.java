@@ -79,7 +79,7 @@ public class OcrProcessTask implements Runnable {
 
                 // 执行OCR识别
                 OcrResult ocrResult = this.ocrEngine.runOcr(subFile.getPath());
-                log.info("==== OCR识别处理 ==== 截屏图片文件OCR识别成功，区域：{} ==> 识别结果：{}", key, ocrResult.toString());
+                log.info("==== OCR识别处理 ==== 截屏图片文件OCR识别成功，区域：{} ==> 识别结果：\n\n{}", key, ocrResult.getStrRes());
                 OcrSectionResult result = ocrSection.newResult(ocrResult, collectTime);
                 resultList.add(result);
 
