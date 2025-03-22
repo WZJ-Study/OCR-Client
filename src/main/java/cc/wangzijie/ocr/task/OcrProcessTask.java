@@ -3,26 +3,16 @@ package cc.wangzijie.ocr.task;
 import cc.wangzijie.constants.Constants;
 import cc.wangzijie.ocr.OCRManager;
 import cc.wangzijie.ocr.component.TaskExecutor;
-import cc.wangzijie.ui.model.SettingsWindowModel;
-import cc.wangzijie.utils.*;
 import cc.wangzijie.server.entity.OcrSection;
 import cc.wangzijie.server.entity.OcrSectionResult;
-import cc.wangzijie.server.service.IOcrSectionResultService;
-import cc.wangzijie.ui.model.DataListAreaModel;
+import cc.wangzijie.utils.DateUtils;
 import com.benjaminwan.ocrlibrary.OcrResult;
 import io.github.mymonstercat.ocr.InferenceEngine;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +50,6 @@ public class OcrProcessTask implements Runnable {
     @Override
     public void run() {
         String collectTime = DateUtils.nowStr();
-        String subFolder = String.format("OcrProcessTask-%s", collectTime);
         log.info("==== OcrProcessTask ==== 开始OCR识别！当前时间：{}\n", collectTime);
 
         // OCR识别各框选区域
@@ -74,7 +63,7 @@ public class OcrProcessTask implements Runnable {
 
                 // 保存截取区域的图片
                 String subFileName = "SubFile_" + ocrSection.getId();
-                File subFile =  File.createTempFile(subFileName, Constants.IMAGE_FORMAT_WITH_DOT);
+                File subFile = File.createTempFile(subFileName, Constants.IMAGE_FORMAT_WITH_DOT);
                 ImageIO.write(rectImage, Constants.IMAGE_FORMAT, subFile);
 
                 // 执行OCR识别
