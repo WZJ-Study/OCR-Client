@@ -1,10 +1,9 @@
 server:
   port: 8888
 
-
 spring:
   application:
-    name: ocrClient
+    name: PT-OCR
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
