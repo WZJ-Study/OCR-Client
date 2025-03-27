@@ -5,6 +5,9 @@
 > 使用JavaFx开发的本地截图工具。
 > 截图框选后进行OCR识别，OCR引擎使用RapidOCR，默认使用ONNX V4模型。
 
+## 占用本地端口
+8888
+
 ## OCR采集结果
 
 1. 通过Http接口 ``GET http://localhost:8888/ocr/data`` 可以在本机浏览器中查询实时采集结果；
@@ -36,3 +39,17 @@
 >     "sendTime": "2025-03-22 16:38:43"
 > }
 > ```
+
+
+# 项目打包exe说明
+1. 首先 ``mvn clean``，然后 ``mvn package``，这样在target目录下会生成一个zip包，例如：``PT-OCR-0.0.1-windows.zip``
+2. 以上生成的zip包是不含Java运行时环境的，如果机器上安装有JDK11，那么可以直接使用；
+3. 否则，需要先把zip压缩包解压，然后把JDK11的目录整个放入到解压后的根目录下，如下图所示：
+![3-1.jdk11目录.png](readme/3-1.jdk11%E7%9B%AE%E5%BD%95.png)
+里面就是完整的jdk11
+![3-2.jdk11目录内.png](readme/3-2.jdk11%E7%9B%AE%E5%BD%95%E5%86%85.png)
+4. 然后，修改配置文件 ``PT.OCR.ini``，如下图所示：
+![4.修改ini配置文件.png](readme/4.%E4%BF%AE%E6%94%B9ini%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png)
+5. 将 ``vm.location`` 配置中的 ``%JAVA_HOME%`` 修改为当前目录下的JDK11目录``.\jdk11``。
+![5.ini配置文件修改内容.png](readme/5.ini%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9%E5%86%85%E5%AE%B9.png)
+6. 最后，把整个目录重新打包为zip包``PT-OCR-0.0.1-windows-with-jdk.zip``，这样发布后就可以免安装本地Java运行时环境，直接使用本地jdk11允许了。
